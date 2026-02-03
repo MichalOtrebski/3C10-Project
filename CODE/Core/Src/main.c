@@ -22,7 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "loop.h"
+#include "setup.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -111,26 +112,13 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  GPIO_InitTypeDef g = {0};
+
+  setup();
 
   while (1)
   {
 
-	  while (1)
-	      {
-	          if (BSP_PB_GetState(BUTTON_USER) == GPIO_PIN_SET || BSP_PB_GetState(BUTTON_USER) == 1)
-	          {
-	              // Button pressed
-	              HAL_GPIO_WritePin(GPIOC, GPIO_PIN_10, GPIO_PIN_SET);
-	              BSP_LED_On(LED_GREEN);
-	          }
-	          else
-	          {
-	              HAL_GPIO_WritePin(GPIOC, GPIO_PIN_10, GPIO_PIN_RESET);
-	              BSP_LED_Off(LED_GREEN);
-	          }
-	      }
-
+	  loop();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
