@@ -1,0 +1,16 @@
+../Core/Src/display.c:14:20:CS_LOW	1
+../Core/Src/display.c:15:20:CS_HIGH	1
+../Core/Src/display.c:17:20:DC_CMD	1
+../Core/Src/display.c:18:20:DC_DATA	1
+../Core/Src/display.c:20:20:RST_LOW	1
+../Core/Src/display.c:21:20:RST_HIGH	1
+../Core/Src/display.c:25:13:spi_tx	3
+../Core/Src/display.c:35:13:write_cmd	1
+../Core/Src/display.c:42:13:write_data	1
+../Core/Src/display.c:49:20:write_data8	1
+../Core/Src/display.c:53:20:write_data16	1
+../Core/Src/display.c:60:6:ILI9341_Init	1
+../Core/Src/display.c:110:6:ILI9341_SetRotation	5
+../Core/Src/display.c:126:6:ILI9341_SetAddrWindow	1
+../Core/Src/display.c:139:6:ILI9341_PushPixels	4
+../Core/Src/display.c:163:6:ILI9341_FillScreen	3
