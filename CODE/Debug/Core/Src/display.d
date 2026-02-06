@@ -33,7 +33,8 @@ Core/Src/display.o: ../Core/Src/display.c ../Core/Inc/display.h \
  ../Core/Inc/stm32g4xx_nucleo_bus.h ../Core/Inc/stm32g4xx_nucleo_conf.h \
  ../Core/Inc/stm32g4xx_nucleo_errno.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h \
- ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h
+ ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h \
+ ../DISPLAY/Target/lcd_os.h
 ../Core/Inc/display.h:
 ../Core/Inc/globals.h:
 ../DISPLAY/Target/lcd_io.h:
@@ -73,3 +74,4 @@ Core/Src/display.o: ../Core/Src/display.c ../Core/Inc/display.h \
 ../Core/Inc/stm32g4xx_nucleo_errno.h:
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h:
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h:
+../DISPLAY/Target/lcd_os.h:

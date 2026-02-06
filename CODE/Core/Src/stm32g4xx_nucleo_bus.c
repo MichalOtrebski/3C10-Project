@@ -34,6 +34,8 @@ __weak HAL_StatusTypeDef MX_SPI2_Init(SPI_HandleTypeDef* hspi);
   * @{
   */
 
+extern void Error_Handler(void);
+
 /** @defgroup STM32G4XX_NUCLEO_BUS_Exported_Variables BUS Exported Variables
   * @{
   */
@@ -198,6 +200,57 @@ int32_t BSP_SPI2_SendRecv(uint8_t *pTxData, uint8_t *pRxData, uint16_t Length)
   return ret;
 }
 
+/**
+  * @brief  Write Data through SPI BUS with DMA.
+  * @param  pData: Pointer to data buffer to send
+  * @param  Length: Length of data in byte
+  * @retval BSP status
+  */
+int32_t BSP_SPI2_Send_DMA(uint8_t *pData, uint16_t Length)
+{
+  int32_t ret = BSP_ERROR_NONE;
+
+  if(HAL_SPI_Transmit_DMA(&hspi2, pData, Length) != HAL_OK)
+  {
+      ret = BSP_ERROR_UNKNOWN_FAILURE;
+  }
+  return ret;
+}
+
+/**
+  * @brief  Receive Data from SPI BUS with DMA
+  * @param  pData: Pointer to data buffer to receive
+  * @param  Length: Length of data in byte
+  * @retval BSP status
+  */
+int32_t  BSP_SPI2_Recv_DMA(uint8_t *pData, uint16_t Length)
+{
+  int32_t ret = BSP_ERROR_NONE;
+
+  if(HAL_SPI_Receive_DMA(&hspi2, pData, Length) != HAL_OK)
+  {
+      ret = BSP_ERROR_UNKNOWN_FAILURE;
+  }
+  return ret;
+}
+
+/**
+  * @brief  Send and Receive data to/from SPI BUS (Full duplex) with DMA
+  * @param  pData: Pointer to data buffer to send/receive
+  * @param  Length: Length of data in byte
+  * @retval BSP status
+  */
+int32_t BSP_SPI2_SendRecv_DMA(uint8_t *pTxData, uint8_t *pRxData, uint16_t Length)
+{
+  int32_t ret = BSP_ERROR_NONE;
+
+  if(HAL_SPI_TransmitReceive_DMA(&hspi2, pTxData, pRxData, Length) != HAL_OK)
+  {
+      ret = BSP_ERROR_UNKNOWN_FAILURE;
+  }
+  return ret;
+}
+
 #if (USE_HAL_SPI_REGISTER_CALLBACKS == 1U)
 /**
   * @brief Register Default BSP SPI2 Bus Msp Callbacks
@@ -273,7 +326,7 @@ __weak HAL_StatusTypeDef MX_SPI2_Init(SPI_HandleTypeDef* hspi)
   hspi->Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi->Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi->Init.NSS = SPI_NSS_SOFT;
-  hspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+  hspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
   hspi->Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi->Init.TIMode = SPI_TIMODE_DISABLE;
   hspi->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -287,6 +340,8 @@ __weak HAL_StatusTypeDef MX_SPI2_Init(SPI_HandleTypeDef* hspi)
 
   return ret;
 }
+DMA_HandleTypeDef hdma_spi2_tx;
+DMA_HandleTypeDef hdma_spi2_rx;
 
 static void SPI2_MspInit(SPI_HandleTypeDef* spiHandle)
 {
@@ -324,6 +379,37 @@ static void SPI2_MspInit(SPI_HandleTypeDef* spiHandle)
     GPIO_InitStruct.Alternate = BUS_SPI2_MOSI_GPIO_AF;
     HAL_GPIO_Init(BUS_SPI2_MOSI_GPIO_PORT, &GPIO_InitStruct);
 
+    /* Peripheral DMA init*/
+
+    hdma_spi2_tx.Instance = DMA1_Channel1;
+    hdma_spi2_tx.Init.Request = DMA_REQUEST_SPI2_TX;
+    hdma_spi2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+    hdma_spi2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_spi2_tx.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_spi2_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+    hdma_spi2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+    hdma_spi2_tx.Init.Mode = DMA_NORMAL;
+    hdma_spi2_tx.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+    HAL_DMA_Init(&hdma_spi2_tx);
+
+  __HAL_LINKDMA(spiHandle,hdmatx,hdma_spi2_tx);
+
+    hdma_spi2_rx.Instance = DMA1_Channel2;
+    hdma_spi2_rx.Init.Request = DMA_REQUEST_SPI2_RX;
+    hdma_spi2_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    hdma_spi2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_spi2_rx.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_spi2_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+    hdma_spi2_rx.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+    hdma_spi2_rx.Init.Mode = DMA_NORMAL;
+    hdma_spi2_rx.Init.Priority = DMA_PRIORITY_HIGH;
+    HAL_DMA_Init(&hdma_spi2_rx);
+
+  __HAL_LINKDMA(spiHandle,hdmarx,hdma_spi2_rx);
+
+    /* Peripheral interrupt init */
+    HAL_NVIC_SetPriority(SPI2_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(SPI2_IRQn);
   /* USER CODE BEGIN SPI2_MspInit 1 */
 
   /* USER CODE END SPI2_MspInit 1 */
@@ -347,6 +433,13 @@ static void SPI2_MspDeInit(SPI_HandleTypeDef* spiHandle)
     HAL_GPIO_DeInit(BUS_SPI2_MISO_GPIO_PORT, BUS_SPI2_MISO_GPIO_PIN);
 
     HAL_GPIO_DeInit(BUS_SPI2_MOSI_GPIO_PORT, BUS_SPI2_MOSI_GPIO_PIN);
+
+    /* Peripheral DMA DeInit*/
+    HAL_DMA_DeInit(spiHandle->hdmatx);
+    HAL_DMA_DeInit(spiHandle->hdmarx);
+
+    /* Peripheral interrupt Deinit*/
+    HAL_NVIC_DisableIRQ(SPI2_IRQn);
 
   /* USER CODE BEGIN SPI2_MspDeInit 1 */
 

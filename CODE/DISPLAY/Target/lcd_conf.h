@@ -36,6 +36,10 @@
 /* BUS IO Instance handler */
 extern  SPI_HandleTypeDef                   hspi2;
 
+/* DMA Instance handlers */
+extern  DMA_HandleTypeDef                   hdma_spi2_rx;
+extern  DMA_HandleTypeDef                   hdma_spi2_tx;
+
 /* USER CODE BEGIN ET */
 
 /* USER CODE END ET */
@@ -47,15 +51,18 @@ extern  SPI_HandleTypeDef                   hspi2;
 /* BUS IO Instance handlers */
 #define hLCDSPI                             hspi2
 
+#define hLCDDMA_rx                          hdma_spi2_rx
+#define hLCDDMA_tx                          hdma_spi2_tx
+
 /* BUS IO functions */
 #define LCD_SPI_Init                        BSP_SPI2_Init
 #define LCD_SPI_DeInit                      BSP_SPI2_DeInit
 #define LCD_SPI_Send                        BSP_SPI2_Send
 #define LCD_SPI_Recv                        BSP_SPI2_Recv
 #define LCD_SPI_SendRecv                    BSP_SPI2_SendRecv
-#define LCD_SPI_Send_DMA(td, ln)            BSP_ERROR_FEATURE_NOT_SUPPORTED
-#define LCD_SPI_Recv_DMA(rd, ln)            BSP_ERROR_FEATURE_NOT_SUPPORTED
-#define LCD_SPI_SendRecv_DMA(td, rd, ln)    BSP_ERROR_FEATURE_NOT_SUPPORTED
+#define LCD_SPI_Send_DMA                    BSP_SPI2_Send_DMA
+#define LCD_SPI_Recv_DMA                    BSP_SPI2_Recv_DMA
+#define LCD_SPI_SendRecv_DMA                BSP_SPI2_SendRecv_DMA
 
 /* CS Pin mapping */
 #define LCD_CS_GPIO_PORT                    GPIOC

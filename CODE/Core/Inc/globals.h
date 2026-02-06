@@ -11,11 +11,11 @@
 #include "stdint.h"
 #include "stddef.h"
 
-#define LCD_WIDTH 	320
-#define LCD_HEIGHT 	240
+#define LCD_WIDTH 	240
+#define LCD_HEIGHT 	320
 
-#define FB_WIDTH 	160
-#define FB_HEIGHT 	120
+#define FB_WIDTH 	120
+#define FB_HEIGHT 	160
 
 extern uint16_t framebuffer[FB_WIDTH * FB_HEIGHT];
 extern uint16_t buf[LCD_WIDTH];

@@ -1,3 +1,0 @@
-void Error_Handler(void);
-
-SPI_HandleTypeDef hspi2;

@@ -9,4 +9,4 @@
 #include "globals.h"
 
 uint16_t framebuffer[FB_WIDTH * FB_HEIGHT];
-uint16_t buf[LCD_WIDTH];
+__attribute__((aligned(4))) uint16_t buf[LCD_WIDTH];

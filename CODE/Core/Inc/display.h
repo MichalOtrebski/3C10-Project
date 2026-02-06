@@ -10,8 +10,9 @@
 
 #include <stdint.h>
 
-void LCD_ClearFrame();
+void LCD_ClearFrame(void);
 void LCD_DrawRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t color);
-void render();
+void render(void);
+void render_dma(void);
 
 #endif /* INC_DISPLAY_H_ */
