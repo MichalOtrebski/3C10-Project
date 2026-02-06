@@ -32,9 +32,11 @@ extern "C" {
 #include "stm32g4xx_nucleo.h"
 #include <stdio.h>
 
+#include "lcd_io.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "display.h"
+#include "globals.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

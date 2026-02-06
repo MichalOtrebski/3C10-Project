@@ -1,0 +1,6 @@
+../Drivers/BSP/Components/ili9341/ili9341_reg.c:50:9:ili9341_read_reg	24	static
+../Drivers/BSP/Components/ili9341/ili9341_reg.c:63:9:ili9341_write_reg	24	static
+../Drivers/BSP/Components/ili9341/ili9341_reg.c:75:9:ili9341_send_data	24	static
+../Drivers/BSP/Components/ili9341/ili9341_reg.c:87:9:ili9341_send_data_dma	24	static
+../Drivers/BSP/Components/ili9341/ili9341_reg.c:99:9:ili9341_recv_data	24	static
+../Drivers/BSP/Components/ili9341/ili9341_reg.c:111:9:ili9341_recv_data_dma	24	static

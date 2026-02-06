@@ -1,0 +1,12 @@
+../Core/Src/stm32g4xx_nucleo_bus.c:91:9:BSP_SPI2_Init	5
+../Core/Src/stm32g4xx_nucleo_bus.c:132:9:BSP_SPI2_DeInit	4
+../Core/Src/stm32g4xx_nucleo_bus.c:158:9:BSP_SPI2_Send	2
+../Core/Src/stm32g4xx_nucleo_bus.c:175:10:BSP_SPI2_Recv	2
+../Core/Src/stm32g4xx_nucleo_bus.c:192:9:BSP_SPI2_SendRecv	2
+../Core/Src/stm32g4xx_nucleo_bus.c:209:9:BSP_SPI2_Send_DMA	2
+../Core/Src/stm32g4xx_nucleo_bus.c:226:10:BSP_SPI2_Recv_DMA	2
+../Core/Src/stm32g4xx_nucleo_bus.c:243:9:BSP_SPI2_SendRecv_DMA	2
+../Core/Src/stm32g4xx_nucleo_bus.c:312:9:BSP_GetTick	1
+../Core/Src/stm32g4xx_nucleo_bus.c:318:26:MX_SPI2_Init	2
+../Core/Src/stm32g4xx_nucleo_bus.c:346:13:SPI2_MspInit	1
+../Core/Src/stm32g4xx_nucleo_bus.c:418:13:SPI2_MspDeInit	1

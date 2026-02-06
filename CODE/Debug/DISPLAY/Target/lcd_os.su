@@ -1,0 +1,7 @@
+../DISPLAY/Target/lcd_os.c:112:9:LCD_OS_Initialize	24	static
+../DISPLAY/Target/lcd_os.c:127:9:LCD_OS_Lock	16	static
+../DISPLAY/Target/lcd_os.c:139:9:LCD_OS_Unlock	24	static,ignoring_inline_asm
+../DISPLAY/Target/lcd_os.c:156:9:LCD_OS_UnlockFromISR	16	static
+../DISPLAY/Target/lcd_os.c:169:9:LCD_OS_TryLock	24	static,ignoring_inline_asm
+../DISPLAY/Target/lcd_os.c:192:9:LCD_OS_IsLocked	16	static
+../DISPLAY/Target/lcd_os.c:202:9:LCD_OS_WaitForTransferToBeDone	16	static
