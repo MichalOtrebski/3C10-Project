@@ -1,0 +1,4 @@
+
+#include "stm32g4xx_nucleo.h"
+#include <stdio.h>
+#n

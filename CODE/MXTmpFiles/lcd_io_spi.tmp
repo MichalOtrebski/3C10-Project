@@ -1,0 +1,203 @@
+
+#if (USE_HAL_SPI_REGISTER_CALLBACKS == 1U)
+static void SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+  if(hspi == &hLCDSPI)
+  {
+    /* Deselect : Chip Select high */
+    LCD_CS_HIGH();
+
+    /* Go back to 8-bit mode */
+    hspi->Init.DataSize = SPI_DATASIZE_8BIT;
+    HAL_SPI_Init(hspi);
+
+    /* USER CODE BEGIN SPI_TxCpltCallback */
+
+    /* USER CODE END SPI_TxCpltCallback */
+
+    /* Unlock LCD ressources */
+    LCD_OS_UnlockFromISR(0);
+
+    /* Signal Transfer Done Event */
+    BSP_LCD_SignalTransferDone(0);
+  }
+}
+#endif /* USE_HAL_SPI_REGISTER_CALLBACKS */
+
+/**
+  * @brief  Initializes LCD low level.
+  * @retval BSP status
+  */
+static int32_t LCD_IO_Init(void)
+{
+  int32_t ret = BSP_ERROR_NONE;
+
+  /* USER CODE BEGIN LCD_IO_Init 1 */
+
+  /* USER CODE END LCD_IO_Init 1 */
+
+  LCD_RST_LOW();
+  HAL_Delay(100);
+  LCD_RST_HIGH();
+  HAL_Delay(100);
+
+  /* turn LCD on = drive pin low (active low) */
+  /* Set or Reset the control line */
+  LCD_CS_HIGH();
+  LCD_DC_HIGH();
+
+  ret = LCD_SPI_Init();
+
+  if(ret == BSP_ERROR_NONE)
+  {
+
+#if (USE_HAL_SPI_REGISTER_CALLBACKS == 1U)
+    /* Register SPI Tx Complete Callback */
+    HAL_SPI_RegisterCallback(&hLCDSPI, HAL_SPI_TX_COMPLETE_CB_ID, SPI_TxCpltCallback);
+#endif /* USE_HAL_SPI_REGISTER_CALLBACKS */
+  }
+
+  /* USER CODE BEGIN LCD_IO_Init 2 */
+
+  /* USER CODE END LCD_IO_Init 2 */
+
+  return ret;
+}
+
+/**
+  * @brief  DeInitializes LCD low level
+  * @retval BSP status
+  */
+static int32_t LCD_IO_DeInit(void)
+{
+  int32_t ret = BSP_ERROR_NONE;
+
+  ret = LCD_SPI_DeInit();
+
+  return ret;
+}
+
+/**
+  * @brief  Writes register on LCD register.
+  * @param  Reg    Register to be written
+  * @param  Length length of data be read from the LCD GRAM
+  * @retval BSP status
+  */
+static int32_t LCD_IO_WriteReg(volatile uint8_t *Reg, uint32_t Length)
+{
+  int32_t ret = BSP_ERROR_NONE;
+
+  /* Select : Chip Select low */
+  LCD_CS_LOW();
+
+  LCD_DC_HIGH();
+
+  ret = LCD_SPI_Send((uint8_t *)Reg, Length);
+
+  LCD_DC_LOW();
+
+  /* Deselect : Chip Select high */
+  LCD_CS_HIGH();
+
+  return ret;
+}
+
+/**
+  * @brief  Read register on LCD register.
+  * @param  Reg    Register to be read
+  * @param  Length length of data be read from the LCD GRAM
+  * @retval BSP status
+  */
+static int32_t LCD_IO_ReadReg(volatile uint8_t *Reg, uint32_t Length)
+{
+  /* USER CODE BEGIN LCD_IO_ReadReg */
+
+  return BSP_ERROR_FEATURE_NOT_SUPPORTED;
+
+  /* USER CODE END LCD_IO_ReadReg */
+}
+
+/**
+  * @brief  Send data to select the LCD GRAM.
+  * @param  pData  pointer to data to write to LCD GRAM.
+  * @param  Length length of data to write to LCD GRAM
+  * @retval Error status
+  */
+static int32_t LCD_IO_SendData(uint8_t *pData, uint32_t Length)
+{
+  int32_t ret = BSP_ERROR_NONE;
+
+  /* Select : Chip Select low */
+  LCD_CS_LOW();
+
+  /* Send Data */
+  ret = LCD_SPI_Send(pData, Length);
+
+  /* Deselect : Chip Select high */
+  LCD_CS_HIGH();
+
+  return ret;
+}
+
+/**
+  * @brief  Send data to select the LCD GRAM using DMA.
+  * @param  pData  pointer to data to write to LCD GRAM.
+  * @param  Length length of data to write to LCD GRAM
+  * @retval Error status
+  */
+static int32_t LCD_IO_SendDataDMA(uint8_t *pData, uint32_t Length)
+{
+  int32_t ret = BSP_ERROR_NONE;
+
+  /* Select : Chip Select low */
+  LCD_CS_LOW();
+
+  /* Send Data */
+  ret = LCD_SPI_Send_DMA(pData, Length);
+
+  return ret;
+}
+
+/**
+  * @brief  Receive data from selected LCD GRAM.
+  * @param  pData  pointer to data to read to from selected LCD GRAM.
+  * @param  Length length of data to read from selected LCD GRAM
+  * @retval Error status
+  */
+static int32_t LCD_IO_RecvData(uint8_t *pData, uint32_t Length)
+{
+  int32_t ret = BSP_ERROR_NONE;
+
+  /* Select : Chip Select low */
+  LCD_CS_LOW();
+
+  LCD_DC_HIGH();
+
+  /* Write Register to read */
+  ret = LCD_SPI_Send(pData, 1);
+
+  LCD_DC_LOW();
+
+  /* Receive the Data */
+  ret = LCD_SPI_Recv(pData, Length);
+
+  /* Deselect : Chip Select high */
+  LCD_CS_HIGH();
+
+  return ret;
+}
+
+/**
+  * @brief  Receive data using DMA from selected LCD GRAM.
+  * @param  pData  pointer to data to read to from selected LCD GRAM.
+  * @param  Length length of data to read from selected LCD GRAM
+  * @retval Error status
+  */
+static int32_t LCD_IO_RecvDataDMA(uint8_t *pData, uint32_t Length)
+{
+  /* USER CODE BEGIN LCD_IO_RecvDataDMA */
+
+  return BSP_ERROR_FEATURE_NOT_SUPPORTED;
+
+  /* USER CODE END LCD_IO_RecvDataDMA */
+}

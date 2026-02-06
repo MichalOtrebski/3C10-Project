@@ -11,4 +11,7 @@
 
 void setup() {
 
+	BSP_LCD_Init(0, LCD_ORIENTATION_LANDSCAPE);
+	BSP_LCD_DisplayOn(0);
+
 }

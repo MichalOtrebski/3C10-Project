@@ -1,0 +1,28 @@
+
+/* SPI2 init function */ #n
+__weak HAL_StatusTypeDef MX_SPI2_Init(SPI_HandleTypeDef* hspi)
+{
+#tHAL_StatusTypeDef ret = HAL_OK;
+#n
+#thspi->Instance = SPI2;
+#thspi->Init.Mode = SPI_MODE_MASTER;
+#thspi->Init.Direction = SPI_DIRECTION_2LINES;
+#thspi->Init.DataSize = SPI_DATASIZE_8BIT;
+#thspi->Init.CLKPolarity = SPI_POLARITY_LOW;
+#thspi->Init.CLKPhase = SPI_PHASE_1EDGE;
+#thspi->Init.NSS = SPI_NSS_SOFT;
+#thspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+#thspi->Init.FirstBit = SPI_FIRSTBIT_MSB;
+#thspi->Init.TIMode = SPI_TIMODE_DISABLE;
+#thspi->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+#thspi->Init.CRCPolynomial = 7;
+#thspi->Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+#thspi->Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
+#tif (HAL_SPI_Init(hspi) != HAL_OK)
+#t{
+#t#tret = HAL_ERROR;
+#t}
+#n
+#n
+#treturn ret;
+}

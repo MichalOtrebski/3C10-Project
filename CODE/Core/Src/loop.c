@@ -8,19 +8,22 @@
 #include "main.h"
 #include "gpio.h"
 #include "loop.h"
+#include "display.h"
 
 void loop() {
 
-    if (BSP_PB_GetState(BUTTON_USER) == GPIO_PIN_SET || BSP_PB_GetState(BUTTON_USER) == 1)
-    {
-        // Button pressed
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_10, GPIO_PIN_SET);
-        BSP_LED_On(LED_GREEN);
-    }
-    else
-    {
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_10, GPIO_PIN_RESET);
-        BSP_LED_Off(LED_GREEN);
-    }
+	static uint8_t x = 0;
+
+	LCD_ClearFrame();
+
+	LCD_DrawRect(5, 5, 50, 50, 0xF800);
+
+	LCD_DrawRect(x, 80, 5, 5, 0xe201);
+
+
+	x++;
+	if (x == 119) x = 0;
+
+	render();
 
 }
