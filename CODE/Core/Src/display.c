@@ -9,6 +9,7 @@
 #include "globals.h"
 #include "lcd_io.h"
 #include "lcd_os.h"
+#include "lcd_conf.h"
 
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
@@ -93,8 +94,6 @@ void render_dma(void)
 
   BSP_LCD_WaitForTransferToBeDone(0);
 }
-
-
 
 
 

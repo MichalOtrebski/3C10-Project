@@ -1,2 +1,1 @@
-../Core/Src/setup.c:12:13:SPI2_SetPrescaler	16	static
-../Core/Src/setup.c:18:6:setup	24	static
+../Core/Src/setup.c:12:6:setup	24	static

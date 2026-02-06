@@ -9,12 +9,6 @@
 #include "gpio.h"
 #include "setup.h"
 
-static void SPI2_SetPrescaler(uint32_t presc)
-{
-    hspi2.Init.BaudRatePrescaler = presc;
-    HAL_SPI_Init(&hspi2);
-}
-
 void setup() {
 
 	BSP_LCD_Init(0, LCD_ORIENTATION_PORTRAIT_ROT180);

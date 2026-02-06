@@ -10,6 +10,7 @@
 #include "loop.h"
 #include "display.h"
 #include "globals.h"
+#include "text.h"
 
 void loop() {
 	uint32_t t0 = DWT->CYCCNT;
@@ -21,6 +22,9 @@ void loop() {
 //	LCD_DrawRect(5, 5, 50, 50, 0xF800);
 
 	LCD_DrawRect(x, 80, 5, 5, 0xe201);
+
+	LCD_DrawText(10, 10, "\"HELLO JOSH\"", 0x07E0, 0x0000, 1);
+	LCD_DrawText(10, 20, "- JOHN CAVAN", 0x07E0, 0x0000, 1);
 
 	uint32_t t1 = DWT->CYCCNT;
 

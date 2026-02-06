@@ -7,6 +7,7 @@
 C_SRCS += \
 ../Core/Src/display.c \
 ../Core/Src/dma.c \
+../Core/Src/font.c \
 ../Core/Src/globals.c \
 ../Core/Src/gpio.c \
 ../Core/Src/input.c \
@@ -18,11 +19,13 @@ C_SRCS += \
 ../Core/Src/stm32g4xx_nucleo_bus.c \
 ../Core/Src/syscalls.c \
 ../Core/Src/sysmem.c \
-../Core/Src/system_stm32g4xx.c 
+../Core/Src/system_stm32g4xx.c \
+../Core/Src/text.c 
 
 OBJS += \
 ./Core/Src/display.o \
 ./Core/Src/dma.o \
+./Core/Src/font.o \
 ./Core/Src/globals.o \
 ./Core/Src/gpio.o \
 ./Core/Src/input.o \
@@ -34,11 +37,13 @@ OBJS += \
 ./Core/Src/stm32g4xx_nucleo_bus.o \
 ./Core/Src/syscalls.o \
 ./Core/Src/sysmem.o \
-./Core/Src/system_stm32g4xx.o 
+./Core/Src/system_stm32g4xx.o \
+./Core/Src/text.o 
 
 C_DEPS += \
 ./Core/Src/display.d \
 ./Core/Src/dma.d \
+./Core/Src/font.d \
 ./Core/Src/globals.d \
 ./Core/Src/gpio.d \
 ./Core/Src/input.d \
@@ -50,7 +55,8 @@ C_DEPS += \
 ./Core/Src/stm32g4xx_nucleo_bus.d \
 ./Core/Src/syscalls.d \
 ./Core/Src/sysmem.d \
-./Core/Src/system_stm32g4xx.d 
+./Core/Src/system_stm32g4xx.d \
+./Core/Src/text.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -60,7 +66,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/display.cyclo ./Core/Src/display.d ./Core/Src/display.o ./Core/Src/display.su ./Core/Src/dma.cyclo ./Core/Src/dma.d ./Core/Src/dma.o ./Core/Src/dma.su ./Core/Src/globals.cyclo ./Core/Src/globals.d ./Core/Src/globals.o ./Core/Src/globals.su ./Core/Src/gpio.cyclo ./Core/Src/gpio.d ./Core/Src/gpio.o ./Core/Src/gpio.su ./Core/Src/input.cyclo ./Core/Src/input.d ./Core/Src/input.o ./Core/Src/input.su ./Core/Src/loop.cyclo ./Core/Src/loop.d ./Core/Src/loop.o ./Core/Src/loop.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/setup.cyclo ./Core/Src/setup.d ./Core/Src/setup.o ./Core/Src/setup.su ./Core/Src/stm32g4xx_hal_msp.cyclo ./Core/Src/stm32g4xx_hal_msp.d ./Core/Src/stm32g4xx_hal_msp.o ./Core/Src/stm32g4xx_hal_msp.su ./Core/Src/stm32g4xx_it.cyclo ./Core/Src/stm32g4xx_it.d ./Core/Src/stm32g4xx_it.o ./Core/Src/stm32g4xx_it.su ./Core/Src/stm32g4xx_nucleo_bus.cyclo ./Core/Src/stm32g4xx_nucleo_bus.d ./Core/Src/stm32g4xx_nucleo_bus.o ./Core/Src/stm32g4xx_nucleo_bus.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32g4xx.cyclo ./Core/Src/system_stm32g4xx.d ./Core/Src/system_stm32g4xx.o ./Core/Src/system_stm32g4xx.su
+	-$(RM) ./Core/Src/display.cyclo ./Core/Src/display.d ./Core/Src/display.o ./Core/Src/display.su ./Core/Src/dma.cyclo ./Core/Src/dma.d ./Core/Src/dma.o ./Core/Src/dma.su ./Core/Src/font.cyclo ./Core/Src/font.d ./Core/Src/font.o ./Core/Src/font.su ./Core/Src/globals.cyclo ./Core/Src/globals.d ./Core/Src/globals.o ./Core/Src/globals.su ./Core/Src/gpio.cyclo ./Core/Src/gpio.d ./Core/Src/gpio.o ./Core/Src/gpio.su ./Core/Src/input.cyclo ./Core/Src/input.d ./Core/Src/input.o ./Core/Src/input.su ./Core/Src/loop.cyclo ./Core/Src/loop.d ./Core/Src/loop.o ./Core/Src/loop.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/setup.cyclo ./Core/Src/setup.d ./Core/Src/setup.o ./Core/Src/setup.su ./Core/Src/stm32g4xx_hal_msp.cyclo ./Core/Src/stm32g4xx_hal_msp.d ./Core/Src/stm32g4xx_hal_msp.o ./Core/Src/stm32g4xx_hal_msp.su ./Core/Src/stm32g4xx_it.cyclo ./Core/Src/stm32g4xx_it.d ./Core/Src/stm32g4xx_it.o ./Core/Src/stm32g4xx_it.su ./Core/Src/stm32g4xx_nucleo_bus.cyclo ./Core/Src/stm32g4xx_nucleo_bus.d ./Core/Src/stm32g4xx_nucleo_bus.o ./Core/Src/stm32g4xx_nucleo_bus.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32g4xx.cyclo ./Core/Src/system_stm32g4xx.d ./Core/Src/system_stm32g4xx.o ./Core/Src/system_stm32g4xx.su ./Core/Src/text.cyclo ./Core/Src/text.d ./Core/Src/text.o ./Core/Src/text.su
 
 .PHONY: clean-Core-2f-Src
 
