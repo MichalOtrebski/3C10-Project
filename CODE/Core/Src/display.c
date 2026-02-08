@@ -95,6 +95,14 @@ void render_dma(void)
   BSP_LCD_WaitForTransferToBeDone(0);
 }
 
+void border(uint8_t t, uint8_t b, uint8_t l, uint8_t r, uint16_t color) {
+
+	LCD_DrawRect(0, 0, FB_WIDTH, t, color);
+	LCD_DrawRect(0, FB_HEIGHT - b, FB_WIDTH, b, color);
+
+	LCD_DrawRect(0, t, l, FB_HEIGHT - b, color);
+	LCD_DrawRect(FB_WIDTH - r, t, r, FB_HEIGHT - b, color);
+}
 
 
 

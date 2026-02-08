@@ -15,4 +15,6 @@ void LCD_DrawRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t col
 void render(void);
 void render_dma(void);
 
+void border(uint8_t t, uint8_t b, uint8_t l, uint8_t r, uint16_t color);
+
 #endif /* INC_DISPLAY_H_ */

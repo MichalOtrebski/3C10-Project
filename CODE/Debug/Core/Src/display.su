@@ -3,3 +3,4 @@
 ../Core/Src/display.c:32:6:LCD_DrawRect	24	static
 ../Core/Src/display.c:49:6:render	40	static
 ../Core/Src/display.c:73:6:render_dma	40	static
+../Core/Src/display.c:98:6:border	32	static

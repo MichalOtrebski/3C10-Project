@@ -5,11 +5,17 @@
  *      Author: Michal P. Otrebski
  */
 
+#include "stm32g4xx_hal.h"
+
+extern TIM_HandleTypeDef htim6;
+
 #include "main.h"
 #include "gpio.h"
 #include "setup.h"
 
 void setup() {
+
+	HAL_TIM_Base_Start_IT(&htim6);
 
 	BSP_LCD_Init(0, LCD_ORIENTATION_PORTRAIT_ROT180);
 	BSP_LCD_DisplayOn(0);

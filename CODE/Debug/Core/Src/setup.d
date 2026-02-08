@@ -1,4 +1,4 @@
-Core/Src/setup.o: ../Core/Src/setup.c ../Core/Inc/main.h \
+Core/Src/setup.o: ../Core/Src/setup.c \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
@@ -26,16 +26,17 @@ Core/Src/setup.o: ../Core/Src/setup.c ../Core/Inc/main.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
- ../Core/Inc/stm32g4xx_nucleo.h ../Core/Inc/stm32g4xx_nucleo_errno.h \
- ../Core/Inc/stm32g4xx_nucleo_conf.h ../DISPLAY/Target/lcd_io.h \
- ../Drivers/BSP/Components/Common/lcd.h ../DISPLAY/Target/lcd_conf.h \
- ../Core/Inc/stm32g4xx_nucleo_bus.h \
+ ../Core/Inc/main.h ../Core/Inc/stm32g4xx_nucleo.h \
+ ../Core/Inc/stm32g4xx_nucleo_errno.h ../Core/Inc/stm32g4xx_nucleo_conf.h \
+ ../DISPLAY/Target/lcd_io.h ../Drivers/BSP/Components/Common/lcd.h \
+ ../DISPLAY/Target/lcd_conf.h ../Core/Inc/stm32g4xx_nucleo_bus.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h \
  ../Core/Inc/gpio.h ../Core/Inc/main.h ../Core/Inc/setup.h
-../Core/Inc/main.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h:
@@ -63,8 +64,11 @@ Core/Src/setup.o: ../Core/Src/setup.c ../Core/Inc/main.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
+../Core/Inc/main.h:
 ../Core/Inc/stm32g4xx_nucleo.h:
 ../Core/Inc/stm32g4xx_nucleo_errno.h:
 ../Core/Inc/stm32g4xx_nucleo_conf.h:
