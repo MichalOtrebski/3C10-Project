@@ -20,6 +20,8 @@ typedef enum {
   BTN_A,
 } ButtonId;
 
+#define BTN_COUNT 15
+
 void     Buttons_Init(void);
 void     Buttons_Tick1ms(void);              // call from TIM6/TIM7 ISR
 uint16_t Buttons_State(void);                // debounced held state bitmask

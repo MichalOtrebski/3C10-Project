@@ -6,9 +6,11 @@
  */
 
 
+
+#include "globals.h"
 #include "text.h"
 #include "font.h"
-#include "globals.h"
+
 
 static inline void LCD_FB_PutPixel(int x, int y, uint16_t color)
 {

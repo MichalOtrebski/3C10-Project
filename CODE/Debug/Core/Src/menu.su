@@ -1,1 +1,2 @@
-../Core/Src/menu.c:14:6:LCD_MenuDraw	48	static
+../Core/Src/menu.c:15:6:LCD_MenuDraw	48	static
+../Core/Src/menu.c:57:6:Menu_Update	16	static

@@ -26,11 +26,10 @@
 typedef enum {
     STATE_MENU = 0,
     STATE_TETRIS,
-    STATE_PONG,
-    STATE_SETTINGS
+    STATE_SNAKE,
 } SystemState;
 
-volatile SystemState g_state = STATE_MENU;
+extern volatile SystemState g_state;
 
 extern uint16_t framebuffer[FB_WIDTH * FB_HEIGHT];
 extern uint16_t buf[LCD_WIDTH];

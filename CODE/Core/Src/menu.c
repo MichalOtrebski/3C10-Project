@@ -7,9 +7,10 @@
 
 
 #include "menu.h"
-#include "globals.h"
-#include "display.h"
+#include "main.h"
+
 #include "text.h"
+#include "buttons.h"
 
 void LCD_MenuDraw(void)
 {
@@ -53,10 +54,11 @@ void LCD_MenuDraw(void)
 //    LCD_DrawText(8, FB_HEIGHT - 14, "A=START  B=BACK", RGB565_GRAY, RGB565_BLACK, 1);
 }
 
-void Menu_Update(uint16_t pressed, uitn16_t held) {
+void Menu_Update(uint16_t pressed, uint16_t held) {
 
 	if (pressed & (1 << BTN_DOWN)) {
 		menu_scroll++;
+		printf("yes\n");
 	}
 
 	if (pressed & (1 << BTN_UP)) {
@@ -64,7 +66,7 @@ void Menu_Update(uint16_t pressed, uitn16_t held) {
 	}
 
 	if (pressed & (1 << BTN_A)) {
-		menu_select = 1;
+		menu_selected = 1;
 	}
 
 }

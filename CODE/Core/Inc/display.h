@@ -8,6 +8,7 @@
 #ifndef INC_DISPLAY_H_
 #define INC_DISPLAY_H_
 
+#include "globals.h"
 #include <stdint.h>
 
 void LCD_ClearFrame(void);

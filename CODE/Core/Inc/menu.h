@@ -10,6 +10,9 @@
 
 #include <stdint.h>
 
+#include "globals.h"
+#include "display.h"
+
 typedef struct {
 	const char *title;
 } MenuItem;

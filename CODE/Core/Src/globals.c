@@ -8,5 +8,7 @@
 
 #include "globals.h"
 
+volatile SystemState g_state = STATE_MENU;
+
 uint16_t framebuffer[FB_WIDTH * FB_HEIGHT];
 __attribute__((aligned(4))) uint16_t buf[LCD_WIDTH];

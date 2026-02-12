@@ -6,7 +6,6 @@
  */
 
 #include "display.h"
-#include "globals.h"
 #include "lcd_io.h"
 #include "lcd_os.h"
 #include "lcd_conf.h"

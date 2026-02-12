@@ -8,6 +8,6 @@
 #ifndef INC_LOOP_H_
 #define INC_LOOP_H_
 
-void loop();
+void loop(void);
 
 #endif /* INC_LOOP_H_ */
