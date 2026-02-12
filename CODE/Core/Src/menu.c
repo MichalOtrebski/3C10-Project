@@ -12,8 +12,11 @@
 #include "text.h"
 #include "buttons.h"
 
-void LCD_MenuDraw(void)
-{
+static int clampi(int v, int lo, int hi) {
+    return (v < lo) ? lo : (v > hi) ? hi : v;
+}
+
+void LCD_MenuDraw(void) {
 	LCD_DrawRect(0, 0, FB_WIDTH, FB_HEIGHT, RGB565_BLACK);
 
     // Title
@@ -54,21 +57,47 @@ void LCD_MenuDraw(void)
 //    LCD_DrawText(8, FB_HEIGHT - 14, "A=START  B=BACK", RGB565_GRAY, RGB565_BLACK, 1);
 }
 
-void Menu_Update(uint16_t pressed, uint16_t held) {
+uint8_t Menu_Update(uint16_t pressed, uint16_t held) {
 
-	if (pressed & (1 << BTN_DOWN)) {
-		menu_scroll++;
-		printf("yes\n");
+	(void)held;
+
+	if (pressed & (1u << BTN_DOWN)) {
+		menu_selected++;
 	}
 
-	if (pressed & (1 << BTN_UP)) {
-		menu_scroll--;
+	if (pressed & (1u << BTN_UP)) {
+		menu_selected--;
 	}
 
-	if (pressed & (1 << BTN_A)) {
-		menu_selected = 1;
+	if (menu_selected < 0) {
+		menu_selected = (uint8_t)MENU_COUNT - 1;
 	}
 
+	if (menu_selected >= (uint8_t)MENU_COUNT) {
+		menu_selected = 0;
+	}
+
+	const uint8_t topY;
+	const uint8_t rowH;
+	const int visibleRows = (FB_HEIGHT - topY) / rowH;
+
+	if (menu_selected < menu_scroll) {
+		menu_scroll = menu_selected;
+	}
+
+	if (menu_selected >= menu_scroll + visibleRows) {
+		menu_scroll = menu_selected - visibleRows + 1;
+	}
+
+	const int maxScroll = (int)MENU_COUNT - visibleRows;
+	menu_scroll = clampi(menu_scroll, 0, (maxScroll > 0) ? maxScroll : 0);
+
+	int chosen = -1;
+	if (pressed & (1u << BTN_A))
+		chosen = menu_selected;
+
+	LCD_MenuDraw();
+	return chosen;
 }
 
 

@@ -10,9 +10,14 @@
 #include "display.h"
 #include "globals.h"
 #include "text.h"
+#include <stdbool.h>
+#include "buttons.h"
 
 static inline int GX(int gx){ return FIELD_X + gx*CELL; }
 static inline int GY(int gy){ return FIELD_Y + gy*CELL; }
+
+static bool once = true;
+static uint32_t s_lastTickMs;
 
 static inline int idx_wrap(int i)
 {
@@ -54,8 +59,7 @@ static void Snake_SpawnFood(void)
     }
 }
 
-void Snake_Init(void)
-{
+void Snake_Init(void) {
     alive=1;
     score=0;
     dir=DIR_RIGHT;
@@ -71,6 +75,8 @@ void Snake_Init(void)
     snake[SNAKE_MAX-2]=(Pt){sx-2,sy};
 
     Snake_SpawnFood();
+
+    s_lastTickMs = HAL_GetTick();   // <-- add this
 }
 
 void Snake_SetDir(Dir d)
@@ -160,7 +166,34 @@ void Snake_Draw(void)
         LCD_DrawText(10,70,"GAME OVER",C_TEXT,C_BG,2);
 }
 
+void Snake_Update(uint16_t pressed, uint16_t held) {
+    if (once) {
+        Snake_Init();
+        once = false;
+    }
 
+    if (pressed & (1u << BTN_UP))    Snake_SetDir(DIR_UP);
+    if (pressed & (1u << BTN_DOWN))  Snake_SetDir(DIR_DOWN);
+    if (pressed & (1u << BTN_LEFT))  Snake_SetDir(DIR_LEFT);
+    if (pressed & (1u << BTN_RIGHT)) Snake_SetDir(DIR_RIGHT);
+
+    if (held & (1u << BTN_A)) {
+    	once = true;
+    	g_state = STATE_MENU;
+    	return;
+    }
+
+    uint32_t now = HAL_GetTick();
+
+    // allow catch-up if a frame stalls (important if DMA blocks sometimes)
+    while ((uint32_t)(now - s_lastTickMs) >= 100)
+    {
+        s_lastTickMs += 100;
+        Snake_Tick();
+    }
+
+    Snake_Draw();
+}
 
 
 

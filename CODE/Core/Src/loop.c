@@ -23,72 +23,34 @@ bool once = true;
 uint32_t last = 0;
 uint8_t direction = 0;
 
-void loop() {
-	uint32_t t0 = DWT->CYCCNT;
+void loop(void) {
+    uint32_t now_ms = HAL_GetTick();
 
-	static uint8_t x = 0;
+    LCD_ClearFrame();
 
-	LCD_ClearFrame();
+    Buttons_BeginFrame();
 
-	border(1, 1, 1, 1, 0xf984);
+    uint16_t pressed = Buttons_PressedSnapshot();   // <-- add this function
+	uint16_t held    = Buttons_State();
+	uint16_t held_ev = Buttons_HeldSnapshot();      // optional if you want long-press events
 
-	LCD_DrawRect(x, 80, 5, 5, 0xf800);
+	switch (g_state) {
+	case STATE_MENU: {
 
-	LCD_DrawText(10, 10, "\"HELLO JOSH\"", 0x07E0, 0x0000, 1);
-	LCD_DrawText(10, 20, "- JOHN CAVAN", 0x07E0, 0x0000, 1);
+		int chosen = Menu_Update(pressed, held);
+		if (chosen >= 0) {
+			if (chosen == 0) g_state = STATE_TETRIS;
+			if (chosen == 1) g_state = STATE_SNAKE;
+		}
+	} break;
 
+	case STATE_SNAKE:
+		Snake_Update(pressed, held_ev);
+		break;
 
-	if (direction) {
-		x -= 5;
-	} else {
-		x += 5;
+	default:
+		break;
 	}
 
-	if (x + 5 >= FB_WIDTH - 2) x = 2;
-    uint16_t pressed = Buttons_PressedEvents();
-    uint16_t held    = Buttons_State();
-
-
-
-    if (pressed & (1 << BTN_DOWN)) {
-    		direction = !direction;
-    		printf("yes\n");
-    }
-
-//	switch(g_state) {
-//	case STATE_MENU:
-//		Menu_Update(pressed, held);
-//		break;
-//
-//	case STATE_TETRIS:
-////		Tetris_Update(pressed, held);
-//		break;
-//
-//	case STATE_SNAKE:
-////		Snake_Update(pressed, held);
-//		break;
-//	}
-
-//	LCD_MenuDraw();
-//
-//	if (once) {
-//		Snake_Init();
-//		once = false;
-//	}
-//
-//    if(HAL_GetTick()-last>100) // speed
-//    {
-//        last=HAL_GetTick();
-//        Snake_Tick();
-//    }
-//
-//	Snake_Draw();
-
-
-
-
 	render_dma();
-
-	uint32_t t1 = DWT->CYCCNT;
-//	printf("loop=%.2f ms \r\n", (t1-t0) / (SystemCoreClock/1000.0f));
 }

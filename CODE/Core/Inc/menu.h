@@ -29,6 +29,6 @@ static int menu_scroll = 0;
 
 void LCD_MenuDraw(void);
 
-void Menu_Update(uint16_t pressed, uint16_t held);
+uint8_t Menu_Update(uint16_t pressed, uint16_t held);
 
 #endif /* INC_MENU_H_ */

@@ -30,4 +30,8 @@ uint16_t Buttons_ReleasedEvents(void);       // edge events since last read (cle
 bool     Buttons_IsDown(ButtonId b);
 bool     Buttons_WasPressed(ButtonId b);
 
+uint16_t Buttons_HeldEvents(void);
+uint16_t Buttons_HeldMs(ButtonId b);
+bool Buttons_WasHeld(ButtonId b);
+
 #endif /* INC_BUTTONS_H_ */

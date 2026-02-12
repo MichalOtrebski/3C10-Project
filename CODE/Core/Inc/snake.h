@@ -54,6 +54,7 @@ static int score;
 void Snake_Init(void);
 void Snake_Tick(void);
 void Snake_Draw(void);
+void Snake_Update(uint16_t pressed, uint16_t held);
 
 // HELPERS
 
