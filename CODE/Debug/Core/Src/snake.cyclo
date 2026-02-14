@@ -10,4 +10,4 @@
 ../Core/Src/snake.c:93:6:Snake_Tick	17
 ../Core/Src/snake.c:135:13:Snake_DrawCell	1
 ../Core/Src/snake.c:140:6:Snake_Draw	4
-../Core/Src/snake.c:169:6:Snake_Update	8
+../Core/Src/snake.c:171:6:Snake_Update	8

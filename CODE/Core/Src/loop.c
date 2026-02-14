@@ -52,5 +52,9 @@ void loop(void) {
 		break;
 	}
 
+//	uint16_t time = HAL_GetTick() - now_ms;
+
+//	printf("loop = %u\n", time);
+
 	render_dma();
 }

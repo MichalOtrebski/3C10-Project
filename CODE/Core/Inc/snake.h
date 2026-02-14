@@ -25,15 +25,13 @@
 #define GRID_H FIELD_H / CELL
 
 // colors
-
 #define C_BG     0x0000
 #define C_SNAKE  0x07E0
-#define C_HEAD   0x00FF
+#define C_HEAD   0x47F9
 #define C_FOOD   0xF800
 #define C_TEXT   0xFFFF
 
 // SNAKE
-
 typedef struct { uint8_t x,y; } Pt;
 
 #define SNAKE_MAX (GRID_W*GRID_H)

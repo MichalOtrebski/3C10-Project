@@ -151,6 +151,8 @@ void Snake_Draw(void)
     // border
     border(2, 2, 2, 2, C_TEXT);
 
+    LCD_DrawRect(0, UI_TOP, FB_WIDTH, 2, C_TEXT);
+
     // food
     Snake_DrawCell(food.x,food.y,C_FOOD);
 

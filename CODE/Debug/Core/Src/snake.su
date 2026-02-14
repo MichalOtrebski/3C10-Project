@@ -10,4 +10,4 @@
 ../Core/Src/snake.c:93:6:Snake_Tick	32	static
 ../Core/Src/snake.c:135:13:Snake_DrawCell	40	static
 ../Core/Src/snake.c:140:6:Snake_Draw	40	static
-../Core/Src/snake.c:169:6:Snake_Update	24	static
+../Core/Src/snake.c:171:6:Snake_Update	24	static

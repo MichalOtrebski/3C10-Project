@@ -19,8 +19,10 @@ static int clampi(int v, int lo, int hi) {
 void LCD_MenuDraw(void) {
 	LCD_DrawRect(0, 0, FB_WIDTH, FB_HEIGHT, RGB565_BLACK);
 
+	border(2, 2, 2, 2, 0xF81D);
+
     // Title
-    LCD_DrawText(10, 8, "GAME MENU", RGB565_WHITE, RGB565_BLACK, 2);
+    LCD_DrawText(15, 8, "GAME MAN", 0xF81D, RGB565_BLACK, 2);
 
     const int topY = 40;
     const int rowH = 16;        // pixels in framebuffer
