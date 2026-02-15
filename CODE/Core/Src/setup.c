@@ -5,17 +5,28 @@
  *      Author: Michal P. Otrebski
  */
 
-#include "stm32g4xx_hal.h"
-
-extern TIM_HandleTypeDef htim6;
+#include "tim.h"
+#include "dac.h"
 
 #include "main.h"
 #include "gpio.h"
 #include "setup.h"
+#include "audio.h"
 
 void setup() {
 
 	HAL_TIM_Base_Start_IT(&htim6);
+
+    // 1) Fill audio buffer with an obvious waveform
+    for (int i = 0; i < AUDIO_BUF; i++) {
+        audioBuf[i] = (i & 32) ? 3500 : 500;  // loud square-ish buzz
+    }
+
+	HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1,
+	                  (uint32_t*)audioBuf, AUDIO_BUF,
+	                  DAC_ALIGN_12B_R);
+
+	HAL_TIM_Base_Start(&htim7);
 
 	BSP_LCD_Init(0, LCD_ORIENTATION_PORTRAIT_ROT180);
 	BSP_LCD_DisplayOn(0);
@@ -33,5 +44,4 @@ void setup() {
 
 	BSP_LCD_WaitForTransferToBeDone(0);
 	printf("dma_done status=%u\r\n", BSP_LCD_GetTransferStatus(0));
-
 }

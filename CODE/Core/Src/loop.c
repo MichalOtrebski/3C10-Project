@@ -18,6 +18,7 @@
 #include "snake.h"
 
 #include "buttons.h"
+#include "audio.h"
 
 bool once = true;
 uint32_t last = 0;
