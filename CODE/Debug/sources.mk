@@ -24,8 +24,7 @@ C_DEPS :=
 SUBDIRS := \
 Core/Src \
 Core/Startup \
-DISPLAY/Target \
-Drivers/BSP/Components/ili9341 \
 Drivers/BSP/STM32G4xx_Nucleo \
 Drivers/STM32G4xx_HAL_Driver/Src \
+Drivers/csrc \
 

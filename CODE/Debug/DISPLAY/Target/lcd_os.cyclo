@@ -1,7 +1,0 @@
-../DISPLAY/Target/lcd_os.c:112:9:LCD_OS_Initialize	2
-../DISPLAY/Target/lcd_os.c:127:9:LCD_OS_Lock	2
-../DISPLAY/Target/lcd_os.c:139:9:LCD_OS_Unlock	3
-../DISPLAY/Target/lcd_os.c:156:9:LCD_OS_UnlockFromISR	1
-../DISPLAY/Target/lcd_os.c:169:9:LCD_OS_TryLock	5
-../DISPLAY/Target/lcd_os.c:192:9:LCD_OS_IsLocked	1
-../DISPLAY/Target/lcd_os.c:202:9:LCD_OS_WaitForTransferToBeDone	2
