@@ -31,9 +31,9 @@ void loop(void) {
 
     Buttons_BeginFrame();
 
-    uint16_t pressed = Buttons_PressedSnapshot();   // <-- add this function
+    uint16_t pressed = Buttons_PressedSnapshot();
 	uint16_t held    = Buttons_State();
-	uint16_t held_ev = Buttons_HeldSnapshot();      // optional if you want long-press events
+	uint16_t held_ev = Buttons_HeldSnapshot();
 
 	switch (g_state) {
 	case STATE_MENU: {
@@ -52,10 +52,6 @@ void loop(void) {
 	default:
 		break;
 	}
-
-//	uint16_t time = HAL_GetTick() - now_ms;
-
-//	printf("loop = %u\n", time);
 
 	render_dma();
 }

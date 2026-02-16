@@ -17,16 +17,18 @@ void setup() {
 
 	HAL_TIM_Base_Start_IT(&htim6);
 
-    // 1) Fill audio buffer with an obvious waveform
-    for (int i = 0; i < AUDIO_BUF; i++) {
-        audioBuf[i] = (i & 32) ? 3500 : 500;  // loud square-ish buzz
-    }
+	PSG_Init();
 
-	HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1,
-	                  (uint32_t*)audioBuf, AUDIO_BUF,
-	                  DAC_ALIGN_12B_R);
+	// Example: 2-square “GB-ish” chord
+	PSG_SetVoiceWave(0, 0); PSG_SetVoiceFreq(0, 440.0f); PSG_SetVoiceVol(0, 1200);
+	PSG_SetVoiceWave(1, 0); PSG_SetVoiceFreq(1, 660.0f); PSG_SetVoiceVol(1, 800);
+	PSG_SetVoiceWave(2, 1); PSG_SetVoiceFreq(2, 220.0f); PSG_SetVoiceVol(2, 600);
 
-	HAL_TIM_Base_Start(&htim7);
+	// Pre-fill buffer once so DMA doesn't start with garbage
+	PSG_Fill(&audioBuf[0], AUDIO_BUF);
+
+	HAL_TIM_Base_Start(&htim6); // TIM6 set to TRGO @ SR (update event)
+	HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, (uint32_t*)audioBuf, AUDIO_BUF, DAC_ALIGN_12B_R);
 
 	BSP_LCD_Init(0, LCD_ORIENTATION_PORTRAIT_ROT180);
 	BSP_LCD_DisplayOn(0);

@@ -8,15 +8,22 @@
 #ifndef INC_AUDIO_H_
 #define INC_AUDIO_H_
 
-#define AUDIO_BUF 512
+#define AUDIO_BUF 1024u
 
 #include "stdint.h"
 #include "dac.h"
 #include "gpio.h"
+#include <stdint.h>
 
-uint16_t audioBuf[AUDIO_BUF];
+#define SR 48000u
 
-void HAL_DAC_ConvHalfCpltCallbackCh1(DAC_HandleTypeDef *hdac);
-void HAL_DAC_ConvCpltCallbackCh1(DAC_HandleTypeDef *hdac);
+extern uint16_t audioBuf[AUDIO_BUF];
+
+void PSG_Init(void);
+void PSG_SetVoiceFreq(uint8_t voice, float hz);
+void PSG_SetVoiceVol(uint8_t voice, uint16_t vol);
+void PSG_SetVoiceWave(uint8_t voice, uint8_t wave);
+
+void PSG_Fill(uint16_t *dst, uint32_t n);
 
 #endif /* INC_AUDIO_H_ */

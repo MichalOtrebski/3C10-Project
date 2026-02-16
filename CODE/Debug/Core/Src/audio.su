@@ -1,2 +1,7 @@
-../Core/Src/audio.c:10:6:HAL_DAC_ConvHalfCpltCallbackCh1	16	static
-../Core/Src/audio.c:15:6:HAL_DAC_ConvCpltCallbackCh1	16	static
+../Core/Src/audio.c:23:24:hz_to_inc	24	static
+../Core/Src/audio.c:32:6:PSG_Init	16	static
+../Core/Src/audio.c:41:6:PSG_SetVoiceFreq	24	static
+../Core/Src/audio.c:46:6:PSG_SetVoiceVol	16	static
+../Core/Src/audio.c:52:6:PSG_SetVoiceWave	16	static
+../Core/Src/audio.c:57:23:osc_sample	32	static
+../Core/Src/audio.c:84:6:PSG_Fill	24	static
