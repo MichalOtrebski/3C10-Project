@@ -1,0 +1,13 @@
+../Core/Src/snake.c:16:19:GX	16	static
+../Core/Src/snake.c:17:19:GY	16	static
+../Core/Src/snake.c:22:19:idx_wrap	16	static
+../Core/Src/snake.c:29:18:snake_head	16	static
+../Core/Src/snake.c:31:18:snake_tail	16	static
+../Core/Src/snake.c:37:12:snake_contains	24	static
+../Core/Src/snake.c:47:13:Snake_SpawnFood	16	static
+../Core/Src/snake.c:62:6:Snake_Init	32	static
+../Core/Src/snake.c:82:6:Snake_SetDir	16	static
+../Core/Src/snake.c:93:6:Snake_Tick	32	static
+../Core/Src/snake.c:135:13:Snake_DrawCell	40	static
+../Core/Src/snake.c:140:6:Snake_Draw	40	static
+../Core/Src/snake.c:171:6:Snake_Update	24	static

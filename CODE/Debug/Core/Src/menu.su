@@ -1,0 +1,3 @@
+../Core/Src/menu.c:15:12:clampi	24	static
+../Core/Src/menu.c:19:6:LCD_MenuDraw	48	static
+../Core/Src/menu.c:62:9:Menu_Update	32	static

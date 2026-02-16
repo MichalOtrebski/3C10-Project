@@ -1,0 +1,7 @@
+../Core/Src/audio.c:23:24:hz_to_inc	3
+../Core/Src/audio.c:32:6:PSG_Init	2
+../Core/Src/audio.c:41:6:PSG_SetVoiceFreq	2
+../Core/Src/audio.c:46:6:PSG_SetVoiceVol	3
+../Core/Src/audio.c:52:6:PSG_SetVoiceWave	2
+../Core/Src/audio.c:57:23:osc_sample	5
+../Core/Src/audio.c:84:6:PSG_Fill	4

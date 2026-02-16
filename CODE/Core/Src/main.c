@@ -18,7 +18,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "spi.h"
+#include "dac.h"
+#include "dma.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -78,7 +80,9 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; // enable DWT
+  DWT->CYCCNT = 0;
+  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -90,7 +94,10 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_SPI2_Init();
+  MX_DMA_Init();
+  MX_TIM6_Init();
+  MX_DAC1_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
