@@ -96,9 +96,10 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_TIM6_Init();
-  MX_DAC1_Init();
-  MX_TIM7_Init();
+  MX_DAC2_Init();
+  MX_TIM15_Init();
   /* USER CODE BEGIN 2 */
+
 
   /* USER CODE END 2 */
 
@@ -119,7 +120,17 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+
+
+
   setup();
+
+	printf("TIM7 CR1=0x%08lx CR2=0x%08lx PSC=%lu ARR=%lu CNT=%lu\n",
+	       (unsigned long)TIM7->CR1, (unsigned long)TIM7->CR2,
+	       (unsigned long)TIM7->PSC, (unsigned long)TIM7->ARR, (unsigned long)TIM7->CNT);
+
+	printf("DAC2 CR=0x%08lx MCR=0x%08lx SR=0x%08lx\n",
+	       (unsigned long)DAC2->CR, (unsigned long)DAC2->MCR, (unsigned long)DAC2->SR);
 
   while (1)
   {

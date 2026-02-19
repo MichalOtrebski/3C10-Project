@@ -38,9 +38,9 @@ Core/Src/setup.o: ../Core/Src/setup.c ../Core/Inc/tim.h \
  ../Core/Inc/stm32g4xx_nucleo_bus.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h \
- ../Core/Inc/dac.h ../Core/Inc/main.h ../Core/Inc/gpio.h \
- ../Core/Inc/setup.h ../Core/Inc/audio.h ../Core/Inc/dac.h \
- ../Core/Inc/gpio.h
+ ../Core/Inc/dac.h ../Core/Inc/dma.h ../Core/Inc/main.h \
+ ../Core/Inc/gpio.h ../Core/Inc/setup.h ../Core/Inc/audio.h \
+ ../Core/Inc/dac.h ../Core/Inc/gpio.h
 ../Core/Inc/tim.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
@@ -86,6 +86,7 @@ Core/Src/setup.o: ../Core/Src/setup.c ../Core/Inc/tim.h \
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h:
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h:
 ../Core/Inc/dac.h:
+../Core/Inc/dma.h:
 ../Core/Inc/main.h:
 ../Core/Inc/gpio.h:
 ../Core/Inc/setup.h:

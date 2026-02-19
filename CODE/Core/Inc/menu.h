@@ -22,6 +22,8 @@ static const MenuItem menuItems[] = {
 	{"SNAKE"},
 };
 
+
+
 #define MENU_COUNT (sizeof(menuItems) / sizeof(menuItems[0]))
 
 static uint8_t menu_selected = 0;

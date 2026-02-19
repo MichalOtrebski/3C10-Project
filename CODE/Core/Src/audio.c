@@ -20,6 +20,23 @@ typedef struct {
 static Voice v[3];
 static uint16_t lfsr = 0xACE1u; // noise
 
+void HAL_DAC_ConvHalfCpltCallbackCh1(DAC_HandleTypeDef *hdac)
+{
+
+    if (hdac->Instance != DAC2) return;
+    PSG_Fill(&audioBuf[0], AUDIO_BUF/2);
+
+	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);
+}
+
+void HAL_DAC_ConvCpltCallbackCh1(DAC_HandleTypeDef *hdac)
+{
+    if (hdac->Instance != DAC2) return;
+    PSG_Fill(&audioBuf[AUDIO_BUF/2], AUDIO_BUF/2);
+
+	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);
+}
+
 static inline uint32_t hz_to_inc(float hz) {
     // inc = hz * 2^32 / SR
     // use double to reduce error, computed once per note change

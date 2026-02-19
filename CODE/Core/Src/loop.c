@@ -54,4 +54,11 @@ void loop(void) {
 	}
 
 	render_dma();
+//	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);
+
+		printf("DMA cnt = %lu\r\n",
+			   (unsigned long)__HAL_DMA_GET_COUNTER(hdac2.DMA_Handle1)); // or hdac1
+	HAL_Delay(1000);
+	printf("TIM15 CR2=0x%08lx\n", (unsigned long)TIM15->CR2);
+	HAL_Delay(500);
 }

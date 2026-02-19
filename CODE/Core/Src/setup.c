@@ -7,11 +7,14 @@
 
 #include "tim.h"
 #include "dac.h"
+#include "dma.h"
 
 #include "main.h"
 #include "gpio.h"
 #include "setup.h"
 #include "audio.h"
+
+DMA_HandleTypeDef hdma_dac2_ch1;
 
 void setup() {
 
@@ -19,16 +22,52 @@ void setup() {
 
 	PSG_Init();
 
-	// Example: 2-square “GB-ish” chord
-	PSG_SetVoiceWave(0, 0); PSG_SetVoiceFreq(0, 440.0f); PSG_SetVoiceVol(0, 1200);
-	PSG_SetVoiceWave(1, 0); PSG_SetVoiceFreq(1, 660.0f); PSG_SetVoiceVol(1, 800);
-	PSG_SetVoiceWave(2, 1); PSG_SetVoiceFreq(2, 220.0f); PSG_SetVoiceVol(2, 600);
+	PSG_SetVoiceWave(0, 0);      // square
+	PSG_SetVoiceFreq(0, 50.0f);  // 50 Hz so you see edges easily
+	PSG_SetVoiceVol(0, 4095);
 
-	// Pre-fill buffer once so DMA doesn't start with garbage
+	PSG_SetVoiceVol(1, 0);
+	PSG_SetVoiceVol(2, 0);
+
+	// Example: 2-square “GB-ish” chord
+	PSG_SetVoiceWave(0, 0);      // square
+	PSG_SetVoiceFreq(0, 50.0f);  // 50 Hz so you see edges easily
+	PSG_SetVoiceVol(0, 4095);
+
+	PSG_SetVoiceVol(1, 0);
+	PSG_SetVoiceVol(2, 0);
+
 	PSG_Fill(&audioBuf[0], AUDIO_BUF);
 
-	HAL_TIM_Base_Start(&htim6); // TIM6 set to TRGO @ SR (update event)
-	HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, (uint32_t*)audioBuf, AUDIO_BUF, DAC_ALIGN_12B_R);
+//	HAL_TIM_Base_Start(&htim7);
+	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10); // just once
+
+//	HAL_DAC_Start(&hdac2, DAC_CHANNEL_1);
+//	HAL_DAC_SetValue(&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 1048);
+
+//	HAL_DAC_Start_DMA(&hdac2, DAC_CHANNEL_1, (uint32_t*)audioBuf, AUDIO_BUF, DAC_ALIGN_12B_R);
+
+//	for (int i = 0; i < 1024; i++) {
+//	    audioBuf[i] = (i * 4095) / 1023;   // ramp
+//	}
+
+
+	__attribute__((aligned(4))) static uint16_t buf[1024] = { 1024 };
+
+	HAL_TIM_Base_Start(&htim15);
+
+	HAL_StatusTypeDef st = HAL_DAC_Start_DMA(&hdac2, DAC_CHANNEL_1,
+	                                        (uint32_t*)buf, 1024,
+	                                        DAC_ALIGN_12B_R);
+//	printf("StartDMA st=%d DACerr=0x%lx\r\n", (int)st, (unsigned long)hdac2.ErrorCode);
+
+	printf("CCR=0x%lx CNDTR=%lu\r\n",
+	       (unsigned long)DMA2_Channel1->CCR,
+	       (unsigned long)DMA2_Channel1->CNDTR);
+
+
+
+
 
 	BSP_LCD_Init(0, LCD_ORIENTATION_PORTRAIT_ROT180);
 	BSP_LCD_DisplayOn(0);
