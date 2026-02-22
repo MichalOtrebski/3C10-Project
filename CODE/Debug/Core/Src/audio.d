@@ -39,7 +39,7 @@ Core/Src/audio.o: ../Core/Src/audio.c ../Core/Inc/audio.h \
  ../Core/Inc/stm32g4xx_nucleo_bus.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h \
- ../Core/Inc/gpio.h ../Core/Inc/dac.h
+ ../Core/Inc/gpio.h ../Core/Inc/dac.h ../Core/Inc/tetris_audio.h
 ../Core/Inc/audio.h:
 ../Core/Inc/dac.h:
 ../Core/Inc/main.h:
@@ -87,3 +87,4 @@ Core/Src/audio.o: ../Core/Src/audio.c ../Core/Inc/audio.h \
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h:
 ../Core/Inc/gpio.h:
 ../Core/Inc/dac.h:
+../Core/Inc/tetris_audio.h:

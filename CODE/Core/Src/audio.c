@@ -7,6 +7,7 @@
 
 #include "audio.h"
 #include "dac.h"
+#include "tetris_audio.h"
 
 uint32_t audioBuf[AUDIO_BUF];
 
@@ -24,7 +25,7 @@ void HAL_DAC_ConvHalfCpltCallbackCh1(DAC_HandleTypeDef *hdac)
 {
 
     if (hdac->Instance != DAC2) return;
-    PSG_Fill(&audioBuf[0], AUDIO_BUF/2);
+    TetrisAudio_Fill(&audioBuf[0], AUDIO_BUF/2);
 
 //	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);
 }
@@ -32,7 +33,7 @@ void HAL_DAC_ConvHalfCpltCallbackCh1(DAC_HandleTypeDef *hdac)
 void HAL_DAC_ConvCpltCallbackCh1(DAC_HandleTypeDef *hdac)
 {
     if (hdac->Instance != DAC2) return;
-    PSG_Fill(&audioBuf[AUDIO_BUF/2], AUDIO_BUF/2);
+    TetrisAudio_Fill(&audioBuf[AUDIO_BUF/2], AUDIO_BUF/2);
 
 //	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);
 }
@@ -72,6 +73,7 @@ void PSG_SetVoiceWave(uint8_t voice, uint8_t wave) {
 }
 
 static inline int32_t osc_sample(Voice *o) {
+
     o->phase += o->inc;
     uint32_t p = o->phase;
 
@@ -118,6 +120,7 @@ void PSG_Fill(uint32_t *dst, uint32_t n) {
         if (mix < -2047) mix = -2047;
 
         // signed -> unsigned 12-bit
-        dst[i] = (uint16_t)(mix + 2048); // 0..4095
+        uint32_t s = (uint16_t)(mix + 2048);   // 0..4095
+        dst[i] = (s & 0x0FFFu) | ((s & 0x0FFFu) << 16);
     }
 }

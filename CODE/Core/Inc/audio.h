@@ -8,7 +8,7 @@
 #ifndef INC_AUDIO_H_
 #define INC_AUDIO_H_
 
-#define AUDIO_BUF 1024u
+#define AUDIO_BUF 512u
 
 #include "stdint.h"
 #include "dac.h"

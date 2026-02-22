@@ -1,6 +1,6 @@
-Core/Src/tetris_audio.o: ../Core/Src/tetris_audio.c ../Core/Inc/audio.h \
- ../Core/Inc/dac.h ../Core/Inc/main.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
+Core/Src/tetris_audio.o: ../Core/Src/tetris_audio.c \
+ ../Core/Inc/tetris_audio.h ../Core/Inc/audio.h ../Core/Inc/dac.h \
+ ../Core/Inc/main.h ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h \
@@ -39,8 +39,8 @@ Core/Src/tetris_audio.o: ../Core/Src/tetris_audio.c ../Core/Inc/audio.h \
  ../Core/Inc/stm32g4xx_nucleo_bus.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h \
- ../Core/Inc/gpio.h ../Core/Inc/setup.h ../Core/Inc/dac.h \
- ../Core/Inc/tim.h
+ ../Core/Inc/gpio.h
+../Core/Inc/tetris_audio.h:
 ../Core/Inc/audio.h:
 ../Core/Inc/dac.h:
 ../Core/Inc/main.h:
@@ -87,6 +87,3 @@ Core/Src/tetris_audio.o: ../Core/Src/tetris_audio.c ../Core/Inc/audio.h \
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h:
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h:
 ../Core/Inc/gpio.h:
-../Core/Inc/setup.h:
-../Core/Inc/dac.h:
-../Core/Inc/tim.h:

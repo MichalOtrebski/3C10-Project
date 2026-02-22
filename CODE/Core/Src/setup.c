@@ -22,30 +22,17 @@ void setup() {
 
 	PSG_Init();
 
-	PSG_SetVoiceWave(0, 0);      // square
-	PSG_SetVoiceFreq(0, 25.0f);  // 50 Hz so you see edges easily
-	PSG_SetVoiceVol(0, 0);
+	TetrisAudio_Init(SR);
 
-	PSG_SetVoiceWave(1, 0);
-	PSG_SetVoiceFreq(1, 25.0f);
-	PSG_SetVoiceVol(1, 1024);
-
-	PSG_SetVoiceVol(2, 0);
-
+//	PSG_SetVoiceWave(0, 0);       // square
+//	PSG_SetVoiceFreq(0, 100.0f);  // 100 Hz (easy on scope)
+//	PSG_SetVoiceVol(0, 400);     // strong but not clipping
+//
+//	/* disable all other voices */
 //	PSG_SetVoiceVol(1, 0);
 //	PSG_SetVoiceVol(2, 0);
+//	PSG_SetVoiceVol(3, 0);
 
-//	 Example: 2-square “GB-ish” chord
-//	PSG_SetVoiceWave(0, 0);      // square
-//	PSG_SetVoiceFreq(0, 50.0f);  // 50 Hz so you see edges easily
-//	PSG_SetVoiceVol(0, 4095);
-
-
-
-
-
-
-	PSG_Fill(&audioBuf[0], AUDIO_BUF);
 
 //	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10); // just once
 

@@ -12,9 +12,6 @@
 #include "tetris_audio.h"
 
 #include "audio.h"
-#include "setup.h"
-#include "dac.h"
-#include "tim.h"
 
 #ifndef TA_NUM_CH
 #define TA_NUM_CH 4
@@ -47,48 +44,65 @@ typedef struct {
     uint8_t len16;    // duration in 1/16th notes
 } TA_Event;
 
-// Simplified “Korobeiniki” melody (Tetris A theme) in 1/16ths
-// Key: E minor-ish; you can transpose if you like.
 static const TA_Event g_melody[] = {
-    // Phrase A
-    { 76,2 }, { 71,2 }, { 72,2 }, { 74,2 }, { 72,2 }, { 71,2 }, { 69,4 }, { -1,2 }, { 69,2 },
-    { 72,2 }, { 76,2 }, { 74,2 }, { 72,2 }, { 71,4 }, { -1,2 }, { 71,2 },
-    { 72,2 }, { 74,2 }, { 76,2 }, { 72,2 }, { 69,2 }, { 69,4 }, { -1,2 }, { -1,2 },
-
-    // Phrase B
-    { 74,2 }, { 77,2 }, { 81,2 }, { 79,2 }, { 77,2 }, { 76,2 }, { 72,4 }, { -1,2 }, { 72,2 },
-    { 76,2 }, { 74,2 }, { 72,2 }, { 71,4 }, { -1,2 }, { 71,2 },
-    { 72,2 }, { 74,2 }, { 76,2 }, { 72,2 }, { 69,2 }, { 69,4 }, { -1,2 }, { -1,2 },
+	    { 76, 4 }, { 71, 2 }, { 72, 2 }, { 74, 4 }, { 72, 2 }, { 71, 2 }, { 69, 6 }, { 72, 2 },
+	    { 76, 4 }, { 74, 2 }, { 72, 2 }, { 71, 4 }, { -1, 2 }, { 72, 2 }, { 74, 4 }, { 76, 4 },
+	    { 72, 4 }, { 69, 8 }, { -1, 6 }, { 74, 4 }, { 77, 2 }, { 81, 4 }, { 79, 2 }, { 77, 2 },
+	    { 76, 6 }, { 72, 2 }, { 76, 4 }, { 74, 2 }, { 72, 2 }, { 71, 6 }, { 72, 2 }, { 74, 4 },
+	    { 76, 4 }, { 72, 4 }, { 69, 8 }, { -1, 4 }, { 76, 4 }, { 71, 2 }, { 72, 2 }, { 74, 4 },
+	    { 72, 2 }, { 71, 2 }, { 69, 6 }, { 72, 2 }, { 76, 4 }, { 74, 2 }, { 72, 2 }, { 71, 4 },
+	    { -1, 2 }, { 72, 2 }, { 74, 4 }, { 76, 4 }, { 72, 4 }, { 69, 8 }, { -1, 6 }, { 74, 4 },
+	    { 77, 2 }, { 81, 4 }, { 79, 2 }, { 77, 2 }, { 76, 6 }, { 72, 2 }, { 76, 4 }, { 74, 2 },
+	    { 72, 2 }, { 71, 6 }, { 72, 2 }, { 74, 4 }, { 76, 4 }, { 72, 4 }, { 69, 8 },
 };
-
 static const size_t g_melody_len = sizeof(g_melody) / sizeof(g_melody[0]);
 
-// Harmony (simple thirds / supporting notes) — intentionally sparse
 static const TA_Event g_harmony[] = {
-    { 64,4 }, { -1,4 }, { 64,4 }, { -1,4 },
-    { 66,4 }, { -1,4 }, { 67,4 }, { -1,4 },
-
-    { 69,4 }, { -1,4 }, { 69,4 }, { -1,4 },
-    { 67,4 }, { -1,4 }, { 66,4 }, { -1,4 },
+    { 71, 4 }, { 68, 2 }, { 69, 2 }, { 71, 2 }, { 76, 1 }, { 74, 1 }, { 69, 2 }, { 68, 2 },
+    { 64, 2 }, { -1, 4 }, { 69, 2 }, { 72, 4 }, { 71, 2 }, { 69, 2 }, { 68, 2 }, { 64, 1 },
+    { -1, 1 }, { 68, 2 }, { 69, 2 }, { 71, 4 }, { 72, 4 }, { 69, 4 }, { 64, 8 }, { -1, 4 },
+    { 50, 2 }, { 65, 4 }, { 69, 2 }, { 72, 4 }, { 71, 2 }, { 69, 2 }, { 67, 6 }, { 64, 2 },
+    { 67, 2 }, { 69, 1 }, { 67, 1 }, { 65, 2 }, { 64, 2 }, { 68, 2 }, { 64, 2 }, { 68, 2 },
+    { 69, 2 }, { 71, 2 }, { 68, 2 }, { 72, 2 }, { 68, 2 }, { 69, 1 }, { 72, 1 }, { 64, 10 },
+    { -1, 4 }, { 71, 4 }, { 68, 2 }, { 69, 2 }, { 71, 2 }, { 76, 1 }, { 74, 1 }, { 69, 2 },
+    { 68, 2 }, { 64, 2 }, { -1, 4 }, { 69, 2 }, { 72, 4 }, { 71, 2 }, { 69, 2 }, { 68, 2 },
+    { 64, 1 }, { -1, 1 }, { 68, 2 }, { 69, 2 }, { 71, 4 }, { 72, 4 }, { 69, 4 }, { 64, 8 },
+    { -1, 4 }, { 50, 2 }, { 65, 4 }, { 69, 2 }, { 72, 4 }, { 71, 2 }, { 69, 2 }, { 67, 6 },
+    { 64, 2 }, { 67, 2 }, { 69, 1 }, { 67, 1 }, { 65, 2 }, { 64, 2 }, { 68, 2 }, { 64, 2 },
+    { 68, 2 }, { 69, 2 }, { 71, 2 }, { 68, 2 }, { 72, 2 }, { 68, 2 }, { 69, 1 }, { 72, 1 },
+    { 64, 10 },
 };
-
 static const size_t g_harmony_len = sizeof(g_harmony) / sizeof(g_harmony[0]);
 
-// Bassline (roots)
 static const TA_Event g_bass[] = {
-    { 40,4 }, { 40,4 }, { 43,4 }, { 43,4 },
-    { 45,4 }, { 45,4 }, { 43,4 }, { 43,4 },
-
-    { 40,4 }, { 40,4 }, { 43,4 }, { 43,4 },
-    { 45,4 }, { 45,4 }, { 43,4 }, { 43,4 },
+    { 52, 2 }, { 64, 2 }, { 52, 2 }, { 64, 2 }, { 52, 2 }, { 64, 2 }, { 52, 2 }, { 64, 2 },
+    { 57, 2 }, { 69, 2 }, { 57, 2 }, { 69, 2 }, { 57, 2 }, { 69, 2 }, { 57, 2 }, { 69, 2 },
+    { 56, 2 }, { 68, 2 }, { 56, 2 }, { 68, 2 }, { 52, 2 }, { 64, 2 }, { 52, 2 }, { 64, 2 },
+    { 57, 2 }, { 69, 2 }, { 57, 2 }, { 69, 2 }, { 57, 2 }, { 69, 2 }, { 59, 2 }, { 60, 2 },
+    { 62, 2 }, { 50, 2 }, { -1, 2 }, { 50, 2 }, { -1, 2 }, { 50, 2 }, { 57, 2 }, { 53, 2 },
+    { 48, 2 }, { 60, 2 }, { -1, 2 }, { 60, 2 }, { -1, 2 }, { 55, 6 }, { 59, 2 }, { 71, 2 },
+    { -1, 2 }, { 71, 2 }, { -1, 2 }, { 64, 2 }, { -1, 2 }, { 68, 2 }, { 45, 2 }, { 57, 2 },
+    { 45, 2 }, { 57, 2 }, { 45, 6 }, { -1, 2 }, { 52, 2 }, { 64, 2 }, { 52, 2 }, { 64, 2 },
+    { 52, 2 }, { 64, 2 }, { 52, 2 }, { 64, 2 }, { 57, 2 }, { 69, 2 }, { 57, 2 }, { 69, 2 },
+    { 57, 2 }, { 69, 2 }, { 57, 2 }, { 69, 2 }, { 56, 2 }, { 68, 2 }, { 56, 2 }, { 68, 2 },
+    { 52, 2 }, { 64, 2 }, { 52, 2 }, { 64, 2 }, { 57, 2 }, { 69, 2 }, { 57, 2 }, { 69, 2 },
+    { 57, 2 }, { 69, 2 }, { 59, 2 }, { 60, 2 }, { 62, 2 }, { 50, 2 }, { -1, 2 }, { 50, 2 },
+    { -1, 2 }, { 50, 2 }, { 57, 2 }, { 53, 2 }, { 48, 2 }, { 60, 2 }, { -1, 2 }, { 60, 2 },
+    { -1, 2 }, { 55, 6 }, { 59, 2 }, { 71, 2 }, { -1, 2 }, { 71, 2 }, { -1, 2 }, { 64, 2 },
+    { -1, 2 }, { 68, 2 }, { 45, 2 }, { 57, 2 }, { 45, 2 }, { 57, 2 }, { 45, 6 }, { -1, 2 },
+    { 69, 2 }, { 76, 2 }, { 69, 2 }, { 76, 2 }, { 69, 2 }, { 76, 2 }, { 69, 2 }, { 76, 2 },
+    { 68, 2 }, { 76, 2 }, { 68, 2 }, { 76, 2 }, { 68, 2 }, { 76, 2 }, { 68, 2 }, { 76, 2 },
+    { 69, 2 }, { 76, 2 }, { 69, 2 }, { 76, 2 }, { 69, 2 }, { 76, 2 }, { 69, 2 }, { 76, 2 },
+    { 68, 2 }, { 76, 2 }, { 68, 2 }, { 76, 2 }, { 68, 2 }, { -1, 6 }, { 69, 2 }, { 76, 2 },
+    { 69, 2 }, { 76, 2 }, { 69, 2 }, { 76, 2 }, { 69, 2 }, { 76, 2 }, { 68, 2 }, { 76, 2 },
+    { 68, 2 }, { 76, 2 }, { 68, 2 }, { 76, 2 }, { 68, 2 }, { 76, 2 }, { 69, 2 }, { 76, 2 },
+    { 69, 2 }, { 76, 2 }, { 69, 2 }, { 76, 2 }, { 69, 2 }, { 76, 2 }, { 68, 2 }, { 76, 2 },
+    { 68, 2 }, { 76, 2 }, { 68, 2 },
 };
 static const size_t g_bass_len = sizeof(g_bass) / sizeof(g_bass[0]);
 
-// “Hats” / ticks on noise channel: note field ignored (use -1 as rest), len16 sets rhythm
-// Pattern: 1/16 on, 1/16 off repeating-ish
 static const TA_Event g_noise[] = {
-    {  0,1 }, { -1,1 }, {  0,1 }, { -1,1 }, {  0,1 }, { -1,1 }, {  0,1 }, { -1,1 },
-    {  0,1 }, { -1,1 }, {  0,1 }, { -1,1 }, {  0,1 }, { -1,1 }, {  0,1 }, { -1,1 },
+    { -1, 382 },
 };
 static const size_t g_noise_len = sizeof(g_noise) / sizeof(g_noise[0]);
 
@@ -102,18 +116,18 @@ typedef struct {
 
 static TA_Track tr_mel, tr_har, tr_bas, tr_noi;
 
-static uint32_t g_sr = 22000;
-static uint32_t g_bpm = 140; // Tetris theme often ~140-150 BPM; tweak to taste
+static uint32_t g_sr = 48000;
+static uint32_t g_bpm = 300;
 
 // We advance at 1/16th notes.
 static uint32_t g_samples_per_tick = 0;
 static uint32_t g_tick_sample_acc  = 0;
 
 // Volumes per channel (0..4095)
-static uint16_t g_vol_mel = 2600;
-static uint16_t g_vol_har = 1600;
-static uint16_t g_vol_bas = 2200;
-static uint16_t g_vol_noi = 900;
+static uint16_t g_vol_mel = 2400;
+static uint16_t g_vol_har = 1200;
+static uint16_t g_vol_bas = 2600;
+static uint16_t g_vol_noi = 700;
 
 // Forward
 static void TA_AdvanceTracks_IfNeeded(uint32_t ticks_to_advance);
@@ -177,9 +191,6 @@ void TetrisAudio_Fill(uint32_t* dst, size_t n_samples)
 {
     if (!dst || n_samples == 0) return;
 
-    // small temp buffer for PSG's native 16-bit sample format
-    static __attribute__((aligned(4))) uint16_t tmp16[256];
-
     size_t remaining = n_samples;
     while (remaining > 0)
     {
@@ -188,20 +199,10 @@ void TetrisAudio_Fill(uint32_t* dst, size_t n_samples)
 
         uint32_t chunk = (remaining < to_tick) ? (uint32_t)remaining : to_tick;
 
-        // render in smaller blocks to tmp16 then widen to dst
-        size_t todo = chunk;
-        while (todo)
-        {
-            size_t m = (todo > (sizeof(tmp16)/sizeof(tmp16[0]))) ? (sizeof(tmp16)/sizeof(tmp16[0])) : todo;
+        // Generate chunk with current notes (PSG writes uint32_t samples)
+        PSG_Fill(dst, chunk);
 
-            PSG_Fill(tmp16, m);                 // PSG generates 0..4095 in uint16_t
-            for (size_t i = 0; i < m; i++)
-                dst[i] = (uint32_t)tmp16[i];    // store in low bits of uint32_t
-
-            dst += m;
-            todo -= m;
-        }
-
+        dst += chunk;
         remaining -= chunk;
 
         g_tick_sample_acc += chunk;
@@ -252,20 +253,24 @@ static void TA_AdvanceTracks_IfNeeded(uint32_t ticks_to_advance)
 
 static void TA_ApplyEventToChannel(uint8_t ch, const TA_Event* ev, uint16_t vol, int is_noise)
 {
-    if (is_noise)
-    {
-        // For noise channel, we treat ev->note as “on/off”.
-        if (ev->note < 0)
-        {
-            PSG_SetVoiceVol(ch, 0);
-        }
-        else
-        {
-            // You can also “tune” noise by setting a dummy freq if your noise uses it.
-            PSG_SetVoiceVol(ch, vol);
-        }
-        return;
-    }
+	if (is_noise)
+	{
+	    // Use ev->note as an "accent" selector:
+	    //  -1 = rest
+	    //   0 = normal hat
+	    //   1 = accent (louder)
+	    //   2 = strong accent (snare-ish)
+	    if (ev->note < 0) {
+	        PSG_SetVoiceVol(ch, 0);
+	    } else {
+	        uint16_t v = vol;
+	        if (ev->note == 1) v = (uint16_t)((uint32_t)vol * 3 / 2);  // 1.5x
+	        if (ev->note >= 2) v = (uint16_t)((uint32_t)vol * 2);      // 2x
+	        if (v > 4095) v = 4095;
+	        PSG_SetVoiceVol(ch, v);
+	    }
+	    return;
+	}
 
     if (ev->note < 0)
     {
