@@ -349,6 +349,10 @@
           <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Device/ST/STM32G4xx/Include</state>
           <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Include</state>
           <state>$PROJ_DIR$/../../../../../../Drivers/BSP/STM32G4xx_Nucleo</state>
+          <state>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Inc</state>
+          <state>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Inc/Legacy</state>
+          <state>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/CMSIS/Device/ST/STM32G4xx/Include</state>
+          <state>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/CMSIS/Include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1062,69 +1066,69 @@
       </group>
     </group>
     <group>
-      <name>STM32G4xx_HAL_Driver</name>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dac.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dac_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$/../../../../../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.c</name>
-      </file>
-    </group>
-    <group>
       <name>CMSIS</name>
       <file>
         <name>$PROJ_DIR$/../Src/system_stm32g4xx.c</name>
+      </file>
+    </group>
+    <group>
+      <name>STM32G4xx_HAL_Driver</name>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dac.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dac_ex.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c</name>
+      </file>
+      <file>
+        <name>C:/Users/motre/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.c</name>
       </file>
     </group>
   </group>

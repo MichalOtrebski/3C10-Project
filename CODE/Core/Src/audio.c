@@ -8,7 +8,7 @@
 #include "audio.h"
 #include "dac.h"
 
-uint16_t audioBuf[AUDIO_BUF];
+uint32_t audioBuf[AUDIO_BUF];
 
 typedef struct {
     uint32_t phase;
@@ -17,7 +17,7 @@ typedef struct {
     uint8_t  wave;  // 0=square 1=tri 2=saw
 } Voice;
 
-static Voice v[3];
+static Voice v[4];
 static uint16_t lfsr = 0xACE1u; // noise
 
 void HAL_DAC_ConvHalfCpltCallbackCh1(DAC_HandleTypeDef *hdac)
@@ -26,7 +26,7 @@ void HAL_DAC_ConvHalfCpltCallbackCh1(DAC_HandleTypeDef *hdac)
     if (hdac->Instance != DAC2) return;
     PSG_Fill(&audioBuf[0], AUDIO_BUF/2);
 
-	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);
+//	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);
 }
 
 void HAL_DAC_ConvCpltCallbackCh1(DAC_HandleTypeDef *hdac)
@@ -34,7 +34,7 @@ void HAL_DAC_ConvCpltCallbackCh1(DAC_HandleTypeDef *hdac)
     if (hdac->Instance != DAC2) return;
     PSG_Fill(&audioBuf[AUDIO_BUF/2], AUDIO_BUF/2);
 
-	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);
+//	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);
 }
 
 static inline uint32_t hz_to_inc(float hz) {
@@ -47,7 +47,7 @@ static inline uint32_t hz_to_inc(float hz) {
 }
 
 void PSG_Init(void) {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         v[i].phase = 0;
         v[i].inc = 0;
         v[i].vol = 0;
@@ -56,18 +56,18 @@ void PSG_Init(void) {
 }
 
 void PSG_SetVoiceFreq(uint8_t voice, float hz) {
-    if (voice >= 3) return;
+    if (voice >= 4) return;
     v[voice].inc = hz_to_inc(hz);
 }
 
 void PSG_SetVoiceVol(uint8_t voice, uint16_t vol) {
-    if (voice >= 3) return;
+    if (voice >= 4) return;
     if (vol > 4095) vol = 4095;
     v[voice].vol = vol;
 }
 
 void PSG_SetVoiceWave(uint8_t voice, uint8_t wave) {
-    if (voice >= 3) return;
+    if (voice >= 4) return;
     v[voice].wave = wave;
 }
 
@@ -98,12 +98,18 @@ static inline int32_t noise_sample(uint16_t vol) {
     return (s * (int32_t)vol) >> 12;
 }
 
-void PSG_Fill(uint16_t *dst, uint32_t n) {
+void PSG_Fill(uint32_t *dst, uint32_t n) {
     for (uint32_t i = 0; i < n; i++) {
         int32_t mix = 0;
         mix += osc_sample(&v[0]);
         mix += osc_sample(&v[1]);
         mix += osc_sample(&v[2]);
+
+        if (v[3].vol) {
+            if (v[3].wave == 3) mix += noise_sample(v[3].vol);
+            else                mix += osc_sample(&v[3]);
+        }
+
         // optional noise channel:
         // mix += noise_sample(600);
 

@@ -62,8 +62,8 @@ all: main-build
 main-build: DAC_SignalsGeneration2.elf secondary-outputs
 
 # Tool invocations
-DAC_SignalsGeneration2.elf DAC_SignalsGeneration2.map: $(OBJS) $(USER_OBJS) C:\GIT\STM32CubeG4\Projects\NUCLEO-G474RE\Examples\DAC\DAC_SignalsGeneration2\STM32CubeIDE\STM32G474RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "DAC_SignalsGeneration2.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\GIT\STM32CubeG4\Projects\NUCLEO-G474RE\Examples\DAC\DAC_SignalsGeneration2\STM32CubeIDE\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="DAC_SignalsGeneration2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+DAC_SignalsGeneration2.elf DAC_SignalsGeneration2.map: $(OBJS) $(USER_OBJS) C:\GIT\New\ folder\3C10-Project\DAC_SignalsGeneration2\STM32CubeIDE\STM32G474RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "DAC_SignalsGeneration2.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\GIT\New folder\3C10-Project\DAC_SignalsGeneration2\STM32CubeIDE\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="DAC_SignalsGeneration2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

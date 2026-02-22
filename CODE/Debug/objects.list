@@ -19,6 +19,7 @@
 "./Core/Src/sysmem.o"
 "./Core/Src/system_stm32g4xx.o"
 "./Core/Src/tetris.o"
+"./Core/Src/tetris_audio.o"
 "./Core/Src/text.o"
 "./Core/Src/tim.o"
 "./Core/Src/timers.o"

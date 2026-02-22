@@ -17,13 +17,13 @@
 
 #define SR 48000u
 
-extern uint16_t audioBuf[AUDIO_BUF];
+extern uint32_t audioBuf[AUDIO_BUF];
 
 void PSG_Init(void);
 void PSG_SetVoiceFreq(uint8_t voice, float hz);
 void PSG_SetVoiceVol(uint8_t voice, uint16_t vol);
 void PSG_SetVoiceWave(uint8_t voice, uint8_t wave);
 
-void PSG_Fill(uint16_t *dst, uint32_t n);
+void PSG_Fill(uint32_t *dst, uint32_t n);
 
 #endif /* INC_AUDIO_H_ */

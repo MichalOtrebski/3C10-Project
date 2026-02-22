@@ -23,24 +23,31 @@ void setup() {
 	PSG_Init();
 
 	PSG_SetVoiceWave(0, 0);      // square
-	PSG_SetVoiceFreq(0, 50.0f);  // 50 Hz so you see edges easily
-	PSG_SetVoiceVol(0, 4095);
+	PSG_SetVoiceFreq(0, 25.0f);  // 50 Hz so you see edges easily
+	PSG_SetVoiceVol(0, 0);
 
-	PSG_SetVoiceVol(1, 0);
+	PSG_SetVoiceWave(1, 0);
+	PSG_SetVoiceFreq(1, 25.0f);
+	PSG_SetVoiceVol(1, 1024);
+
 	PSG_SetVoiceVol(2, 0);
 
-	// Example: 2-square “GB-ish” chord
-	PSG_SetVoiceWave(0, 0);      // square
-	PSG_SetVoiceFreq(0, 50.0f);  // 50 Hz so you see edges easily
-	PSG_SetVoiceVol(0, 4095);
+//	PSG_SetVoiceVol(1, 0);
+//	PSG_SetVoiceVol(2, 0);
 
-	PSG_SetVoiceVol(1, 0);
-	PSG_SetVoiceVol(2, 0);
+//	 Example: 2-square “GB-ish” chord
+//	PSG_SetVoiceWave(0, 0);      // square
+//	PSG_SetVoiceFreq(0, 50.0f);  // 50 Hz so you see edges easily
+//	PSG_SetVoiceVol(0, 4095);
+
+
+
+
+
 
 	PSG_Fill(&audioBuf[0], AUDIO_BUF);
 
-//	HAL_TIM_Base_Start(&htim7);
-	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10); // just once
+//	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10); // just once
 
 //	HAL_DAC_Start(&hdac2, DAC_CHANNEL_1);
 //	HAL_DAC_SetValue(&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 1048);
@@ -48,26 +55,19 @@ void setup() {
 //	HAL_DAC_Start_DMA(&hdac2, DAC_CHANNEL_1, (uint32_t*)audioBuf, AUDIO_BUF, DAC_ALIGN_12B_R);
 
 //	for (int i = 0; i < 1024; i++) {
-//	    audioBuf[i] = (i * 4095) / 1023;   // ramp
+////	    audioBuf[i] = (i * 4095) / 1023;   // ramp
+//	    audioBuf[i] = 2048;   // ramp
 //	}
 
 
-	__attribute__((aligned(4))) static uint16_t buf[1024] = { 1024 };
+//	__attribute__((aligned(4))) static uint32_t buf[1024] = { 1024 };
 
 	HAL_TIM_Base_Start(&htim15);
 
 	HAL_StatusTypeDef st = HAL_DAC_Start_DMA(&hdac2, DAC_CHANNEL_1,
-	                                        (uint32_t*)buf, 1024,
+	                                        (uint32_t*)audioBuf, 1024,
 	                                        DAC_ALIGN_12B_R);
 //	printf("StartDMA st=%d DACerr=0x%lx\r\n", (int)st, (unsigned long)hdac2.ErrorCode);
-
-	printf("CCR=0x%lx CNDTR=%lu\r\n",
-	       (unsigned long)DMA2_Channel1->CCR,
-	       (unsigned long)DMA2_Channel1->CNDTR);
-
-
-
-
 
 	BSP_LCD_Init(0, LCD_ORIENTATION_PORTRAIT_ROT180);
 	BSP_LCD_DisplayOn(0);
