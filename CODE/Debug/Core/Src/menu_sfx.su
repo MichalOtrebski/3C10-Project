@@ -1,0 +1,3 @@
+../Core/Src/menu_sfx.c:28:6:MenuSFX_Move	8	static
+../Core/Src/menu_sfx.c:33:6:MenuSFX_Select	8	static
+../Core/Src/menu_sfx.c:38:6:MenuSFX_Back	8	static

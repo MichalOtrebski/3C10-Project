@@ -18,26 +18,14 @@ static inline void LCD_FB_PutPixel(int x, int y, uint16_t color)
     framebuffer[y * FB_WIDTH + x] = color;
 }
 
-void LCD_DrawChar(int x, int y, char ch, uint16_t fg, uint16_t bg, int scale)
-{
+void LCD_DrawChar(int x, int y, char ch, uint16_t fg, uint16_t bg, int scale) {
+    (void)bg;
+
     if (scale < 1) scale = 1;
 
     if ((unsigned char)ch < 32 || (unsigned char)ch > 127) ch = '?';
     const uint8_t *glyph = font5x7[(int)ch - 32];
 
-    const int glyph_w = 5 * scale;
-    const int glyph_h = 7 * scale;
-    const int spacing_x = 1;   // 1 px gap between chars in framebuffer pixels
-    const int spacing_y = 0;   // IMPORTANT: no extra blank row
-    const int cell_w = glyph_w + spacing_x;
-    const int cell_h = glyph_h + spacing_y;
-
-    // background fill
-    for (int yy = 0; yy < cell_h; yy++)
-        for (int xx = 0; xx < cell_w; xx++)
-            LCD_FB_PutPixel(x + xx, y + yy, bg);
-
-    // glyph draw
     for (int col = 0; col < 5; col++)
     {
         uint8_t bits = glyph[col];
@@ -49,9 +37,11 @@ void LCD_DrawChar(int x, int y, char ch, uint16_t fg, uint16_t bg, int scale)
             int px0 = x + col * scale;
             int py0 = y + row * scale;
 
-            for (int dy = 0; dy < scale; dy++)
-                for (int dx = 0; dx < scale; dx++)
+            for (int dy = 0; dy < scale; dy++) {
+                for (int dx = 0; dx < scale; dx++) {
                     LCD_FB_PutPixel(px0 + dx, py0 + dy, fg);
+                }
+            }
         }
     }
 }

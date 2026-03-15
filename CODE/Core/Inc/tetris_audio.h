@@ -11,18 +11,12 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+void TetrisAudio_Init(uint32_t sample_rate_hz);
 void TetrisAudio_Start(void);
 void TetrisAudio_Stop(void);
-void TetrisAudio_Init(uint32_t sample_rate_hz);
 void TetrisAudio_SetBPM(uint32_t bpm);
-void TetrisAudio_Fill(uint32_t* dst, size_t n_samples);
+void TetrisAudio_Update(uint32_t samples_rendered);
 
-#ifdef __cplusplus
-}
-#endif
+uint8_t TetrisAudio_IsPlaying(void);
 
 #endif /* INC_TETRIS_AUDIO_H_ */

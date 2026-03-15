@@ -12,6 +12,10 @@
 #include "buttons.h"
 #include <string.h>
 #include "colors.h"
+#include "menu_sfx.h"
+
+uint8_t menu_selected = 0;
+int menu_scroll = 0;
 
 static int clampi(int v, int lo, int hi) {
     return (v < lo) ? lo : (v > hi) ? hi : v;
@@ -54,8 +58,9 @@ void LCD_MenuDraw(void) {
     LCD_DrawRect(6, 6, FB_WIDTH - 12, 24, 0x2004);
     LCD_DrawRect(8, 8, FB_WIDTH - 16, 20, 0x4008);
 
-    LCD_DrawText(17, 10, "GAME MAN", RGB565_BLACK, 0x4008, 2);
-    LCD_DrawText(15, 8,  "GAME MAN", RGB565_WHITE, 0x4008, 2);
+    LCD_DrawText(17, 12, "GAME MAN", RGB565_BLACK, 0x4008, 2);
+    LCD_DrawText(16, 11, "GAME MAN", 0x3186, 0x4008, 2);
+    LCD_DrawText(15, 10,  "GAME MAN", RGB565_WHITE, 0x4008, 2);
 
     const int topY = 38;
     const int rowH = 18;
@@ -139,10 +144,12 @@ uint8_t Menu_Update(uint16_t pressed, uint16_t held) {
 
     if (pressed & (1u << BTN_DOWN)) {
         menu_selected++;
+        MenuSFX_Move();
     }
 
     if (pressed & (1u << BTN_UP)) {
         menu_selected--;
+        MenuSFX_Move();
     }
 
     if (menu_selected < 0) {
@@ -169,6 +176,7 @@ uint8_t Menu_Update(uint16_t pressed, uint16_t held) {
     int chosen = 255;
     if (pressed & (1u << BTN_A)) {
         chosen = menu_selected;
+        MenuSFX_Select();
     }
 
     LCD_MenuDraw();

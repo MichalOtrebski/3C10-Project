@@ -15,6 +15,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "rng.h"
+#include "audio.h"
+#include "tetris_audio.h"
 
 static bool once = true;
 static uint32_t s_lastTickMs;
@@ -32,8 +34,8 @@ static uint32_t s_lastTickMs;
 
 int grid[GRID_W_T][GRID_H_T] = {0};
 
-static inline int GX(int gx){ return FIELD_X_T + gx*CELL_T; }
-static inline int GY(int gy){ return FIELD_Y_T + gy*CELL_T; }
+static inline int GX(int gx) { return FIELD_X_T + (gx - 1) * CELL_T; }
+static inline int GY(int gy) { return FIELD_Y_T + (gy - 1) * CELL_T; }
 
 static int cur_x, cur_y;
 static int cur_state;
@@ -44,8 +46,9 @@ static int score;
 static int block;
 static int store_block;
 
-static uint16_t FallingColour(void){
-    switch(cur_type){
+static uint16_t FallingColour(void)
+{
+    switch (cur_type) {
     case 0: return C_B1;
     case 1: return C_B2;
     case 2: return C_B3;
@@ -57,75 +60,104 @@ static uint16_t FallingColour(void){
     }
 }
 
-static void DrawCell(int gx,int gy,uint16_t c)
+static uint16_t BlockColourFromCell(int cell)
 {
-    LCD_DrawRect(GX(gx),GY(gy),CELL_T,CELL_T,c);
+    switch (cell) {
+    case 2: return FallingColour();
+    case 3: return C_B1;
+    case 4: return C_B2;
+    case 5: return C_B3;
+    case 6: return C_B4;
+    case 7: return C_B5;
+    case 8: return C_B6;
+    case 9: return C_B7;
+    case 1: return C_BD;
+    case 0:
+    default:
+        return C_BG;
+    }
 }
 
-void Grid_init(void){
-	for(int i = 0; i < GRID_W_T; i++){//row increment
-		if (i == 0 || i == GRID_W_T - 1){//left and right borders
-			for(int j = 0; j < GRID_H_T; j++){// column increment
-				grid[i][j] = 1;
-			}
-		}
-		else{
-			for(int j = 0; j < GRID_H_T; j++){
-				if(j == 0 || j == GRID_H_T -1){
-				  grid[i][j] = 1;
-				}
-				else{
-				  grid[i][j] = 0;
-				}
-			}
-		}
-	}
+static void DrawCell(int gx, int gy, uint16_t c) {
+    int x = GX(gx);
+    int y = GY(gy);
+
+    if (c == C_BG) {
+        LCD_DrawRect(x, y, CELL_T, CELL_T, C_BG);
+        return;
+    }
+
+    uint16_t border = Darken565(c, 60);
+
+    LCD_DrawRect(x, y, CELL_T, CELL_T, border);
+
+    if (CELL_T > 2) {
+        LCD_DrawRect(x + 1, y + 1, CELL_T - 2, CELL_T - 2, c);
+    }
 }
 
+static void DrawDoublePanelFrame(int x, int y, int w, int h)
+{
+    // outer border
+    LCD_DrawRect(x - 2, y - 2, w + 4, h + 4, C_BD);
+
+    // clear the gap between borders
+    LCD_DrawRect(x - 1, y - 1, w + 2, h + 2, C_BG);
+
+    // inner border
+    LCD_DrawRect(x, y, w, h, C_BD);
+
+    // panel interior
+    if (w > 2 && h > 2) {
+        LCD_DrawRect(x + 1, y + 1, w - 2, h - 2, C_BG);
+    }
+}
+
+static void DrawSinglePanelFrame(int x, int y, int w, int h)
+{
+    LCD_DrawRect(x, y, w, h, C_BD);
+
+    if (w > 2 && h > 2) {
+        LCD_DrawRect(x + 1, y + 1, w - 2, h - 2, C_BG);
+    }
+}
+
+static void DrawFuturePanels(void) {
+    DrawDoublePanelFrame(HOLD_X_T, HOLD_Y_T, 24, 18);
+    DrawSinglePanelFrame(NEXT_X_T, NEXT_Y_T, 24, 24);
+}
+
+void Grid_init(void)
+{
+    for (int i = 0; i < GRID_W_T; i++) {
+        for (int j = 0; j < GRID_H_T; j++) {
+            if (i == 0 || i == GRID_W_T - 1 || j == 0 || j == GRID_H_T - 1) {
+                grid[i][j] = 1;
+            } else {
+                grid[i][j] = 0;
+            }
+        }
+    }
+}
 
 void Tetris_init(void){
+	TetrisAudio_Init(SR);
 	Grid_init();
-	store_block == -1;
+	store_block = -1;
 }
 
-void Draw_Field(void){
-	for(int i = 0; i < GRID_W_T; i++){
-		for(int j = 0; j < GRID_H_T; j++){
-			switch(grid[i][j]){
-			case 0:
-				DrawCell(i, j, C_BG);
-				break;
-			case 1:
-				DrawCell(i, j, C_BD);
-				break;
-			case 2:
-				DrawCell(i, j, FallingColour());
-				break;
-			case 3:
-				DrawCell(i, j, C_B1);
-				break;
-			case 4:
-				DrawCell(i, j, C_B2);
-				break;
-			case 5:
-				DrawCell(i, j, C_B3);
-				break;
-			case 6:
-				DrawCell(i, j, C_B4);
-				break;
-			case 7:
-				DrawCell(i, j, C_B5);
-				break;
-			case 8:
-				DrawCell(i, j, C_B6);
-				break;
-			case 9:
-				DrawCell(i, j, C_B7);
-				break;
-			}
-		}
-	}
+void Draw_Field(void)
+{
+    LCD_DrawRect(FIELD_X_T - 2, FIELD_Y_T - 2, FIELD_W_T + 4, FIELD_H_T + 4, C_BD);
+    LCD_DrawRect(FIELD_X_T, FIELD_Y_T, FIELD_W_T, FIELD_H_T, C_BG);
+
+    for (int i = 1; i <= PLAY_W_T; i++) {
+        for (int j = 1; j <= PLAY_H_T; j++) {
+            DrawCell(i, j, BlockColourFromCell(grid[i][j]));
+        }
+    }
 }
+
 void B1_init(int state, int anch_x, int anch_y){//I shape
 	if (state == 1 || state == 3){//vertical
 		grid[anch_x][anch_y] = 2;
@@ -639,6 +671,7 @@ void B_tick(void){
 
 	if(once){
 		Tetris_init();
+		Audio_SetMode(AUDIO_MODE_TETRIS);
 		s_lastTickMs = HAL_GetTick();
 		once = false;
 	}
@@ -673,69 +706,128 @@ void B_tick(void){
 
 }
 
-void Tetris_Update(uint16_t pressed, uint16_t held){
+static void DrawGameOverPanel(void) {
 
-	if (held & (1u << BTN_A)) {
-		g_state = STATE_MENU;
-		game_over = 0;
-		once = true;
-		score = 0;
-		return;
-	}
+	LCD_DrawText(10, 70, "GAME OVER", C_BD, C_BG, 2);
+    LCD_DrawText(20, 90, "SCORE", C_BD, C_BG, 1);
 
-	if (game_over == 1) {
-		LCD_DrawText(10, 70, "GAME OVER", C_BD, C_BG, 2);
-		LCD_DrawText(20, 90, "SCORE", C_BD, C_BG, 1);
-		char score_buf[10];
-	    itoa(score, score_buf, 10);
-		LCD_DrawText(70,90,score_buf,C_B4, C_BG, 1);
-		return;
-	}
+    char score_buf[10];
+    itoa(score, score_buf, 10);
+    LCD_DrawText(70, 90, score_buf, C_B4, C_BG, 1);
+}
 
-	if(!has_piece){
-		B_tick();
-		Draw_Field();
-		return;
-	}
+//static void DrawGameOverPanel(void) {
+//    char score_buf[10];
+//
+//    DrawDoublePanelFrame(18, 62, 92, 36);
+//
+//    LCD_DrawText(28, 68, "GAME OVER", C_BD, C_BG, 1);
+//    LCD_DrawText(32, 82, "SCORE", C_BD, C_BG, 1);
+//
+//    itoa(score, score_buf, 10);
+//    LCD_DrawText(68, 82, score_buf, C_B4, C_BG, 1);
+//}
 
-	 if (pressed & (1u << BTN_LEFT)){
-		 if(can_move_left() == 1){
-			move_left();
-		 }
-	 }
-	 if (pressed & (1u << BTN_RIGHT)){
-		 if(can_move_right() == 1){
-			move_right();
-		 }
-	 }
-	 if (pressed & (1u << BTN_UP)){
-		store_block = block;
+static void DrawScorePanel(void) {
+    char buf[10];
 
-	 }
-	 if (pressed & (1u << BTN_A)){
-		 rotate();
-	 }
+    DrawDoublePanelFrame(SCORE_X_T, SCORE_Y_T, 70, 14);
 
-	 LCD_DrawText(4,4,"SCORE",C_BD,C_BG,1);
-	 char buf[10];
-	 itoa(score, buf, 10);
-	 LCD_DrawText(60,4,buf,C_BD,C_BG,1);
-
-	 uint32_t now = HAL_GetTick();
+    LCD_DrawText(SCORE_X_T + 5, SCORE_Y_T + 4, "SCORE", 0x632c, C_BG, 1);
+    LCD_DrawText(SCORE_X_T + 4, SCORE_Y_T + 3, "SCORE", C_BD, C_BG, 1);
 
 
-	 if (held & (1u << BTN_DOWN)) {
-	    	while ((uint32_t)(now - s_lastTickMs) >= 50){
-	    		s_lastTickMs += 50;
-	    		B_tick();
-	    	}
-	  } else {
-		  while ((uint32_t)(now - s_lastTickMs) >= 300)
-		  {
-		        s_lastTickMs += 300;
-		        B_tick();
-		  }
-	  }
+    itoa(score, buf, 10);
+    LCD_DrawText(SCORE_X_T + 40, SCORE_Y_T + 3, buf, C_B4, C_BG, 1);
+}
 
-	 Draw_Field();
+void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev)
+{
+    static uint32_t left_repeat_ms = 0;
+    static uint32_t right_repeat_ms = 0;
+    static bool down_was_held = false;
+
+    uint32_t now = HAL_GetTick();
+    bool down_held = (down & (1u << BTN_DOWN)) != 0u;
+
+    if (held_ev & (1u << BTN_A)) {
+    	Audio_SetMode(AUDIO_MODE_SFX);
+        g_state = STATE_MENU;
+        game_over = 0;
+        once = true;
+        score = 0;
+        left_repeat_ms = 0;
+        right_repeat_ms = 0;
+        down_was_held = false;
+
+        return;
+    }
+
+    if (game_over) {
+    	TetrisAudio_Stop();
+        DrawGameOverPanel();
+        return;
+    }
+
+    if (!has_piece) {
+        B_tick();
+        DrawScorePanel();
+        DrawFuturePanels();
+        Draw_Field();
+        return;
+    }
+
+    if (pressed & (1u << BTN_LEFT)) {
+        if (can_move_left()) {
+            move_left();
+        }
+        left_repeat_ms = now + 200u;
+    } else if ((down & (1u << BTN_LEFT)) && now >= left_repeat_ms) {
+        if (can_move_left()) {
+            move_left();
+        }
+        left_repeat_ms = now + 70u;
+    } else if ((down & (1u << BTN_LEFT)) == 0u) {
+        left_repeat_ms = 0;
+    }
+
+    if (pressed & (1u << BTN_RIGHT)) {
+        if (can_move_right()) {
+            move_right();
+        }
+        right_repeat_ms = now + 200u;
+    } else if ((down & (1u << BTN_RIGHT)) && now >= right_repeat_ms) {
+        if (can_move_right()) {
+            move_right();
+        }
+        right_repeat_ms = now + 70u;
+    } else if ((down & (1u << BTN_RIGHT)) == 0u) {
+        right_repeat_ms = 0;
+    }
+
+    if (pressed & (1u << BTN_UP)) {
+        store_block = block;
+    }
+
+    if (pressed & (1u << BTN_A)) {
+        rotate();
+    }
+
+    if (down_held != down_was_held) {
+        s_lastTickMs = now;
+        down_was_held = down_held;
+    }
+
+    {
+        uint32_t step_ms = down_held ? 75u : 350u;
+
+        while ((uint32_t)(now - s_lastTickMs) >= step_ms) {
+            s_lastTickMs += step_ms;
+            B_tick();
+        }
+    }
+
+    DrawScorePanel();
+    DrawFuturePanels();
+    Draw_Field();
 }

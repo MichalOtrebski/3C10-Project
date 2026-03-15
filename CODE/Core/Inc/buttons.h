@@ -13,30 +13,22 @@
 #include <stdbool.h>
 
 typedef enum {
-  BTN_UP = 0,
-  BTN_DOWN,
-  BTN_LEFT,
-  BTN_RIGHT,
-  BTN_A,
+    BTN_UP = 0,
+    BTN_DOWN,
+    BTN_LEFT,
+    BTN_RIGHT,
+    BTN_A,
+    BTN_COUNT
 } ButtonId;
 
-#define BTN_COUNT 15
-
-void Buttons_BeginFrame(void);
-
 void     Buttons_Init(void);
-void     Buttons_Tick1ms(void);              // call from TIM6/TIM7 ISR
-uint16_t Buttons_State(void);                // debounced held state bitmask
-uint16_t Buttons_PressedEvents(void);        // edge events since last read (clears on read)
-uint16_t Buttons_ReleasedEvents(void);       // edge events since last read (clears on read)
-bool     Buttons_IsDown(ButtonId b);
-bool     Buttons_WasPressed(ButtonId b);
+void     Buttons_Tick1ms(void);      // call every 1 ms from timer ISR
+void     Buttons_BeginFrame(void);   // call once per main loop
 
-uint16_t Buttons_HeldEvents(void);
-uint16_t Buttons_HeldMs(ButtonId b);
-bool Buttons_WasHeld(ButtonId b);
+bool     Buttons_IsDown(ButtonId b);     // true while button is held down
+bool     Buttons_WasPressed(ButtonId b); // true once when button becomes pressed
+bool     Buttons_WasHeld(ButtonId b);    // true once when hold threshold is reached
 
-uint16_t Buttons_PressedSnapshot(void);
-uint16_t Buttons_HeldSnapshot(void);
+uint16_t Buttons_HeldMs(ButtonId b);     // held time in ms
 
 #endif /* INC_BUTTONS_H_ */

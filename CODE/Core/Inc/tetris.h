@@ -12,22 +12,34 @@
 #include "display.h"
 #include "text.h"
 
-#define UI_TOP_T 20
-#define BORDER_T 4
-#define CELL_T 7
+#define CELL_T 6
 
-#define FIELD_X_T BORDER_T
-#define FIELD_Y_T (UI_TOP_T + BORDER_T)
+#define PLAY_W_T 10
+#define PLAY_H_T 20
 
-#define FIELD_W_T ((FB_WIDTH - 21)  - BORDER_T * 2)
-#define FIELD_H_T (FB_HEIGHT - UI_TOP_T - BORDER_T * 2)
+#define GRID_W_T (PLAY_W_T + 2)   // left/right walls
+#define GRID_H_T (PLAY_H_T + 2)   // top/bottom walls
 
-#define FIELD_W_DIFF FB_WIDTH - FIELD_W_T
+#define UI_TOP_T 35
+#define UI_SIDE_W_T 28
+#define GAP_T 10
 
-#define GRID_W_T (FIELD_W_T / CELL_T)
-#define GRID_H_T (FIELD_H_T / CELL_T)
+#define FIELD_X_T (GAP_T)
+#define FIELD_Y_T (UI_TOP_T)
 
-#define SPAWN_X  (GRID_W_T/2)
+#define FIELD_W_T (PLAY_W_T * CELL_T)
+#define FIELD_H_T (PLAY_H_T * CELL_T)
+
+#define NEXT_X_T  (FIELD_X_T + FIELD_W_T + GAP_T + 2)
+#define NEXT_Y_T  (FIELD_Y_T + 8)
+
+#define HOLD_X_T  (FIELD_X_T)
+#define HOLD_Y_T  (3)
+
+#define SCORE_X_T (48)
+#define SCORE_Y_T (3)
+
+#define SPAWN_X  (GRID_W_T / 2)
 #define SPAWN_Y  3
 
 
@@ -54,6 +66,6 @@ void B_tick(void);
 
 void Grid_init(void);
 
-void Tetris_Update(uint16_t pressed, uint16_t held);
+void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev);
 
 #endif /* INC_TETRIS_H_ */

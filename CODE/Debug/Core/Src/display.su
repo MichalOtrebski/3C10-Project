@@ -1,6 +1,7 @@
-../Core/Src/display.c:13:6:HAL_SPI_TxCpltCallback	16	static
-../Core/Src/display.c:24:6:LCD_ClearFrame	16	static
-../Core/Src/display.c:30:6:LCD_DrawRect	24	static
-../Core/Src/display.c:46:6:render	40	static
-../Core/Src/display.c:70:6:render_dma	40	static
-../Core/Src/display.c:94:6:border	32	static
+../Core/Src/display.c:17:6:HAL_SPI_TxCpltCallback	16	static
+../Core/Src/display.c:36:6:LCD_ClearFrame	8	static
+../Core/Src/display.c:41:6:LCD_DrawRect	32	static
+../Core/Src/display.c:78:20:build_scaled_row_fast	24	static
+../Core/Src/display.c:90:6:render_dma	40	static
+../Core/Src/display.c:132:6:border	40	static
+../Core/Src/display.c:146:10:Darken565	24	static

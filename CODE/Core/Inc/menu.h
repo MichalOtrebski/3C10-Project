@@ -26,9 +26,6 @@ static const MenuItem menuItems[] = {
 
 #define MENU_COUNT (sizeof(menuItems) / sizeof(menuItems[0]))
 
-static uint8_t menu_selected = 0;
-static int menu_scroll = 0;
-
 void LCD_MenuDraw(void);
 
 uint8_t Menu_Update(uint16_t pressed, uint16_t held);

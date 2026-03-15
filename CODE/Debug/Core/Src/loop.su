@@ -1,1 +1,4 @@
-../Core/Src/loop.c:29:6:loop	24	static
+../Core/Src/loop.c:29:17:GetPressedMask	16	static
+../Core/Src/loop.c:42:17:GetDownMask	16	static
+../Core/Src/loop.c:55:17:GetHeldEventMask	16	static
+../Core/Src/loop.c:68:6:loop	24	static

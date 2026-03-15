@@ -23,8 +23,6 @@ void setup() {
 
 	PSG_Init();
 
-//	TetrisAudio_Init(SR);
-
 //	PSG_SetVoiceWave(0, 0);       // square
 //	PSG_SetVoiceFreq(0, 100.0f);  // 100 Hz (easy on scope)
 //	PSG_SetVoiceVol(0, 400);     // strong but not clipping

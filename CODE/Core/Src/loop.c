@@ -26,38 +26,75 @@ bool once = true;
 uint32_t last = 0;
 uint8_t direction = 0;
 
-void loop(void) {
-//    uint32_t now_ms = HAL_GetTick();
+static uint16_t GetPressedMask(void)
+{
+    uint16_t mask = 0;
 
+    for (int i = 0; i < BTN_COUNT; i++) {
+        if (Buttons_WasPressed((ButtonId)i)) {
+            mask |= (uint16_t)(1u << i);
+        }
+    }
+
+    return mask;
+}
+
+static uint16_t GetDownMask(void)
+{
+    uint16_t mask = 0;
+
+    for (int i = 0; i < BTN_COUNT; i++) {
+        if (Buttons_IsDown((ButtonId)i)) {
+            mask |= (uint16_t)(1u << i);
+        }
+    }
+
+    return mask;
+}
+
+static uint16_t GetHeldEventMask(void)
+{
+    uint16_t mask = 0;
+
+    for (int i = 0; i < BTN_COUNT; i++) {
+        if (Buttons_WasHeld((ButtonId)i)) {
+            mask |= (uint16_t)(1u << i);
+        }
+    }
+
+    return mask;
+}
+
+void loop(void)
+{
     LCD_ClearFrame();
 
     Buttons_BeginFrame();
 
-    uint16_t pressed = Buttons_PressedSnapshot();
-	uint16_t held    = Buttons_State();
-	uint16_t held_ev = Buttons_HeldSnapshot();
+    uint16_t pressed = GetPressedMask();    // one-shot press
+    uint16_t held    = GetDownMask();       // continuous held-down state
+    uint16_t held_ev = GetHeldEventMask();  // one-shot long-hold event
 
-	switch (g_state) {
-	case STATE_MENU: {
+    switch (g_state) {
+    case STATE_MENU: {
+        int chosen = Menu_Update(pressed, held);
+        if (chosen >= 0) {
+            if (chosen == 0) g_state = STATE_TETRIS;
+            if (chosen == 1) g_state = STATE_SNAKE;
+        }
+    } break;
 
-		int chosen = Menu_Update(pressed, held);
-		if (chosen >= 0) {
-			if (chosen == 0) g_state = STATE_TETRIS;
-			if (chosen == 1) g_state = STATE_SNAKE;
-		}
-	} break;
+    case STATE_SNAKE:
+        Snake_Update(pressed, held_ev);
+        break;
 
-	case STATE_SNAKE:
-		Snake_Update(pressed, held_ev);
-		break;
+    case STATE_TETRIS:
+        Tetris_Update(pressed, held, held_ev);
+        break;
 
-	case STATE_TETRIS:
-		Tetris_Update(pressed, held_ev);
-		break;
+    default:
+        break;
+    }
 
-	default:
-		break;
-	}
-
-	render_dma();
+    render_dma();
 }

@@ -126,14 +126,6 @@ int main(void)
 
 
   setup();
-
-	printf("TIM7 CR1=0x%08lx CR2=0x%08lx PSC=%lu ARR=%lu CNT=%lu\n",
-	       (unsigned long)TIM7->CR1, (unsigned long)TIM7->CR2,
-	       (unsigned long)TIM7->PSC, (unsigned long)TIM7->ARR, (unsigned long)TIM7->CNT);
-
-	printf("DAC2 CR=0x%08lx MCR=0x%08lx SR=0x%08lx\n",
-	       (unsigned long)DAC2->CR, (unsigned long)DAC2->MCR, (unsigned long)DAC2->SR);
-
   while (1)
   {
 
