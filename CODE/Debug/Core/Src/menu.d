@@ -39,7 +39,7 @@ Core/Src/menu.o: ../Core/Src/menu.c ../Core/Inc/menu.h \
  ../Core/Inc/stm32g4xx_nucleo_bus.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h \
- ../Core/Inc/text.h ../Core/Inc/buttons.h
+ ../Core/Inc/text.h ../Core/Inc/buttons.h ../Core/Inc/colors.h
 ../Core/Inc/menu.h:
 ../Core/Inc/globals.h:
 ../Core/Inc/display.h:
@@ -88,3 +88,4 @@ Core/Src/menu.o: ../Core/Src/menu.c ../Core/Inc/menu.h \
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h:
 ../Core/Inc/text.h:
 ../Core/Inc/buttons.h:
+../Core/Inc/colors.h:

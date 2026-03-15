@@ -13,6 +13,7 @@
 #include "gpio.h"
 #include "setup.h"
 #include "audio.h"
+#include "tetris_audio.h"
 
 DMA_HandleTypeDef hdma_dac2_ch1;
 
@@ -22,7 +23,7 @@ void setup() {
 
 	PSG_Init();
 
-	TetrisAudio_Init(SR);
+//	TetrisAudio_Init(SR);
 
 //	PSG_SetVoiceWave(0, 0);       // square
 //	PSG_SetVoiceFreq(0, 100.0f);  // 100 Hz (easy on scope)

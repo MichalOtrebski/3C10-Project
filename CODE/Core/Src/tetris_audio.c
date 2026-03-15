@@ -32,8 +32,7 @@
 #endif
 
 // --- Utility: MIDI note -> frequency (A4=440Hz) ---
-static float midi_to_freq(int midi_note)
-{
+static float midi_to_freq(int midi_note) {
     // midi_note: 69 -> 440Hz
     return 440.0f * powf(2.0f, (midi_note - 69) / 12.0f);
 }
@@ -134,8 +133,7 @@ static void TA_AdvanceTracks_IfNeeded(uint32_t ticks_to_advance);
 static void TA_ApplyEventToChannel(uint8_t ch, const TA_Event* ev, uint16_t vol, int is_noise);
 
 // Call once
-void TetrisAudio_Init(uint32_t sample_rate_hz)
-{
+void TetrisAudio_Init(uint32_t sample_rate_hz) {
     g_sr = (sample_rate_hz == 0) ? 22000 : sample_rate_hz;
 
     // 1/16 note duration in seconds:
@@ -175,9 +173,32 @@ void TetrisAudio_Init(uint32_t sample_rate_hz)
     TA_AdvanceTracks_IfNeeded(1);
 }
 
-// Optional: change tempo at runtime
-void TetrisAudio_SetBPM(uint32_t bpm)
-{
+void TetrisAudio_Start() {
+    g_tetris_playing = 1;
+
+    // Reset tracks so the song starts from the beginning
+    tr_mel = (TA_Track){ g_melody,  g_melody_len,  0, 0 };
+    tr_har = (TA_Track){ g_harmony, g_harmony_len, 0, 0 };
+    tr_bas = (TA_Track){ g_bass,    g_bass_len,    0, 0 };
+    tr_noi = (TA_Track){ g_noise,   g_noise_len,   0, 0 };
+
+    g_tick_sample_acc = 0;
+
+    // Load first notes immediately
+    TA_AdvanceTracks_IfNeeded(1);
+}
+
+void TetrisAudio_Stop() {
+    g_tetris_playing = 0;
+
+    // Mute all channels immediately
+    PSG_SetVoiceVol(0, 0);
+    PSG_SetVoiceVol(1, 0);
+    PSG_SetVoiceVol(2, 0);
+    PSG_SetVoiceVol(3, 0);
+}
+
+void TetrisAudio_SetBPM(uint32_t bpm) {
     if (bpm < 40) bpm = 40;
     if (bpm > 260) bpm = 260;
     g_bpm = bpm;
@@ -187,13 +208,17 @@ void TetrisAudio_SetBPM(uint32_t bpm)
 }
 
 // Fill audio buffer (call from DAC DMA half/full callbacks)
-void TetrisAudio_Fill(uint32_t* dst, size_t n_samples)
-{
+void TetrisAudio_Fill(uint32_t* dst, size_t n_samples) {
+
+    if (!g_tetris_playing) {
+        PSG_Fill(dst, n_samples);
+        return;
+    }
+
     if (!dst || n_samples == 0) return;
 
     size_t remaining = n_samples;
-    while (remaining > 0)
-    {
+    while (remaining > 0) {
         uint32_t to_tick = g_samples_per_tick - g_tick_sample_acc;
         if (to_tick == 0) to_tick = g_samples_per_tick;
 
@@ -206,8 +231,7 @@ void TetrisAudio_Fill(uint32_t* dst, size_t n_samples)
         remaining -= chunk;
 
         g_tick_sample_acc += chunk;
-        if (g_tick_sample_acc >= g_samples_per_tick)
-        {
+        if (g_tick_sample_acc >= g_samples_per_tick) {
             g_tick_sample_acc = 0;
             TA_AdvanceTracks_IfNeeded(1);
         }
@@ -215,8 +239,7 @@ void TetrisAudio_Fill(uint32_t* dst, size_t n_samples)
 }
 
 // --- Internals ---
-static void TA_LoadNext(TA_Track* tr, uint8_t ch, uint16_t vol, int is_noise)
-{
+static void TA_LoadNext(TA_Track* tr, uint8_t ch, uint16_t vol, int is_noise) {
     if (tr->seq_len == 0) return;
 
     const TA_Event* ev = &tr->seq[tr->idx];
@@ -227,23 +250,18 @@ static void TA_LoadNext(TA_Track* tr, uint8_t ch, uint16_t vol, int is_noise)
     TA_ApplyEventToChannel(ch, ev, vol, is_noise);
 }
 
-static void TA_AdvanceOne(TA_Track* tr, uint8_t ch, uint16_t vol, int is_noise)
-{
-    if (tr->remain_ticks > 0)
-    {
+static void TA_AdvanceOne(TA_Track* tr, uint8_t ch, uint16_t vol, int is_noise) {
+    if (tr->remain_ticks > 0) {
         tr->remain_ticks--;
     }
 
-    if (tr->remain_ticks == 0)
-    {
+    if (tr->remain_ticks == 0) {
         TA_LoadNext(tr, ch, vol, is_noise);
     }
 }
 
-static void TA_AdvanceTracks_IfNeeded(uint32_t ticks_to_advance)
-{
-    while (ticks_to_advance--)
-    {
+static void TA_AdvanceTracks_IfNeeded(uint32_t ticks_to_advance) {
+    while (ticks_to_advance--) {
         TA_AdvanceOne(&tr_mel, 0, g_vol_mel, 0);
         TA_AdvanceOne(&tr_har, 1, g_vol_har, 0);
         TA_AdvanceOne(&tr_bas, 2, g_vol_bas, 0);
@@ -251,11 +269,9 @@ static void TA_AdvanceTracks_IfNeeded(uint32_t ticks_to_advance)
     }
 }
 
-static void TA_ApplyEventToChannel(uint8_t ch, const TA_Event* ev, uint16_t vol, int is_noise)
-{
-	if (is_noise)
-	{
-	    // Use ev->note as an "accent" selector:
+static void TA_ApplyEventToChannel(uint8_t ch, const TA_Event* ev, uint16_t vol, int is_noise) {
+	if (is_noise) {
+		// 	ev
 	    //  -1 = rest
 	    //   0 = normal hat
 	    //   1 = accent (louder)
@@ -272,8 +288,7 @@ static void TA_ApplyEventToChannel(uint8_t ch, const TA_Event* ev, uint16_t vol,
 	    return;
 	}
 
-    if (ev->note < 0)
-    {
+    if (ev->note < 0) {
         PSG_SetVoiceVol(ch, 0);
         return;
     }

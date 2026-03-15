@@ -34,4 +34,7 @@ uint16_t Buttons_HeldEvents(void);
 uint16_t Buttons_HeldMs(ButtonId b);
 bool Buttons_WasHeld(ButtonId b);
 
+uint16_t Buttons_PressedSnapshot(void);
+uint16_t Buttons_HeldSnapshot(void);
+
 #endif /* INC_BUTTONS_H_ */

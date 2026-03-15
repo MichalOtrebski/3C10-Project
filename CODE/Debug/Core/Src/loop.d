@@ -42,7 +42,8 @@ Core/Src/loop.o: ../Core/Src/loop.c ../Core/Inc/globals.h \
  ../Core/Inc/display.h ../Core/Inc/globals.h ../Core/Inc/text.h \
  ../Core/Inc/menu.h ../Core/Inc/display.h ../Core/Inc/snake.h \
  ../Core/Inc/buttons.h ../Core/Inc/audio.h ../Core/Inc/dac.h \
- ../Core/Inc/gpio.h
+ ../Core/Inc/gpio.h ../Core/Inc/tetris_audio.h ../Core/Inc/tetris.h \
+ ../Core/Inc/text.h
 ../Core/Inc/globals.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
@@ -100,3 +101,6 @@ Core/Src/loop.o: ../Core/Src/loop.c ../Core/Inc/globals.h \
 ../Core/Inc/audio.h:
 ../Core/Inc/dac.h:
 ../Core/Inc/gpio.h:
+../Core/Inc/tetris_audio.h:
+../Core/Inc/tetris.h:
+../Core/Inc/text.h:

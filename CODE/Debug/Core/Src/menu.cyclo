@@ -1,3 +1,4 @@
-../Core/Src/menu.c:15:12:clampi	2
-../Core/Src/menu.c:19:6:LCD_MenuDraw	11
-../Core/Src/menu.c:62:9:Menu_Update	7
+../Core/Src/menu.c:16:12:clampi	2
+../Core/Src/menu.c:20:13:LCD_DrawMenuTitleFancy	3
+../Core/Src/menu.c:46:6:LCD_MenuDraw	13
+../Core/Src/menu.c:133:9:Menu_Update	7

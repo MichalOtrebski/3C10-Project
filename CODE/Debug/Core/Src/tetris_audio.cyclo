@@ -1,8 +1,10 @@
 ../Core/Src/tetris_audio.c:35:14:midi_to_freq	1
-../Core/Src/tetris_audio.c:137:6:TetrisAudio_Init	3
-../Core/Src/tetris_audio.c:179:6:TetrisAudio_SetBPM	4
-../Core/Src/tetris_audio.c:190:6:TetrisAudio_Fill	6
-../Core/Src/tetris_audio.c:218:13:TA_LoadNext	3
-../Core/Src/tetris_audio.c:230:13:TA_AdvanceOne	3
-../Core/Src/tetris_audio.c:243:13:TA_AdvanceTracks_IfNeeded	2
-../Core/Src/tetris_audio.c:254:13:TA_ApplyEventToChannel	7
+../Core/Src/tetris_audio.c:136:6:TetrisAudio_Init	3
+../Core/Src/tetris_audio.c:176:6:TetrisAudio_Start	1
+../Core/Src/tetris_audio.c:191:6:TetrisAudio_Stop	1
+../Core/Src/tetris_audio.c:202:6:TetrisAudio_SetBPM	4
+../Core/Src/tetris_audio.c:212:6:TetrisAudio_Fill	7
+../Core/Src/tetris_audio.c:243:13:TA_LoadNext	3
+../Core/Src/tetris_audio.c:254:13:TA_AdvanceOne	3
+../Core/Src/tetris_audio.c:264:13:TA_AdvanceTracks_IfNeeded	2
+../Core/Src/tetris_audio.c:273:13:TA_ApplyEventToChannel	7

@@ -20,6 +20,7 @@
 #include "main.h"
 #include "dac.h"
 #include "dma.h"
+#include "rng.h"
 #include "tim.h"
 #include "gpio.h"
 
@@ -98,6 +99,7 @@ int main(void)
   MX_TIM6_Init();
   MX_DAC2_Init();
   MX_TIM15_Init();
+  MX_RNG_Init();
   /* USER CODE BEGIN 2 */
 
 
@@ -159,9 +161,10 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSI48;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV4;

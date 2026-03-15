@@ -1,8 +1,10 @@
 ../Core/Src/tetris_audio.c:35:14:midi_to_freq	16	static
-../Core/Src/tetris_audio.c:137:6:TetrisAudio_Init	104	static
-../Core/Src/tetris_audio.c:179:6:TetrisAudio_SetBPM	40	static
-../Core/Src/tetris_audio.c:190:6:TetrisAudio_Fill	32	static
-../Core/Src/tetris_audio.c:218:13:TA_LoadNext	32	static
-../Core/Src/tetris_audio.c:230:13:TA_AdvanceOne	24	static
-../Core/Src/tetris_audio.c:243:13:TA_AdvanceTracks_IfNeeded	16	static
-../Core/Src/tetris_audio.c:254:13:TA_ApplyEventToChannel	32	static
+../Core/Src/tetris_audio.c:136:6:TetrisAudio_Init	104	static
+../Core/Src/tetris_audio.c:176:6:TetrisAudio_Start	72	static
+../Core/Src/tetris_audio.c:191:6:TetrisAudio_Stop	8	static
+../Core/Src/tetris_audio.c:202:6:TetrisAudio_SetBPM	40	static
+../Core/Src/tetris_audio.c:212:6:TetrisAudio_Fill	32	static
+../Core/Src/tetris_audio.c:243:13:TA_LoadNext	32	static
+../Core/Src/tetris_audio.c:254:13:TA_AdvanceOne	24	static
+../Core/Src/tetris_audio.c:264:13:TA_AdvanceTracks_IfNeeded	16	static
+../Core/Src/tetris_audio.c:273:13:TA_ApplyEventToChannel	32	static

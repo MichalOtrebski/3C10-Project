@@ -19,6 +19,8 @@
 
 #include "buttons.h"
 #include "audio.h"
+#include "tetris_audio.h"
+#include "tetris.h"
 
 bool once = true;
 uint32_t last = 0;
@@ -49,16 +51,13 @@ void loop(void) {
 		Snake_Update(pressed, held_ev);
 		break;
 
+	case STATE_TETRIS:
+		Tetris_Update(pressed, held_ev);
+		break;
+
 	default:
 		break;
 	}
 
 	render_dma();
-//	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);
-
-		printf("DMA cnt = %lu\r\n",
-			   (unsigned long)__HAL_DMA_GET_COUNTER(hdac2.DMA_Handle1)); // or hdac1
-	HAL_Delay(1000);
-	printf("TIM15 CR2=0x%08lx\n", (unsigned long)TIM15->CR2);
-	HAL_Delay(500);
 }
