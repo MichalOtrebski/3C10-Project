@@ -14,8 +14,7 @@
 #include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "audio.h"
-#include "tetris_audio.h"
+#include "rng.h"
 
 static bool once = true;
 static uint32_t s_lastTickMs;
@@ -42,6 +41,8 @@ static int cur_type;
 static int has_piece;
 static int game_over;
 static int score;
+static int block;
+static int store_block;
 
 static uint16_t FallingColour(void){
     switch(cur_type){
@@ -84,7 +85,7 @@ void Grid_init(void){
 
 void Tetris_init(void){
 	Grid_init();
-	TetrisAudio_Init(SR);
+	store_block == -1;
 }
 
 void Draw_Field(void){
@@ -259,15 +260,19 @@ void B7_init(int state, int anch_x, int anch_y){//T shape
 }
 
 int B_init(int state, int anch_x, int anch_y, int B){
-	int block;
-
+	static int last_block = -1;
 	if(B == -1){
-		block = rand()%7;
+		uint32_t random;
+		do{
+			HAL_RNG_GenerateRandomNumber(&hrng, &random);
+			block = random %7;
+		} while(last_block == block);
+		last_block = block;
+		printf("%u\n", block);
 	}
 	else{
 		block = B;
 	}
-
 	switch(block){
 	case 0:
 		 B1_init(state, anch_x, anch_y); break;
@@ -514,6 +519,32 @@ void place(void){
 			}
 		}
 }
+//
+//void stored(int stored_b){
+//	switch(stored_b){
+//	case 0:
+//
+//		break;
+//	case 1:
+//
+//			break;
+//	case 2:
+//
+//			break;
+//	case 3:
+//
+//			break;
+//	case 4:
+//
+//			break;
+//	case 5:
+//
+//			break;
+//	case 6:
+//
+//			break;
+//	}
+//}
 
 void rotate(void){
 	 int new_state = (cur_state + 1) % 4;
@@ -608,7 +639,6 @@ void B_tick(void){
 
 	if(once){
 		Tetris_init();
-		TetrisAudio_Start();
 		s_lastTickMs = HAL_GetTick();
 		once = false;
 	}
@@ -640,12 +670,12 @@ void B_tick(void){
 		 place();
 		 clear_line();
 	 }
+
 }
 
 void Tetris_Update(uint16_t pressed, uint16_t held){
 
 	if (held & (1u << BTN_A)) {
-		TetrisAudio_Stop();
 		g_state = STATE_MENU;
 		game_over = 0;
 		once = true;
@@ -655,6 +685,10 @@ void Tetris_Update(uint16_t pressed, uint16_t held){
 
 	if (game_over == 1) {
 		LCD_DrawText(10, 70, "GAME OVER", C_BD, C_BG, 2);
+		LCD_DrawText(20, 90, "SCORE", C_BD, C_BG, 1);
+		char score_buf[10];
+	    itoa(score, score_buf, 10);
+		LCD_DrawText(70,90,score_buf,C_B4, C_BG, 1);
 		return;
 	}
 
@@ -669,13 +703,15 @@ void Tetris_Update(uint16_t pressed, uint16_t held){
 			move_left();
 		 }
 	 }
-
 	 if (pressed & (1u << BTN_RIGHT)){
 		 if(can_move_right() == 1){
 			move_right();
 		 }
 	 }
+	 if (pressed & (1u << BTN_UP)){
+		store_block = block;
 
+	 }
 	 if (pressed & (1u << BTN_A)){
 		 rotate();
 	 }
@@ -689,16 +725,16 @@ void Tetris_Update(uint16_t pressed, uint16_t held){
 
 
 	 if (held & (1u << BTN_DOWN)) {
-		while ((uint32_t)(now - s_lastTickMs) >= 50){
-			s_lastTickMs += 50;
-			B_tick();
-		}
+	    	while ((uint32_t)(now - s_lastTickMs) >= 50){
+	    		s_lastTickMs += 50;
+	    		B_tick();
+	    	}
 	  } else {
-		while ((uint32_t)(now - s_lastTickMs) >= 250)
-		{
-			s_lastTickMs += 250;
-			B_tick();
-		}
+		  while ((uint32_t)(now - s_lastTickMs) >= 300)
+		  {
+		        s_lastTickMs += 300;
+		        B_tick();
+		  }
 	  }
 
 	 Draw_Field();

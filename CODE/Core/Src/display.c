@@ -10,8 +10,7 @@
 #include "lcd_os.h"
 #include "lcd_conf.h"
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
-{
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi) {
   if (hspi == &hspi2)
   {
     LCD_CS_HIGH();
@@ -28,8 +27,7 @@ void LCD_ClearFrame() {
 	}
 }
 
-void LCD_DrawRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t color)
-{
+void LCD_DrawRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t color) {
 
     if (x0 >= FB_WIDTH || y0 >= FB_HEIGHT) return;
 
@@ -69,8 +67,7 @@ void render() {
 	}
 }
 
-void render_dma(void)
-{
+void render_dma(void) {
   for (uint32_t y = 0; y < FB_HEIGHT; y++)
   {
     for (uint32_t v = 0; v < 2; v++)

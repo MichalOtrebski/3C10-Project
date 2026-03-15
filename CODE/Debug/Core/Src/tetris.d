@@ -29,6 +29,7 @@ Core/Src/tetris.o: ../Core/Src/tetris.c ../Core/Inc/globals.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rng.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h \
@@ -41,8 +42,7 @@ Core/Src/tetris.o: ../Core/Src/tetris.c ../Core/Inc/globals.h \
  ../DISPLAY/Target/lcd_conf.h ../Core/Inc/stm32g4xx_nucleo_bus.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h \
- ../Core/Inc/audio.h ../Core/Inc/dac.h ../Core/Inc/main.h \
- ../Core/Inc/gpio.h ../Core/Inc/tetris_audio.h
+ ../Core/Inc/rng.h ../Core/Inc/main.h
 ../Core/Inc/globals.h:
 ../Core/Inc/display.h:
 ../Core/Inc/globals.h:
@@ -78,6 +78,7 @@ Core/Src/tetris.o: ../Core/Src/tetris.c ../Core/Inc/globals.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rng.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h:
@@ -94,8 +95,5 @@ Core/Src/tetris.o: ../Core/Src/tetris.c ../Core/Inc/globals.h \
 ../Core/Inc/stm32g4xx_nucleo_bus.h:
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h:
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h:
-../Core/Inc/audio.h:
-../Core/Inc/dac.h:
+../Core/Inc/rng.h:
 ../Core/Inc/main.h:
-../Core/Inc/gpio.h:
-../Core/Inc/tetris_audio.h:

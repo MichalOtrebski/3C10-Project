@@ -27,7 +27,7 @@ uint32_t last = 0;
 uint8_t direction = 0;
 
 void loop(void) {
-    uint32_t now_ms = HAL_GetTick();
+//    uint32_t now_ms = HAL_GetTick();
 
     LCD_ClearFrame();
 

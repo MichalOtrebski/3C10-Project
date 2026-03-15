@@ -15,8 +15,6 @@
 extern "C" {
 #endif
 
-static uint8_t g_tetris_playing = 0;
-
 void TetrisAudio_Start(void);
 void TetrisAudio_Stop(void);
 void TetrisAudio_Init(uint32_t sample_rate_hz);

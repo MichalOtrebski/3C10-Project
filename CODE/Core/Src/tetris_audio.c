@@ -31,6 +31,8 @@
 #define TA_WAVE_NOISE  3
 #endif
 
+static uint8_t g_tetris_playing = 0;
+
 // --- Utility: MIDI note -> frequency (A4=440Hz) ---
 static float midi_to_freq(int midi_note) {
     // midi_note: 69 -> 440Hz
