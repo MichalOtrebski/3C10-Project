@@ -18,6 +18,8 @@
 #include "audio.h"
 #include "tetris_audio.h"
 
+int predict_block[PREDICT] = {-1};
+
 static bool once = true;
 static uint32_t s_lastTickMs;
 
@@ -44,6 +46,7 @@ static int has_piece;
 static int game_over;
 static int score;
 static int block;
+static int hold_used;
 static int store_block;
 
 static uint16_t FallingColour(void)
@@ -123,8 +126,190 @@ static void DrawSinglePanelFrame(int x, int y, int w, int h)
 }
 
 static void DrawFuturePanels(void) {
-    DrawDoublePanelFrame(HOLD_X_T, HOLD_Y_T, 24, 18);
-    DrawSinglePanelFrame(NEXT_X_T, NEXT_Y_T, 24, 24);
+    DrawDoublePanelFrame(HOLD_X_T, HOLD_Y_T, 24, 20);
+    DrawSinglePanelFrame(NEXT_X_T, NEXT_Y_T, 24, 50);
+}
+
+static void DrawStoredBlock(void)
+{
+    if (store_block < 0) return;
+
+    int hx = HOLD_X_T + 4;
+    int hy = HOLD_Y_T + 4;
+    int s = 4;
+    uint16_t c;
+
+    switch (store_block) {
+        case 0: c = C_B1; break;
+        case 1: c = C_B2; break;
+        case 2: c = C_B3; break;
+        case 3: c = C_B4; break;
+        case 4: c = C_B5; break;
+        case 5: c = C_B6; break;
+        case 6: c = C_B7; break;
+        default: return;
+    }
+
+    switch(store_block){
+        	case 0: hy += 4; break;
+        	case 1: hx += 4; break;
+    		case 2: hx += 4; break;
+        	case 3: hx += 2;
+        	        hy += 2;
+        	        break;
+    		case 4:  hx += 2;
+            		 hy += 2;
+            		 break;
+    		case 5: hx += 4;
+    				hy += 2;
+    				break;
+    		case 6: hx += 2;
+    		        hy += 6;
+    		        break;
+        }
+
+    switch(store_block){
+        case 0: // I
+            LCD_DrawRect(hx,     hy, s, s, c);
+            LCD_DrawRect(hx+s,   hy, s, s, c);
+            LCD_DrawRect(hx+2*s, hy, s, s, c);
+            LCD_DrawRect(hx+3*s, hy, s, s, c);
+            break;
+
+        case 1: // L
+            LCD_DrawRect(hx,   hy,     s, s, c);
+            LCD_DrawRect(hx,   hy+s,   s, s, c);
+            LCD_DrawRect(hx,   hy+2*s, s, s, c);
+            LCD_DrawRect(hx+s, hy+2*s, s, s, c);
+            break;
+
+        case 2: // J
+            LCD_DrawRect(hx+s, hy,     s, s, c);
+            LCD_DrawRect(hx+s, hy+s,   s, s, c);
+            LCD_DrawRect(hx+s, hy+2*s, s, s, c);
+            LCD_DrawRect(hx,   hy+2*s, s, s, c);
+            break;
+
+        case 3: // S
+            LCD_DrawRect(hx+s,   hy,   s, s, c);
+            LCD_DrawRect(hx+2*s, hy,   s, s, c);
+            LCD_DrawRect(hx,     hy+s, s, s, c);
+            LCD_DrawRect(hx+s,   hy+s, s, s, c);
+            break;
+
+        case 4: // Z
+            LCD_DrawRect(hx,     hy,   s, s, c);
+            LCD_DrawRect(hx+s,   hy,   s, s, c);
+            LCD_DrawRect(hx+s,   hy+s, s, s, c);
+            LCD_DrawRect(hx+2*s, hy+s, s, s, c);
+            break;
+
+        case 5: // O
+            LCD_DrawRect(hx,   hy,   s, s, c);
+            LCD_DrawRect(hx+s, hy,   s, s, c);
+            LCD_DrawRect(hx,   hy+s, s, s, c);
+            LCD_DrawRect(hx+s, hy+s, s, s, c);
+            break;
+
+        case 6: // T
+            LCD_DrawRect(hx,     hy,   s, s, c);
+            LCD_DrawRect(hx+s,   hy,   s, s, c);
+            LCD_DrawRect(hx+2*s, hy,   s, s, c);
+            LCD_DrawRect(hx+s,   hy-s, s, s, c);
+            break;
+    }
+}
+
+static void DrawPredictedBlocks(void)
+{
+    int s = 4;
+
+    /* first preview starts near top-left of NEXT panel */
+    int base_x = NEXT_X_T + 4;
+    int base_y = NEXT_Y_T + 4;
+
+    for (int n = 0; n < PREDICT; n++) {
+        int type = predict_block[n];
+        if (type < 0) continue;
+
+        /* stack previews downward */
+        int bx = base_x;
+        int by = base_y + n * 15;
+
+        uint16_t c;
+        switch (type) {
+            case 0: c = C_B1; break;
+            case 1: c = C_B2; break;
+            case 2: c = C_B3; break;
+            case 3: c = C_B4; break;
+            case 4: c = C_B5; break;
+            case 5: c = C_B6; break;
+            case 6: c = C_B7; break;
+            default: continue;
+        }
+
+        /* per-piece offsets so each shape looks centered */
+        switch (type) {
+            case 0: by += 2; break;          // I
+            case 1: bx += 4; break;          // L
+            case 2: bx += 4; break;          // J
+            case 3: bx += 2; break;          // S
+            case 4: bx += 2; break;          // Z
+            case 5: bx += 4; break;          // O
+            case 6: bx += 2; break;          // T
+        }
+
+        switch (type) {
+            case 0: // I
+                LCD_DrawRect(bx,     by, s, s, c);
+                LCD_DrawRect(bx+s,   by, s, s, c);
+                LCD_DrawRect(bx+2*s, by, s, s, c);
+                LCD_DrawRect(bx+3*s, by, s, s, c);
+                break;
+
+            case 1: // L
+                LCD_DrawRect(bx,   by,     s, s, c);
+                LCD_DrawRect(bx,   by+s,   s, s, c);
+                LCD_DrawRect(bx,   by+2*s, s, s, c);
+                LCD_DrawRect(bx+s, by+2*s, s, s, c);
+                break;
+
+            case 2: // J
+                LCD_DrawRect(bx+s, by,     s, s, c);
+                LCD_DrawRect(bx+s, by+s,   s, s, c);
+                LCD_DrawRect(bx+s, by+2*s, s, s, c);
+                LCD_DrawRect(bx,   by+2*s, s, s, c);
+                break;
+
+            case 3: // S
+                LCD_DrawRect(bx+s,   by,   s, s, c);
+                LCD_DrawRect(bx+2*s, by,   s, s, c);
+                LCD_DrawRect(bx,     by+s, s, s, c);
+                LCD_DrawRect(bx+s,   by+s, s, s, c);
+                break;
+
+            case 4: // Z
+                LCD_DrawRect(bx,     by,   s, s, c);
+                LCD_DrawRect(bx+s,   by,   s, s, c);
+                LCD_DrawRect(bx+s,   by+s, s, s, c);
+                LCD_DrawRect(bx+2*s, by+s, s, s, c);
+                break;
+
+            case 5: // O
+                LCD_DrawRect(bx,   by,   s, s, c);
+                LCD_DrawRect(bx+s, by,   s, s, c);
+                LCD_DrawRect(bx,   by+s, s, s, c);
+                LCD_DrawRect(bx+s, by+s, s, s, c);
+                break;
+
+            case 6: // T
+                LCD_DrawRect(bx,     by,   s, s, c);
+                LCD_DrawRect(bx+s,   by,   s, s, c);
+                LCD_DrawRect(bx+2*s, by,   s, s, c);
+                LCD_DrawRect(bx+s,   by+s, s, s, c);
+                break;
+        }
+    }
 }
 
 void Grid_init(void)
@@ -144,6 +329,20 @@ void Tetris_init(void){
 	TetrisAudio_Init(SR);
 	Grid_init();
 	store_block = -1;
+	hold_used = 0;
+	int last_block = -1;
+	int block;
+	uint32_t random;
+	for (int i = 0; i < PREDICT; i++){
+		do{
+			HAL_RNG_GenerateRandomNumber(&hrng, &random);
+			block = random %7;
+		} while(last_block == block);
+
+		last_block = block;
+		predict_block[i] = block;
+
+	}
 }
 
 void Draw_Field(void)
@@ -293,15 +492,20 @@ void B7_init(int state, int anch_x, int anch_y){//T shape
 
 int B_init(int state, int anch_x, int anch_y, int B){
 	static int last_block = -1;
-	if(B == -1){
-		uint32_t random;
-		do{
-			HAL_RNG_GenerateRandomNumber(&hrng, &random);
-			block = random %7;
-		} while(last_block == block);
-		last_block = block;
-		printf("%u\n", block);
-	}
+		static int rand_block;
+		if(B == -1){
+			block = predict_block[0];
+			for(int i = 0; i < PREDICT - 1; i++){
+				predict_block[i] = predict_block[i+1];
+			}
+			uint32_t random;
+			do{
+				HAL_RNG_GenerateRandomNumber(&hrng, &random);
+				rand_block = random %7;
+			} while(last_block == rand_block);
+			last_block = rand_block;
+			predict_block[PREDICT - 1] = rand_block;
+		}
 	else{
 		block = B;
 	}
@@ -551,32 +755,40 @@ void place(void){
 			}
 		}
 }
-//
-//void stored(int stored_b){
-//	switch(stored_b){
-//	case 0:
-//
-//		break;
-//	case 1:
-//
-//			break;
-//	case 2:
-//
-//			break;
-//	case 3:
-//
-//			break;
-//	case 4:
-//
-//			break;
-//	case 5:
-//
-//			break;
-//	case 6:
-//
-//			break;
-//	}
-//}
+
+
+void hold(void)
+{
+    if (!has_piece || hold_used) {
+        return;
+    }
+
+    erase_B();
+
+    if (store_block == -1) {
+        store_block = cur_type;
+        has_piece = 0;
+        cur_state = 0;
+    } else {
+        int temp = store_block;
+        store_block = cur_type;
+
+        cur_type = temp;
+        cur_state = 0;
+        cur_x = SPAWN_X;
+        cur_y = SPAWN_Y;
+
+        if (grid[cur_x][cur_y] >= 3) {
+            game_over = 1;
+            return;
+        }
+
+        B_init(cur_state, cur_x, cur_y, cur_type);
+        has_piece = 1;
+    }
+
+    hold_used = 1;
+}
 
 void rotate(void){
 	 int new_state = (cur_state + 1) % 4;
@@ -685,6 +897,7 @@ void B_tick(void){
 		cur_state = 0;
 		cur_x = SPAWN_X;
 		cur_y = SPAWN_Y;
+		hold_used = 0;
 
 		if (grid[cur_x][cur_y] >= 3) {
 			game_over = 1;
@@ -756,6 +969,8 @@ void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev)
         game_over = 0;
         once = true;
         score = 0;
+        store_block = -1;
+        hold_used = 0;
         left_repeat_ms = 0;
         right_repeat_ms = 0;
         down_was_held = false;
@@ -773,6 +988,8 @@ void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev)
         B_tick();
         DrawScorePanel();
         DrawFuturePanels();
+        DrawPredictedBlocks();
+        DrawStoredBlock();
         Draw_Field();
         return;
     }
@@ -806,7 +1023,7 @@ void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev)
     }
 
     if (pressed & (1u << BTN_UP)) {
-        store_block = block;
+        hold();
     }
 
     if (pressed & (1u << BTN_A)) {
@@ -829,5 +1046,7 @@ void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev)
 
     DrawScorePanel();
     DrawFuturePanels();
+    DrawStoredBlock();
+    DrawPredictedBlocks();
     Draw_Field();
 }

@@ -42,6 +42,8 @@
 #define SPAWN_X  (GRID_W_T / 2)
 #define SPAWN_Y  3
 
+#define PREDICT  3
+
 
 #define C_BG 0x0000
 #define C_BD 0xFFFF
