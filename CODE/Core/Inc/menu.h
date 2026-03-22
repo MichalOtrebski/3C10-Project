@@ -20,9 +20,8 @@ typedef struct {
 static const MenuItem menuItems[] = {
 	{"TETRIS"},
 	{"SNAKE"},
+	{"BREAKOUT"},
 };
-
-
 
 #define MENU_COUNT (sizeof(menuItems) / sizeof(menuItems[0]))
 

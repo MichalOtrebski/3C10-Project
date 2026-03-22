@@ -39,6 +39,8 @@ int grid[GRID_W_T][GRID_H_T] = {0};
 static inline int GX(int gx) { return FIELD_X_T + (gx - 1) * CELL_T; }
 static inline int GY(int gy) { return FIELD_Y_T + (gy - 1) * CELL_T; }
 
+float scale;
+
 static int cur_x, cur_y;
 static int cur_state;
 static int cur_type;
@@ -49,8 +51,7 @@ static int block;
 static int hold_used;
 static int store_block;
 
-static uint16_t FallingColour(void)
-{
+static uint16_t FallingColour(void) {
     switch (cur_type) {
     case 0: return C_B1;
     case 1: return C_B2;
@@ -63,8 +64,7 @@ static uint16_t FallingColour(void)
     }
 }
 
-static uint16_t BlockColourFromCell(int cell)
-{
+static uint16_t BlockColourFromCell(int cell) {
     switch (cell) {
     case 2: return FallingColour();
     case 3: return C_B1;
@@ -99,8 +99,61 @@ static void DrawCell(int gx, int gy, uint16_t c) {
     }
 }
 
-static void DrawDoublePanelFrame(int x, int y, int w, int h)
-{
+//static void DrawIconCellPx(int x, int y, int s, uint16_t c)
+//{
+//    if (c == C_BG) {
+//        LCD_DrawRect(x, y, s, s, C_BG);
+//        return;
+//    }
+//
+//    uint16_t border = Darken565(c, 60);
+//
+//    LCD_DrawRect(x, y, s, s, border);
+//
+//    if (s > 2) {
+//        LCD_DrawRect(x + 1, y + 1, s - 2, s - 2, c);
+//    }
+//}
+//
+//static void DrawTetrisIcon(void)
+//{
+//    int s = 6;      // block size
+//    int pad = 2;    // spacing from edge
+//
+//    int right = FIELD_X_T + FIELD_W_T;
+//    int bottom = FIELD_Y_T + FIELD_H_T;
+//
+//    int x = 40 + right - (3 * s) - pad;
+//    int y = bottom - (3 * s) - pad;
+//
+//    uint16_t c = C_B7;  // same colour as T piece (purple)
+//
+//    // top bar
+//    DrawIconCellPx(x,       y, s, C_B1);
+//    DrawIconCellPx(x + s,   y, s, C_B2);
+//    DrawIconCellPx(x + 2*s, y, s, C_B3);
+//
+//    // vertical stem
+//    DrawIconCellPx(x + s, y + s,     s, C_B4);
+//    DrawIconCellPx(x + s, y + 2*s,   s, C_B5);
+//}
+
+static void DrawMiniCell(int x, int y, int s, uint16_t c) {
+    if (c == C_BG) {
+        LCD_DrawRect(x, y, s, s, C_BG);
+        return;
+    }
+
+    uint16_t border = Darken565(c, 60);
+
+    LCD_DrawRect(x, y, s, s, border);
+
+    if (s > 2) {
+        LCD_DrawRect(x + 1, y + 1, s - 2, s - 2, c);
+    }
+}
+
+static void DrawDoublePanelFrame(int x, int y, int w, int h) {
     // outer border
     LCD_DrawRect(x - 2, y - 2, w + 4, h + 4, C_BD);
 
@@ -116,8 +169,7 @@ static void DrawDoublePanelFrame(int x, int y, int w, int h)
     }
 }
 
-static void DrawSinglePanelFrame(int x, int y, int w, int h)
-{
+static void DrawSinglePanelFrame(int x, int y, int w, int h) {
     LCD_DrawRect(x, y, w, h, C_BD);
 
     if (w > 2 && h > 2) {
@@ -130,8 +182,7 @@ static void DrawFuturePanels(void) {
     DrawSinglePanelFrame(NEXT_X_T, NEXT_Y_T, 24, 50);
 }
 
-static void DrawStoredBlock(void)
-{
+static void DrawStoredBlock(void) {
     if (store_block < 0) return;
 
     int hx = HOLD_X_T + 4;
@@ -151,80 +202,69 @@ static void DrawStoredBlock(void)
     }
 
     switch(store_block){
-        	case 0: hy += 4; break;
-        	case 1: hx += 4; break;
-    		case 2: hx += 4; break;
-        	case 3: hx += 2;
-        	        hy += 2;
-        	        break;
-    		case 4:  hx += 2;
-            		 hy += 2;
-            		 break;
-    		case 5: hx += 4;
-    				hy += 2;
-    				break;
-    		case 6: hx += 2;
-    		        hy += 6;
-    		        break;
-        }
+        case 0: hy += 4; break;
+        case 1: hx += 4; break;
+        case 2: hx += 4; break;
+        case 3: hx += 2; hy += 2; break;
+        case 4: hx += 2; hy += 2; break;
+        case 5: hx += 4; hy += 2; break;
+        case 6: hx += 2; hy += 6; break;
+    }
 
-    switch(store_block){
+    switch(store_block) {
         case 0: // I
-            LCD_DrawRect(hx,     hy, s, s, c);
-            LCD_DrawRect(hx+s,   hy, s, s, c);
-            LCD_DrawRect(hx+2*s, hy, s, s, c);
-            LCD_DrawRect(hx+3*s, hy, s, s, c);
+            DrawMiniCell(hx,     hy, s, c);
+            DrawMiniCell(hx+s,   hy, s, c);
+            DrawMiniCell(hx+2*s, hy, s, c);
+            DrawMiniCell(hx+3*s, hy, s, c);
             break;
 
         case 1: // L
-            LCD_DrawRect(hx,   hy,     s, s, c);
-            LCD_DrawRect(hx,   hy+s,   s, s, c);
-            LCD_DrawRect(hx,   hy+2*s, s, s, c);
-            LCD_DrawRect(hx+s, hy+2*s, s, s, c);
+            DrawMiniCell(hx,   hy,     s, c);
+            DrawMiniCell(hx,   hy+s,   s, c);
+            DrawMiniCell(hx,   hy+2*s, s, c);
+            DrawMiniCell(hx+s, hy+2*s, s, c);
             break;
 
         case 2: // J
-            LCD_DrawRect(hx+s, hy,     s, s, c);
-            LCD_DrawRect(hx+s, hy+s,   s, s, c);
-            LCD_DrawRect(hx+s, hy+2*s, s, s, c);
-            LCD_DrawRect(hx,   hy+2*s, s, s, c);
+            DrawMiniCell(hx+s, hy,     s, c);
+            DrawMiniCell(hx+s, hy+s,   s, c);
+            DrawMiniCell(hx+s, hy+2*s, s, c);
+            DrawMiniCell(hx,   hy+2*s, s, c);
             break;
 
         case 3: // S
-            LCD_DrawRect(hx+s,   hy,   s, s, c);
-            LCD_DrawRect(hx+2*s, hy,   s, s, c);
-            LCD_DrawRect(hx,     hy+s, s, s, c);
-            LCD_DrawRect(hx+s,   hy+s, s, s, c);
+            DrawMiniCell(hx+s,   hy,   s, c);
+            DrawMiniCell(hx+2*s, hy,   s, c);
+            DrawMiniCell(hx,     hy+s, s, c);
+            DrawMiniCell(hx+s,   hy+s, s, c);
             break;
 
         case 4: // Z
-            LCD_DrawRect(hx,     hy,   s, s, c);
-            LCD_DrawRect(hx+s,   hy,   s, s, c);
-            LCD_DrawRect(hx+s,   hy+s, s, s, c);
-            LCD_DrawRect(hx+2*s, hy+s, s, s, c);
+            DrawMiniCell(hx,     hy,   s, c);
+            DrawMiniCell(hx+s,   hy,   s, c);
+            DrawMiniCell(hx+s,   hy+s, s, c);
+            DrawMiniCell(hx+2*s, hy+s, s, c);
             break;
 
         case 5: // O
-            LCD_DrawRect(hx,   hy,   s, s, c);
-            LCD_DrawRect(hx+s, hy,   s, s, c);
-            LCD_DrawRect(hx,   hy+s, s, s, c);
-            LCD_DrawRect(hx+s, hy+s, s, s, c);
+            DrawMiniCell(hx,   hy,   s, c);
+            DrawMiniCell(hx+s, hy,   s, c);
+            DrawMiniCell(hx,   hy+s, s, c);
+            DrawMiniCell(hx+s, hy+s, s, c);
             break;
 
         case 6: // T
-            LCD_DrawRect(hx,     hy,   s, s, c);
-            LCD_DrawRect(hx+s,   hy,   s, s, c);
-            LCD_DrawRect(hx+2*s, hy,   s, s, c);
-            LCD_DrawRect(hx+s,   hy-s, s, s, c);
+            DrawMiniCell(hx,     hy,   s, c);
+            DrawMiniCell(hx+s,   hy,   s, c);
+            DrawMiniCell(hx+2*s, hy,   s, c);
+            DrawMiniCell(hx+s,   hy-s, s, c);
             break;
     }
 }
 
-static void DrawPredictedBlocks(void)
-{
+static void DrawPredictedBlocks(void) {
     int s = 4;
-
-    /* first preview starts near top-left of NEXT panel */
     int base_x = NEXT_X_T + 4;
     int base_y = NEXT_Y_T + 4;
 
@@ -232,7 +272,6 @@ static void DrawPredictedBlocks(void)
         int type = predict_block[n];
         if (type < 0) continue;
 
-        /* stack previews downward */
         int bx = base_x;
         int by = base_y + n * 15;
 
@@ -248,72 +287,70 @@ static void DrawPredictedBlocks(void)
             default: continue;
         }
 
-        /* per-piece offsets so each shape looks centered */
         switch (type) {
-            case 0: by += 2; break;          // I
-            case 1: bx += 4; break;          // L
-            case 2: bx += 4; break;          // J
-            case 3: bx += 2; break;          // S
-            case 4: bx += 2; break;          // Z
-            case 5: bx += 4; break;          // O
-            case 6: bx += 2; break;          // T
+            case 0: by += 2; break;
+            case 1: bx += 4; break;
+            case 2: bx += 4; break;
+            case 3: bx += 2; break;
+            case 4: bx += 2; break;
+            case 5: bx += 4; break;
+            case 6: bx += 2; break;
         }
 
         switch (type) {
             case 0: // I
-                LCD_DrawRect(bx,     by, s, s, c);
-                LCD_DrawRect(bx+s,   by, s, s, c);
-                LCD_DrawRect(bx+2*s, by, s, s, c);
-                LCD_DrawRect(bx+3*s, by, s, s, c);
+                DrawMiniCell(bx,     by, s, c);
+                DrawMiniCell(bx+s,   by, s, c);
+                DrawMiniCell(bx+2*s, by, s, c);
+                DrawMiniCell(bx+3*s, by, s, c);
                 break;
 
             case 1: // L
-                LCD_DrawRect(bx,   by,     s, s, c);
-                LCD_DrawRect(bx,   by+s,   s, s, c);
-                LCD_DrawRect(bx,   by+2*s, s, s, c);
-                LCD_DrawRect(bx+s, by+2*s, s, s, c);
+                DrawMiniCell(bx,   by,     s, c);
+                DrawMiniCell(bx,   by+s,   s, c);
+                DrawMiniCell(bx,   by+2*s, s, c);
+                DrawMiniCell(bx+s, by+2*s, s, c);
                 break;
 
             case 2: // J
-                LCD_DrawRect(bx+s, by,     s, s, c);
-                LCD_DrawRect(bx+s, by+s,   s, s, c);
-                LCD_DrawRect(bx+s, by+2*s, s, s, c);
-                LCD_DrawRect(bx,   by+2*s, s, s, c);
+                DrawMiniCell(bx+s, by,     s, c);
+                DrawMiniCell(bx+s, by+s,   s, c);
+                DrawMiniCell(bx+s, by+2*s, s, c);
+                DrawMiniCell(bx,   by+2*s, s, c);
                 break;
 
             case 3: // S
-                LCD_DrawRect(bx+s,   by,   s, s, c);
-                LCD_DrawRect(bx+2*s, by,   s, s, c);
-                LCD_DrawRect(bx,     by+s, s, s, c);
-                LCD_DrawRect(bx+s,   by+s, s, s, c);
+                DrawMiniCell(bx+s,   by,   s, c);
+                DrawMiniCell(bx+2*s, by,   s, c);
+                DrawMiniCell(bx,     by+s, s, c);
+                DrawMiniCell(bx+s,   by+s, s, c);
                 break;
 
             case 4: // Z
-                LCD_DrawRect(bx,     by,   s, s, c);
-                LCD_DrawRect(bx+s,   by,   s, s, c);
-                LCD_DrawRect(bx+s,   by+s, s, s, c);
-                LCD_DrawRect(bx+2*s, by+s, s, s, c);
+                DrawMiniCell(bx,     by,   s, c);
+                DrawMiniCell(bx+s,   by,   s, c);
+                DrawMiniCell(bx+s,   by+s, s, c);
+                DrawMiniCell(bx+2*s, by+s, s, c);
                 break;
 
             case 5: // O
-                LCD_DrawRect(bx,   by,   s, s, c);
-                LCD_DrawRect(bx+s, by,   s, s, c);
-                LCD_DrawRect(bx,   by+s, s, s, c);
-                LCD_DrawRect(bx+s, by+s, s, s, c);
+                DrawMiniCell(bx,   by,   s, c);
+                DrawMiniCell(bx+s, by,   s, c);
+                DrawMiniCell(bx,   by+s, s, c);
+                DrawMiniCell(bx+s, by+s, s, c);
                 break;
 
             case 6: // T
-                LCD_DrawRect(bx,     by,   s, s, c);
-                LCD_DrawRect(bx+s,   by,   s, s, c);
-                LCD_DrawRect(bx+2*s, by,   s, s, c);
-                LCD_DrawRect(bx+s,   by+s, s, s, c);
+                DrawMiniCell(bx,     by,   s, c);
+                DrawMiniCell(bx+s,   by,   s, c);
+                DrawMiniCell(bx+2*s, by,   s, c);
+                DrawMiniCell(bx+s,   by+s, s, c);
                 break;
         }
     }
 }
 
-void Grid_init(void)
-{
+void Grid_init(void) {
     for (int i = 0; i < GRID_W_T; i++) {
         for (int j = 0; j < GRID_H_T; j++) {
             if (i == 0 || i == GRID_W_T - 1 || j == 0 || j == GRID_H_T - 1) {
@@ -325,7 +362,7 @@ void Grid_init(void)
     }
 }
 
-void Tetris_init(void){
+void Tetris_init(void) {
 	TetrisAudio_Init(SR);
 	Grid_init();
 	store_block = -1;
@@ -345,8 +382,7 @@ void Tetris_init(void){
 	}
 }
 
-void Draw_Field(void)
-{
+void Draw_Field(void) {
     LCD_DrawRect(FIELD_X_T - 2, FIELD_Y_T - 2, FIELD_W_T + 4, FIELD_H_T + 4, C_BD);
     LCD_DrawRect(FIELD_X_T, FIELD_Y_T, FIELD_W_T, FIELD_H_T, C_BG);
 
@@ -357,7 +393,7 @@ void Draw_Field(void)
     }
 }
 
-void B1_init(int state, int anch_x, int anch_y){//I shape
+void B1_init(int state, int anch_x, int anch_y) {//I shape
 	if (state == 1 || state == 3){//vertical
 		grid[anch_x][anch_y] = 2;
 		grid[anch_x][anch_y - 1] = 2;
@@ -372,7 +408,7 @@ void B1_init(int state, int anch_x, int anch_y){//I shape
 	}
 }
 
-void B2_init(int state, int anch_x, int anch_y){//L shape
+void B2_init(int state, int anch_x, int anch_y) {//L shape
 	if (state == 0){
 		grid[anch_x][anch_y] = 2;
 		grid[anch_x][anch_y - 1] = 2;
@@ -399,7 +435,7 @@ void B2_init(int state, int anch_x, int anch_y){//L shape
 	}
 }
 
-void B3_init(int state, int anch_x, int anch_y){//J shape
+void B3_init(int state, int anch_x, int anch_y) {//J shape
 	if (state == 0){
 		grid[anch_x][anch_y] = 2;
 		grid[anch_x][anch_y - 1] = 2;
@@ -426,7 +462,7 @@ void B3_init(int state, int anch_x, int anch_y){//J shape
 	}
 }
 
-void B4_init(int state, int anch_x, int anch_y){//S shape
+void B4_init(int state, int anch_x, int anch_y) {//S shape
 	if (state == 0 || state == 2){//horizontal
 		grid[anch_x][anch_y] = 2;
 		grid[anch_x - 1][anch_y] = 2;
@@ -441,7 +477,7 @@ void B4_init(int state, int anch_x, int anch_y){//S shape
 	}
 }
 
-void B5_init(int state, int anch_x, int anch_y){//Z shape
+void B5_init(int state, int anch_x, int anch_y) {//Z shape
 	if (state == 0 || state == 2){//horizontal
 		grid[anch_x][anch_y] = 2;
 		grid[anch_x + 1][anch_y] = 2;
@@ -456,14 +492,14 @@ void B5_init(int state, int anch_x, int anch_y){//Z shape
 	}
 }
 
-void B6_init(int state, int anch_x, int anch_y){//square shape
+void B6_init(int state, int anch_x, int anch_y) {//square shape
 	grid[anch_x][anch_y] = 2;
 	grid[anch_x - 1][anch_y] = 2;
 	grid[anch_x][anch_y - 1] = 2;
 	grid[anch_x - 1][anch_y - 1] = 2;
 }
 
-void B7_init(int state, int anch_x, int anch_y){//T shape
+void B7_init(int state, int anch_x, int anch_y) {//T shape
 	if (state == 0){//pointing down
 		grid[anch_x][anch_y] = 2;
 		grid[anch_x - 1][anch_y] = 2;
@@ -490,7 +526,7 @@ void B7_init(int state, int anch_x, int anch_y){//T shape
 	}
 }
 
-int B_init(int state, int anch_x, int anch_y, int B){
+int B_init(int state, int anch_x, int anch_y, int B) {
 	static int last_block = -1;
 		static int rand_block;
 		if(B == -1){
@@ -506,10 +542,10 @@ int B_init(int state, int anch_x, int anch_y, int B){
 			last_block = rand_block;
 			predict_block[PREDICT - 1] = rand_block;
 		}
-	else{
+	else {
 		block = B;
 	}
-	switch(block){
+	switch (block) {
 	case 0:
 		 B1_init(state, anch_x, anch_y); break;
 	case 1:
@@ -528,22 +564,21 @@ int B_init(int state, int anch_x, int anch_y, int B){
 	return block;
 }
 
-static int cell_ok(int x,int y){
+static int cell_ok(int x,int y) {
     if(x<0||x>=GRID_W_T||y<0||y>=GRID_H_T) return 0;
     if(grid[x][y]==1) return 0;
     if(grid[x][y]>2) return 0;
     return 1;
 }
 
-static int can_place_B1(int state,int ax,int ay)
-{
+static int can_place_B1(int state,int ax,int ay) {
     if(state==1 || state==3){ // vertical
         return cell_ok(ax,ay)
             && cell_ok(ax,ay-1)
             && cell_ok(ax,ay-2)
             && cell_ok(ax,ay+1);
     }
-    else{ // horizontal
+    else { // horizontal
         return cell_ok(ax,ay)
             && cell_ok(ax+1,ay)
             && cell_ok(ax-1,ay)
@@ -551,8 +586,7 @@ static int can_place_B1(int state,int ax,int ay)
     }
 }
 
-static int can_place_B2(int state,int ax,int ay)
-{
+static int can_place_B2(int state,int ax,int ay) {
     if(state==0){
         return cell_ok(ax,ay)
             && cell_ok(ax,ay-1)
@@ -579,8 +613,7 @@ static int can_place_B2(int state,int ax,int ay)
     }
 }
 
-static int can_place_B3(int state,int ax,int ay)
-{
+static int can_place_B3(int state,int ax,int ay) {
     if(state==0){
         return cell_ok(ax,ay)
             && cell_ok(ax,ay-1)
@@ -607,8 +640,7 @@ static int can_place_B3(int state,int ax,int ay)
     }
 }
 
-static int can_place_B4(int state,int ax,int ay)
-{
+static int can_place_B4(int state,int ax,int ay) {
     if(state==0 || state==2){
         return cell_ok(ax,ay)
             && cell_ok(ax-1,ay)
@@ -623,8 +655,7 @@ static int can_place_B4(int state,int ax,int ay)
     }
 }
 
-static int can_place_B5(int state,int ax,int ay)
-{
+static int can_place_B5(int state,int ax,int ay) {
     if(state==0 || state==2){
         return cell_ok(ax,ay)
             && cell_ok(ax+1,ay)
@@ -639,16 +670,14 @@ static int can_place_B5(int state,int ax,int ay)
     }
 }
 
-static int can_place_B6(int state,int ax,int ay)
-{
+static int can_place_B6(int state,int ax,int ay) {
     return cell_ok(ax,ay)
         && cell_ok(ax-1,ay)
         && cell_ok(ax,ay-1)
         && cell_ok(ax-1,ay-1);
 }
 
-static int can_place_B7(int state,int ax,int ay)
-{
+static int can_place_B7(int state,int ax,int ay) {
     if(state==0){
         return cell_ok(ax,ay)
             && cell_ok(ax-1,ay)
@@ -675,20 +704,20 @@ static int can_place_B7(int state,int ax,int ay)
     }
 }
 
-int can_move_down(void){
+int can_move_down(void) {
 	for(int j = GRID_H_T - 2; j >= 0; j--){
-			 for(int i = 0; i < GRID_W_T; i++){
-				 if (grid[i][j] == 2){
-					 if(grid[i][j + 1] > 2 || grid[i][j + 1] == 1){
-						 return 0;
-					 }
+		 for(int i = 0; i < GRID_W_T; i++){
+			 if (grid[i][j] == 2){
+				 if(grid[i][j + 1] > 2 || grid[i][j + 1] == 1){
+					 return 0;
 				 }
 			 }
 		 }
+	 }
 	return 1;
 }
 
-int can_move_right(void){
+int can_move_right(void) {
 	for(int j = GRID_H_T - 2; j >= 0; j--){
 			 for(int i = 0; i < GRID_W_T; i++){
 				 if (grid[i][j] == 2){
@@ -701,20 +730,20 @@ int can_move_right(void){
 	return 1;
 }
 
-int can_move_left(void){
+int can_move_left(void) {
 	for(int j = GRID_H_T - 2; j >= 0; j--){
-				 for(int i = 0; i < GRID_W_T; i++){
-					 if (grid[i][j] == 2){
-						 if(grid[i - 1][j] > 2 || grid[i - 1][j] == 1){
-							 return 0;
-						 }
+			 for(int i = 0; i < GRID_W_T; i++){
+				 if (grid[i][j] == 2){
+					 if(grid[i - 1][j] > 2 || grid[i - 1][j] == 1){
+						 return 0;
 					 }
 				 }
 			 }
-		return 1;
+		 }
+	return 1;
 }
 
-void erase_B(void){
+void erase_B(void) {
 	for(int j = 0; j < GRID_H_T; j++){
 		for(int i = 0; i < GRID_W_T; i++){
 			if(grid[i][j] == 2){
@@ -724,41 +753,40 @@ void erase_B(void){
 	}
 }
 
-void place(void){
+void place(void) {
 	for(int j = 0; j < GRID_H_T; j++){
-			for(int i = 0; i < GRID_W_T; i++){
-				if(grid[i][j] == 2){
-					switch(cur_type){
-					case 0:
-						grid[i][j] = 3;
-						break;
-					case 1:
-						grid[i][j] = 4;
-						break;
-					case 2:
-						grid[i][j] = 5;
-						break;
-					case 3:
-						grid[i][j] = 6;
-						break;
-					case 4:
-						grid[i][j] = 7;
-						break;
-					case 5:
-						grid[i][j] = 8;
-						break;
-					case 6:
-						grid[i][j] = 9;
-						break;
-					}
+		for(int i = 0; i < GRID_W_T; i++){
+			if(grid[i][j] == 2){
+				switch(cur_type){
+				case 0:
+					grid[i][j] = 3;
+					break;
+				case 1:
+					grid[i][j] = 4;
+					break;
+				case 2:
+					grid[i][j] = 5;
+					break;
+				case 3:
+					grid[i][j] = 6;
+					break;
+				case 4:
+					grid[i][j] = 7;
+					break;
+				case 5:
+					grid[i][j] = 8;
+					break;
+				case 6:
+					grid[i][j] = 9;
+					break;
 				}
 			}
 		}
+	}
 }
 
 
-void hold(void)
-{
+void hold(void) {
     if (!has_piece || hold_used) {
         return;
     }
@@ -790,7 +818,7 @@ void hold(void)
     hold_used = 1;
 }
 
-void rotate(void){
+void rotate(void) {
 	 int new_state = (cur_state + 1) % 4;
 
 	    erase_B();
@@ -814,7 +842,7 @@ void rotate(void){
 	    B_init(cur_state,cur_x,cur_y,cur_type);
 }
 
-int check_line(int j){
+int check_line(int j) {
 	int gap = 0;
 	for(int i = 1; i < GRID_W_T - 1; i++){
 		if (grid[i][j] < 3){
@@ -825,7 +853,7 @@ int check_line(int j){
 	return gap;
 }
 
-void move_line(int k){
+void move_line(int k) {
 	for(int j = k; j > 0; j--){
 		for(int i = 1; i < GRID_W_T - 1; i++){
 			if (j == 1){
@@ -838,7 +866,7 @@ void move_line(int k){
 	}
 }
 
-void clear_line(void){
+void clear_line(void) {
 	for(int j = GRID_H_T - 2; j > 0; j--){
 		if(check_line(j) == 0){
 			int counter = 0;
@@ -849,27 +877,45 @@ void clear_line(void){
 					counter++;
 				}
 			}
+
+			switch(counter){
+				case 1:
+					scale = 1;
+					break;
+				case 2:
+					scale = 1.3;
+					break;
+				case 3:
+					scale = 1.6;
+					break;
+				case 4:
+					scale = 2;
+					break;
+				default:
+					scale = 1;
+					break;
+				}
+
 				move_line(j);
-				score = score + (counter + 1) * 10;
+				score = score + (counter) * 10 * scale;
 			} while(check_line(j) == 0);
 		}
 	}
 }
 
-static void move_down(void)
-{
+static void move_down(void) {
     cur_y++;
     erase_B();
     B_init(cur_state, cur_x, cur_y, cur_type);
 }
 
-static void move_right(void){
+static void move_right(void) {
 	cur_x++;
 	erase_B();
 	B_init(cur_state, cur_x, cur_y, cur_type);
 }
 
-static void move_left(void){
+static void move_left(void) {
 	cur_x--;
 	erase_B();
 	B_init(cur_state, cur_x, cur_y, cur_type);
@@ -888,11 +934,11 @@ void B_tick(void){
 		once = false;
 	}
 
-	if(game_over){
+	if(game_over) {
 		return;
 	}
 
-	if (!has_piece){
+	if (!has_piece) {
 		has_piece = 1;
 		cur_state = 0;
 		cur_x = SPAWN_X;
@@ -916,7 +962,6 @@ void B_tick(void){
 		 place();
 		 clear_line();
 	 }
-
 }
 
 static void DrawGameOverPanel(void) {
@@ -954,8 +999,7 @@ static void DrawScorePanel(void) {
     LCD_DrawText(SCORE_X_T + 40, SCORE_Y_T + 3, buf, C_B4, C_BG, 1);
 }
 
-void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev)
-{
+void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev) {
     static uint32_t left_repeat_ms = 0;
     static uint32_t right_repeat_ms = 0;
     static bool down_was_held = false;
@@ -991,6 +1035,7 @@ void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev)
         DrawPredictedBlocks();
         DrawStoredBlock();
         Draw_Field();
+//        DrawTetrisIcon();
         return;
     }
 
@@ -1049,4 +1094,5 @@ void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev)
     DrawStoredBlock();
     DrawPredictedBlocks();
     Draw_Field();
+//    DrawTetrisIcon();
 }

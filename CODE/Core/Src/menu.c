@@ -43,6 +43,13 @@ static void LCD_DrawMenuTitleFancy(int x, int y, const char *title, uint16_t nor
         return;
     }
 
+    if (strcmp(title, "BREAKOUT") == 0)
+    {
+
+    	LCD_DrawText(x, y, "BREAKOUT",  RGB565_WHITE, bg, 2);
+        return;
+    }
+
     // Default
     LCD_DrawText(x, y, title, normalFg, bg, 2);
 }

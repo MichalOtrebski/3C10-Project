@@ -27,6 +27,7 @@ typedef enum {
     STATE_MENU = 0,
     STATE_TETRIS,
     STATE_SNAKE,
+	STATE_BREAKOUT,
 } SystemState;
 
 extern volatile SystemState g_state;

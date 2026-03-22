@@ -1,0 +1,17 @@
+../Core/Src/breakout.c:22:6:block_intl	3
+../Core/Src/breakout.c:28:6:block_draw	9
+../Core/Src/breakout.c:58:6:plat_intl	1
+../Core/Src/breakout.c:64:6:ball_intl	1
+../Core/Src/breakout.c:70:6:initialise	1
+../Core/Src/breakout.c:83:6:release_ball	3
+../Core/Src/breakout.c:92:6:bouncex	1
+../Core/Src/breakout.c:96:6:bouncexplat	1
+../Core/Src/breakout.c:100:6:bouncey	1
+../Core/Src/breakout.c:106:6:does_collide_blk	12
+../Core/Src/breakout.c:130:6:does_collide_wall	4
+../Core/Src/breakout.c:136:6:does_collide_plat	5
+../Core/Src/breakout.c:146:6:ball_update	2
+../Core/Src/breakout.c:153:6:platform_update	6
+../Core/Src/breakout.c:160:6:break_Tick	3
+../Core/Src/breakout.c:169:6:break_draw	2
+../Core/Src/breakout.c:183:6:Breakout_Update	5

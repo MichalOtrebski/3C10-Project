@@ -1,5 +1,7 @@
-Core/Src/loop.o: ../Core/Src/loop.c ../Core/Inc/globals.h \
- ../Core/Inc/main.h ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
+Core/Src/breakout.o: ../Core/Src/breakout.c ../Core/Inc/breakout.h \
+ ../Core/Inc/globals.h ../Core/Inc/display.h ../Core/Inc/globals.h \
+ ../Core/Inc/text.h ../Core/Inc/buttons.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h \
@@ -32,21 +34,13 @@ Core/Src/loop.o: ../Core/Src/loop.c ../Core/Inc/globals.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
- ../Core/Inc/stm32g4xx_nucleo.h ../Core/Inc/stm32g4xx_nucleo_errno.h \
- ../Core/Inc/stm32g4xx_nucleo_conf.h ../DISPLAY/Target/lcd_io.h \
- ../Drivers/BSP/Components/Common/lcd.h ../DISPLAY/Target/lcd_conf.h \
- ../Core/Inc/stm32g4xx_nucleo_bus.h \
- ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h \
- ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h \
- ../Core/Inc/gpio.h ../Core/Inc/main.h ../Core/Inc/loop.h \
- ../Core/Inc/display.h ../Core/Inc/globals.h ../Core/Inc/text.h \
- ../Core/Inc/menu.h ../Core/Inc/display.h ../Core/Inc/snake.h \
- ../Core/Inc/buttons.h ../Core/Inc/audio.h ../Core/Inc/dac.h \
- ../Core/Inc/gpio.h ../Core/Inc/tetris_audio.h ../Core/Inc/tetris.h \
- ../Core/Inc/text.h ../Core/Inc/breakout.h
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
+../Core/Inc/breakout.h:
 ../Core/Inc/globals.h:
-../Core/Inc/main.h:
+../Core/Inc/display.h:
+../Core/Inc/globals.h:
+../Core/Inc/text.h:
+../Core/Inc/buttons.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h:
@@ -81,29 +75,3 @@ Core/Src/loop.o: ../Core/Src/loop.c ../Core/Inc/globals.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
-../Core/Inc/stm32g4xx_nucleo.h:
-../Core/Inc/stm32g4xx_nucleo_errno.h:
-../Core/Inc/stm32g4xx_nucleo_conf.h:
-../DISPLAY/Target/lcd_io.h:
-../Drivers/BSP/Components/Common/lcd.h:
-../DISPLAY/Target/lcd_conf.h:
-../Core/Inc/stm32g4xx_nucleo_bus.h:
-../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h:
-../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h:
-../Core/Inc/gpio.h:
-../Core/Inc/main.h:
-../Core/Inc/loop.h:
-../Core/Inc/display.h:
-../Core/Inc/globals.h:
-../Core/Inc/text.h:
-../Core/Inc/menu.h:
-../Core/Inc/display.h:
-../Core/Inc/snake.h:
-../Core/Inc/buttons.h:
-../Core/Inc/audio.h:
-../Core/Inc/dac.h:
-../Core/Inc/gpio.h:
-../Core/Inc/tetris_audio.h:
-../Core/Inc/tetris.h:
-../Core/Inc/text.h:
-../Core/Inc/breakout.h:

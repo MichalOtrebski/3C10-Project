@@ -22,6 +22,8 @@
 #include "tetris_audio.h"
 #include "tetris.h"
 
+#include "breakout.h"
+
 bool once = true;
 uint32_t last = 0;
 uint8_t direction = 0;
@@ -81,6 +83,7 @@ void loop(void)
         if (chosen >= 0) {
             if (chosen == 0) g_state = STATE_TETRIS;
             if (chosen == 1) g_state = STATE_SNAKE;
+            if (chosen == 2) g_state = STATE_BREAKOUT;
         }
     } break;
 
@@ -91,6 +94,10 @@ void loop(void)
     case STATE_TETRIS:
         Tetris_Update(pressed, held, held_ev);
         break;
+
+    case STATE_BREAKOUT:
+    	Breakout_Update(pressed, held, held_ev);
+    	break;
 
     default:
         break;
