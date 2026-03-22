@@ -69,7 +69,6 @@ static uint16_t GetHeldEventMask(void)
 
 void loop(void)
 {
-    LCD_ClearFrame();
 
     Buttons_BeginFrame();
 
@@ -92,6 +91,7 @@ void loop(void)
         break;
 
     case STATE_TETRIS:
+    	LCD_ClearFrame();
         Tetris_Update(pressed, held, held_ev);
         break;
 
@@ -103,5 +103,15 @@ void loop(void)
         break;
     }
 
+    uint32_t start = DWT->CYCCNT;
+
+    /* code you want to measure */
     render_dma();
+
+    uint32_t end = DWT->CYCCNT;
+
+    uint32_t cycles = end - start;
+    uint32_t us = cycles / 170;
+
+    printf("Time: %lu us\r\n", us);
 }

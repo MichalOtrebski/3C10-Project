@@ -42,8 +42,9 @@ Core/Src/tetris.o: ../Core/Src/tetris.c ../Core/Inc/globals.h \
  ../DISPLAY/Target/lcd_conf.h ../Core/Inc/stm32g4xx_nucleo_bus.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h \
  ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h \
- ../Core/Inc/rng.h ../Core/Inc/main.h ../Core/Inc/audio.h \
- ../Core/Inc/dac.h ../Core/Inc/gpio.h ../Core/Inc/tetris_audio.h
+ ../Core/Inc/menu.h ../Core/Inc/rng.h ../Core/Inc/main.h \
+ ../Core/Inc/audio.h ../Core/Inc/dac.h ../Core/Inc/gpio.h \
+ ../Core/Inc/tetris_audio.h
 ../Core/Inc/globals.h:
 ../Core/Inc/display.h:
 ../Core/Inc/globals.h:
@@ -96,6 +97,7 @@ Core/Src/tetris.o: ../Core/Src/tetris.c ../Core/Inc/globals.h \
 ../Core/Inc/stm32g4xx_nucleo_bus.h:
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341.h:
 ../Drivers/BSP/Components/ili9341/../ili9341/ili9341_reg.h:
+../Core/Inc/menu.h:
 ../Core/Inc/rng.h:
 ../Core/Inc/main.h:
 ../Core/Inc/audio.h:

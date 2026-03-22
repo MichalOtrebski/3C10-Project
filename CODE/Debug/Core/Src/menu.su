@@ -1,4 +1,9 @@
-../Core/Src/menu.c:20:12:clampi	24	static
-../Core/Src/menu.c:24:13:LCD_DrawMenuTitleFancy	32	static
-../Core/Src/menu.c:57:6:LCD_MenuDraw	88	static
-../Core/Src/menu.c:145:9:Menu_Update	40	static
+../Core/Src/menu.c:24:12:clampi	24	static
+../Core/Src/menu.c:28:13:LCD_DrawMenuTitleFancy	32	static
+../Core/Src/menu.c:57:13:Menu_DrawStatic	48	static
+../Core/Src/menu.c:82:13:Menu_DrawRow	64	static
+../Core/Src/menu.c:116:13:Menu_DrawVisibleRows	24	static
+../Core/Src/menu.c:127:13:Menu_DrawScrollbar	56	static
+../Core/Src/menu.c:156:6:Menu_Invalidate	4	static
+../Core/Src/menu.c:163:6:LCD_MenuDraw	32	static
+../Core/Src/menu.c:208:9:Menu_Update	40	static

@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include "main.h"
 #include <stdio.h>
+#include "menu.h"
 #include <stdlib.h>
 #include "rng.h"
 #include "audio.h"
@@ -98,45 +99,6 @@ static void DrawCell(int gx, int gy, uint16_t c) {
         LCD_DrawRect(x + 1, y + 1, CELL_T - 2, CELL_T - 2, c);
     }
 }
-
-//static void DrawIconCellPx(int x, int y, int s, uint16_t c)
-//{
-//    if (c == C_BG) {
-//        LCD_DrawRect(x, y, s, s, C_BG);
-//        return;
-//    }
-//
-//    uint16_t border = Darken565(c, 60);
-//
-//    LCD_DrawRect(x, y, s, s, border);
-//
-//    if (s > 2) {
-//        LCD_DrawRect(x + 1, y + 1, s - 2, s - 2, c);
-//    }
-//}
-//
-//static void DrawTetrisIcon(void)
-//{
-//    int s = 6;      // block size
-//    int pad = 2;    // spacing from edge
-//
-//    int right = FIELD_X_T + FIELD_W_T;
-//    int bottom = FIELD_Y_T + FIELD_H_T;
-//
-//    int x = 40 + right - (3 * s) - pad;
-//    int y = bottom - (3 * s) - pad;
-//
-//    uint16_t c = C_B7;  // same colour as T piece (purple)
-//
-//    // top bar
-//    DrawIconCellPx(x,       y, s, C_B1);
-//    DrawIconCellPx(x + s,   y, s, C_B2);
-//    DrawIconCellPx(x + 2*s, y, s, C_B3);
-//
-//    // vertical stem
-//    DrawIconCellPx(x + s, y + s,     s, C_B4);
-//    DrawIconCellPx(x + s, y + 2*s,   s, C_B5);
-//}
 
 static void DrawMiniCell(int x, int y, int s, uint16_t c) {
     if (c == C_BG) {
@@ -1009,6 +971,7 @@ void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev) {
 
     if (held_ev & (1u << BTN_A)) {
     	Audio_SetMode(AUDIO_MODE_SFX);
+    	Menu_Invalidate();
         g_state = STATE_MENU;
         game_over = 0;
         once = true;

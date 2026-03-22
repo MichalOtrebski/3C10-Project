@@ -28,5 +28,6 @@ static const MenuItem menuItems[] = {
 void LCD_MenuDraw(void);
 
 uint8_t Menu_Update(uint16_t pressed, uint16_t held);
+void Menu_Invalidate(void);
 
 #endif /* INC_MENU_H_ */
