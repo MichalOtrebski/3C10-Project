@@ -48,9 +48,9 @@ static uint32_t g_samples_per_tick = 0;
 static uint32_t g_tick_sample_acc = 0;
 
 static uint16_t g_vol_mel = 2400;
-static uint16_t g_vol_har = 1200;
-static uint16_t g_vol_bas = 2600;
-static uint16_t g_vol_noi = 700;
+static uint16_t g_vol_har = 1600;
+static uint16_t g_vol_bas = 2200;
+static uint16_t g_vol_noi = 500;
 
 static TA_Track tr_mel;
 static TA_Track tr_har;

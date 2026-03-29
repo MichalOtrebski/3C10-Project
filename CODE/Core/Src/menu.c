@@ -64,9 +64,9 @@ static void Menu_DrawStatic(void)
     LCD_DrawRect(6, 6, FB_WIDTH - 12, 24, 0x2004);
     LCD_DrawRect(8, 8, FB_WIDTH - 16, 20, 0x4008);
 
-    LCD_DrawText(17, 12, "GAME MAN", RGB565_BLACK, 0x4008, 2);
-    LCD_DrawText(16, 11, "GAME MAN", 0x3186, 0x4008, 2);
-    LCD_DrawText(15, 10, "GAME MAN", RGB565_WHITE, 0x4008, 2);
+    LCD_DrawText(17, 12, "GAME BOX", RGB565_BLACK, 0x4008, 2);
+    LCD_DrawText(16, 11, "GAME BOX", 0x3186, 0x4008, 2);
+    LCD_DrawText(15, 10, "GAME BOX", RGB565_WHITE, 0x4008, 2);
 
     {
         const int topY = 38;

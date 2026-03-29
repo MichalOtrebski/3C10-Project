@@ -18,27 +18,8 @@ static bool ball_in = true;
 static bool game_ran = true;
 static bool ball_released = false;
 
-uint32_t time_coll;
-
-float ball_velx = 0.0f;
-float ball_vely = 0.0f;
-
-uint16_t pos_pow[2] = {0, 0};
-
-float pos_ball[2] = {0.0f, 0.0f};
-uint16_t pos_plat[2] = {0, 0};
-
-uint16_t line[2][142] = {{0}};
-bool coll_blk = false;
-int16_t coll_timer = -1;
-int16_t coll_i = -1;
-int16_t coll_j = -1;
-bool bounce_dir = false;
-
 static float prev_ball_x = 0.0f;
 static float prev_ball_y = 0.0f;
-
-uint16_t score = 0;
 
 static uint32_t s_lastGameTickMs;
 #define GAME_TICK_MS 16
@@ -49,22 +30,145 @@ static int16_t prev_draw_plat_x = -1;
 static int16_t prev_draw_plat_y = -1;
 static uint16_t prev_score_drawn = 0xFFFF;
 
+static uint8_t block_wave = 0;
+
+#define BALL_MIN_VX 6.0f
+
+float ball_velx = 0.0f;
+float ball_vely = 0.0f;
+
+float pos_ball[2] = {0.0f, 0.0f};
+uint16_t pos_plat[2] = {0, 0};
+
+uint16_t score = 0;
+
 /* -------------------- HELPERS -------------------- */
+
+static bool blocks_remaining(void) {
+    for (int j = 0; j < BLK_YQ; j++) {
+        for (int i = 0; i < BLK_XQ; i++) {
+            if (bloc_exst[j][i]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+static void clear_block_powers(int j, int i) {
+    bloc_pow1[j][i] = false;
+    bloc_pow2[j][i] = false;
+    bloc_pow3[j][i] = false;
+}
+
+static void assign_power_block(int j, int i, int type) {
+    clear_block_powers(j, i);
+
+    switch (type) {
+        case 1:
+            bloc_pow1[j][i] = true;
+            break;
+        case 2:
+            bloc_pow2[j][i] = true;
+            break;
+        case 3:
+            bloc_pow3[j][i] = true;
+            break;
+        default:
+            break;
+    }
+}
+
+static uint16_t block_base_colour_for_row(int row) {
+    switch (row) {
+        case 0: return BLK_RED;
+        case 1: return BLK_YLW;
+        case 2: return BLK_GRN;
+        case 3: return BLK_BLU;
+        case 4: return BLK_PRP;
+        default: return PLT_WHT;
+    }
+}
+
+static void enforce_min_horizontal_speed(void) {
+    if (ball_velx > -BALL_MIN_VX && ball_velx < BALL_MIN_VX) {
+        if (ball_velx < 0.0f) {
+            ball_velx = -BALL_MIN_VX;
+        } else {
+            ball_velx = BALL_MIN_VX;
+        }
+
+        {
+            float vy_sq = (BALL_VEL * BALL_VEL) - (ball_velx * ball_velx);
+            if (vy_sq < 1.0f) {
+                vy_sq = 1.0f;
+            }
+
+            if (ball_vely < 0.0f) {
+                ball_vely = -sqrtf(vy_sq);
+            } else {
+                ball_vely = sqrtf(vy_sq);
+            }
+        }
+    }
+}
+
+static void draw_block_cell(int j, int i) {
+    if (!bloc_exst[j][i]) {
+        return;
+    }
+
+    int x = FST_BLK_SPX + i * BLK_WDH;
+    int y = FST_BLK_SPY + j * BLK_HGT;
+    uint16_t base_colour = block_base_colour_for_row(j);
+
+    LCD_DrawRect(x, y, BLK_WDH, BLK_HGT, base_colour);
+
+    bool p1 = bloc_pow1[j][i];
+    bool p2 = bloc_pow2[j][i];
+    bool p3 = bloc_pow3[j][i];
+
+    if (p1 || p2 || p3) {
+        uint16_t accent = PLT_WHT;
+
+        if (p1) {
+            accent = C_SCORE;
+        } else if (p2) {
+            accent = BLK_BLU;
+        } else if (p3) {
+            accent = BLK_PRP;
+        }
+
+        LCD_DrawRect(x, y, BLK_WDH, 1, accent);
+        LCD_DrawRect(x, y + BLK_HGT - 1, BLK_WDH, 1, accent);
+        LCD_DrawRect(x, y, 1, BLK_HGT, accent);
+        LCD_DrawRect(x + BLK_WDH - 1, y, 1, BLK_HGT, accent);
+
+        if (BLK_WDH > 6 && BLK_HGT > 6) {
+            LCD_DrawRect(x + 2, y + 2, BLK_WDH - 4, BLK_HGT - 4, accent);
+            LCD_DrawRect(x + 3, y + 3, BLK_WDH - 6, BLK_HGT - 6, base_colour);
+        }
+
+        {
+            int cx = x + BLK_WDH / 2;
+            int cy = y + BLK_HGT / 2;
+            LCD_DrawRect(cx - 1, cy - 1, 3, 3, accent);
+        }
+    }
+}
 
 static void draw_static_scene(void) {
     LCD_DrawRect(0, 0, FB_WIDTH, FB_HEIGHT, C_BG);
     LCD_DrawText(4, 4, "SCORE", C_TEXT, C_BG, 1);
     border(2, 2, 2, 2, C_TEXT);
     LCD_DrawRect(0, UI_TOP, FB_WIDTH, 2, C_TEXT);
-    block_draw();
 }
 
 static void draw_score_if_needed(void) {
     if (score != prev_score_drawn) {
-        /* Clear only score number area */
-        LCD_DrawRect(60, 4, 40, 10, C_BG);
+        LCD_DrawRect(60, 4, 50, 10, C_BG);
 
-        char buf[10];
+        char buf[12];
         itoa(score, buf, 10);
         LCD_DrawText(60, 4, buf, C_SCORE, C_BG, 1);
 
@@ -128,41 +232,77 @@ static void draw_paddle_current(void) {
     prev_draw_plat_y = py;
 }
 
-/* -------------------- initialising game play -------------------- */
+static void respawn_blocks(void) {
+    block_wave++;
 
-void block_intl(void) {
-    for (int i = 0; i < BLK_XQ; i++) {
-        for (int j = 0; j < BLK_YQ; j++) {
+    for (int j = 0; j < BLK_YQ; j++) {
+        for (int i = 0; i < BLK_XQ; i++) {
             bloc_exst[j][i] = true;
-            bloc_pow1[j][i] = false;
-            bloc_pow2[j][i] = false;
-            bloc_pow3[j][i] = false;
+            clear_block_powers(j, i);
         }
+    }
+
+    {
+        int total_blocks = BLK_XQ * BLK_YQ;
+        int power_count = total_blocks / 8;
+        power_count += block_wave;
+
+        if (power_count < 3) {
+            power_count = 3;
+        }
+        if (power_count > total_blocks / 2) {
+            power_count = total_blocks / 2;
+        }
+
+        for (int n = 0; n < power_count; n++) {
+            int i = rand() % BLK_XQ;
+            int j = rand() % BLK_YQ;
+            int type = 1 + (rand() % 3);
+            assign_power_block(j, i, type);
+        }
+    }
+
+    block_draw();
+}
+
+static void handle_block_clear(void) {
+    if (!blocks_remaining()) {
+        respawn_blocks();
+
+        ball_released = false;
+        ball_velx = 0.0f;
+        ball_vely = 0.0f;
+
+        pos_plat[0] = PLT_SPX;
+        pos_plat[1] = PLT_SPY;
+
+        pos_ball[0] = pos_plat[0];
+        pos_ball[1] = BALL_SPY;
+
+        prev_ball_x = pos_ball[0];
+        prev_ball_y = pos_ball[1];
+
+        erase_old_ball();
+        erase_old_paddle();
+        draw_paddle_current();
+        draw_ball_current();
     }
 }
 
+/* -------------------- initialising game play -------------------- */
+
+void block_intl(void) {
+    block_wave = 0;
+    respawn_blocks();
+}
+
 void block_draw(void) {
-    for (int i = 0; i < BLK_XQ; i++) {
-        for (int j = 0; j < BLK_YQ; j++) {
-            if (!bloc_exst[j][i]) continue;
-
-            uint16_t colour = BLK_RED;
-            switch (j) {
-                case 0: colour = BLK_RED; break;
-                case 1: colour = BLK_YLW; break;
-                case 2: colour = BLK_GRN; break;
-                case 3: colour = BLK_BLU; break;
-                case 4: colour = BLK_PRP; break;
-                default: colour = PLT_WHT; break;
+    for (int j = 0; j < BLK_YQ; j++) {
+        for (int i = 0; i < BLK_XQ; i++) {
+            if (!bloc_exst[j][i]) {
+                continue;
             }
-
-            LCD_DrawRect(
-                FST_BLK_SPX + i * BLK_WDH,
-                FST_BLK_SPY + j * BLK_HGT,
-                BLK_WDH,
-                BLK_HGT,
-                colour
-            );
+            draw_block_cell(j, i);
         }
     }
 }
@@ -198,13 +338,6 @@ void initialise(void) {
     ball_in = true;
 
     score = 0;
-    time_coll = INT_MAX;
-    coll_timer = -1;
-    coll_blk = false;
-    coll_i = -1;
-    coll_j = -1;
-    bounce_dir = 0;
-
     ball_velx = 0.0f;
     ball_vely = 0.0f;
 
@@ -217,8 +350,6 @@ void initialise(void) {
     prev_draw_plat_y = -1;
     prev_score_drawn = 0xFFFF;
 
-    block_intl();
-
     pos_plat[0] = PLT_SPX;
     pos_plat[1] = PLT_SPY;
 
@@ -226,6 +357,7 @@ void initialise(void) {
     pos_ball[1] = BALL_SPY;
 
     draw_static_scene();
+    block_intl();
     draw_score_if_needed();
     draw_paddle_current();
     draw_ball_current();
@@ -237,40 +369,43 @@ void initialise(void) {
 
 void release_ball(uint16_t pressed) {
     if (!ball_released && (pressed & (1u << BTN_A))) {
-        ball_velx = BALL_VEL * (((float)rand() / (float)RAND_MAX) - 0.5f) * 2.0f;
-        ball_vely = -BALL_VEL;
+        float r = ((float)rand() / (float)RAND_MAX);
+        ball_velx = BALL_VEL * ((r - 0.5f) * 1.6f);
+        ball_vely = -sqrtf((BALL_VEL * BALL_VEL) - (ball_velx * ball_velx));
+
+        enforce_min_horizontal_speed();
         ball_released = true;
     }
 }
 
 /* -------------------- bounce code -------------------- */
 
-void future_pos(void) {
-    float oldxpos = pos_ball[0];
-    float oldypos = pos_ball[1];
-
-    for (int i = 0; i < 142; i++) {
-        oldxpos += ball_velx * BALL_INT;
-        oldypos += ball_vely * BALL_INT;
-
-        if (oldxpos - BALL_WDH / 2 < FIELD_X ||
-            oldxpos + BALL_WDH / 2 > FIELD_X + FIELD_W_BREAKOUT ||
-            oldypos - BALL_HGT / 2 < FIELD_Y ||
-            oldypos + BALL_HGT / 2 > FIELD_Y + FIELD_H_BREAKOUT) {
-            break;
-        }
-
-        line[0][i] = (uint16_t)roundf(oldxpos);
-        line[1][i] = (uint16_t)roundf(oldypos);
-    }
-}
-
 void bouncex(void) {
     ball_velx = -ball_velx;
 }
 
 void bouncexplat(float position) {
-    ball_velx = (position - 0.5f) * 2.0f * BALL_VEL;
+    float offset = (position - 0.5f) * 2.0f;
+
+    if (offset > -0.08f && offset < 0.08f) {
+        offset = (offset < 0.0f) ? -0.08f : 0.08f;
+    }
+
+    if (offset < -0.95f) offset = -0.95f;
+    if (offset > 0.95f)  offset = 0.95f;
+
+    ball_velx = offset * BALL_VEL;
+    ball_vely = -BALL_VEL;
+
+    enforce_min_horizontal_speed();
+
+    {
+        float vy_sq = (BALL_VEL * BALL_VEL) - (ball_velx * ball_velx);
+        if (vy_sq < 1.0f) {
+            vy_sq = 1.0f;
+        }
+        ball_vely = -sqrtf(vy_sq);
+    }
 }
 
 void bouncey(void) {
@@ -290,7 +425,9 @@ void does_collide_blk(void) {
 
     for (int j = 0; j < BLK_YQ; j++) {
         for (int i = 0; i < BLK_XQ; i++) {
-            if (!bloc_exst[j][i]) continue;
+            if (!bloc_exst[j][i]) {
+                continue;
+            }
 
             float blk_left   = FST_BLK_SPX + i * BLK_WDH;
             float blk_right  = blk_left + BLK_WDH;
@@ -303,20 +440,22 @@ void does_collide_blk(void) {
                 (ball_bottom >= blk_top) &&
                 (ball_top <= blk_bottom);
 
-            if (!overlap) continue;
+            if (!overlap) {
+                continue;
+            }
 
             bloc_exst[j][i] = false;
+            clear_block_powers(j, i);
             score += 10;
 
             LCD_DrawRect(
-                FST_BLK_SPX + i * BLK_WDH,
-                FST_BLK_SPY + j * BLK_HGT,
+                (int)blk_left,
+                (int)blk_top,
                 BLK_WDH,
                 BLK_HGT,
                 C_BG
             );
 
-            /* Determine which side was crossed using previous position */
             bool came_from_left   = (prev_right <= blk_left)   && (ball_right >= blk_left);
             bool came_from_right  = (prev_left >= blk_right)   && (ball_left <= blk_right);
             bool came_from_top    = (prev_bottom <= blk_top)   && (ball_bottom >= blk_top);
@@ -335,7 +474,6 @@ void does_collide_blk(void) {
                 pos_ball[1] = blk_bottom + BALL_HGT / 2.0f;
                 bouncey();
             } else {
-                /* Fallback if deeply embedded: choose smaller penetration */
                 float overlap_left   = ball_right - blk_left;
                 float overlap_right  = blk_right - ball_left;
                 float overlap_top    = ball_bottom - blk_top;
@@ -361,6 +499,7 @@ void does_collide_blk(void) {
                 }
             }
 
+            handle_block_clear();
             return;
         }
     }
@@ -370,9 +509,17 @@ void does_collide_wall(void) {
     if (pos_ball[0] - BALL_WDH / 2 <= FIELD_X) {
         pos_ball[0] = FIELD_X + BALL_WDH / 2;
         bouncex();
+
+        if (ball_velx < BALL_MIN_VX) {
+            ball_velx = BALL_MIN_VX;
+        }
     } else if (pos_ball[0] + BALL_WDH / 2 >= FIELD_X + FIELD_W_BREAKOUT) {
         pos_ball[0] = FIELD_X + FIELD_W_BREAKOUT - BALL_WDH / 2;
         bouncex();
+
+        if (ball_velx > -BALL_MIN_VX) {
+            ball_velx = -BALL_MIN_VX;
+        }
     }
 
     if (pos_ball[1] - BALL_HGT / 2 <= FIELD_Y) {
@@ -382,19 +529,16 @@ void does_collide_wall(void) {
 }
 
 void does_collide_plat(void) {
-    float plat_left  = pos_plat[0] - PLT_WDH / 2.0f;
-    float plat_right = pos_plat[0] + PLT_WDH / 2.0f;
-    float plat_top   = pos_plat[1] - PLT_HGT / 2.0f;
-    float plat_bottom = pos_plat[1] + PLT_HGT / 2.0f;
+    float plat_left   = pos_plat[0] - PLT_WDH / 2.0f;
+    float plat_right  = pos_plat[0] + PLT_WDH / 2.0f;
+    float plat_top    = pos_plat[1] - PLT_HGT / 2.0f;
 
     float ball_left      = pos_ball[0] - BALL_WDH / 2.0f;
     float ball_right     = pos_ball[0] + BALL_WDH / 2.0f;
-    float ball_top       = pos_ball[1] - BALL_HGT / 2.0f;
     float ball_bottom    = pos_ball[1] + BALL_HGT / 2.0f;
 
     float prev_ball_left   = prev_ball_x - BALL_WDH / 2.0f;
     float prev_ball_right  = prev_ball_x + BALL_WDH / 2.0f;
-    float prev_ball_top    = prev_ball_y - BALL_HGT / 2.0f;
     float prev_ball_bottom = prev_ball_y + BALL_HGT / 2.0f;
 
     bool x_overlap_now =
@@ -417,39 +561,46 @@ void does_collide_plat(void) {
 
         pos_ball[1] = plat_top - BALL_HGT / 2.0f;
         bouncexplat(pos);
-        bouncey();
     }
 }
 
 /* -------------------- movement updates -------------------- */
 
 void ball_update(void) {
-    if (!ball_released) return;
+    if (!ball_released) {
+        return;
+    }
 
-    int steps = 4;
-    float step_x = (ball_velx * BALL_INT) / steps;
-    float step_y = (ball_vely * BALL_INT) / steps;
+    {
+        int steps = 4;
+        float step_x = (ball_velx * BALL_INT) / (float)steps;
+        float step_y = (ball_vely * BALL_INT) / (float)steps;
 
-    for (int s = 0; s < steps; s++) {
-        prev_ball_x = pos_ball[0];
-        prev_ball_y = pos_ball[1];
+        for (int s = 0; s < steps; s++) {
+            prev_ball_x = pos_ball[0];
+            prev_ball_y = pos_ball[1];
 
-        pos_ball[0] += step_x;
-        pos_ball[1] += step_y;
+            pos_ball[0] += step_x;
+            pos_ball[1] += step_y;
 
-        does_collide_wall();
-        does_collide_plat();
-        does_collide_blk();
+            does_collide_wall();
+            does_collide_plat();
+            does_collide_blk();
+
+            if (!ball_released) {
+                break;
+            }
+        }
     }
 }
 
-void platform_update(uint16_t pressed) {
-    if ((pressed & (1u << BTN_LEFT)) &&
+void platform_update(uint16_t held) {
+    if ((held & (1u << BTN_LEFT)) &&
         (pos_plat[0] - PLT_WDH / 2 > FIELD_X)) {
         pos_plat[0] -= 3;
     }
 
-    if ((pressed & (1u << BTN_RIGHT)) &&
+    if ((held & (1u << BTN_RIGHT)) &&
         (pos_plat[0] + PLT_WDH / 2 < FIELD_X + FIELD_W_BREAKOUT)) {
         pos_plat[0] += 3;
     }
@@ -465,6 +616,8 @@ void platform_update(uint16_t pressed) {
     if (!ball_released) {
         pos_ball[0] = pos_plat[0];
         pos_ball[1] = BALL_SPY;
+        prev_ball_x = pos_ball[0];
+        prev_ball_y = pos_ball[1];
     }
 }
 
@@ -472,12 +625,11 @@ void platform_update(uint16_t pressed) {
 
 void break_Tick(void) {
     if (!ball_in) {
-    	return;
+        return;
     }
 
     if (pos_ball[1] + BALL_HGT / 2 >= FIELD_Y + FIELD_H_BREAKOUT) {
         ball_in = false;
-        return;
     }
 }
 
@@ -487,10 +639,13 @@ void break_draw(void) {
 
     draw_score_if_needed();
     draw_paddle_current();
-    draw_ball_current();
+
+    if (ball_in) {
+        draw_ball_current();
+    }
 
     if (!ball_in) {
-        LCD_DrawRect(8, 68, 90, 20, C_BG);
+        LCD_DrawRect(8, 68, 95, 20, C_BG);
         LCD_DrawText(10, 70, "GAME OVER", C_TEXT, C_BG, 2);
     }
 }
@@ -508,18 +663,20 @@ void Breakout_Update(uint16_t pressed, uint16_t held, uint16_t held_ev) {
         return;
     }
 
-    if (!ball_released) {
+    if (ball_in && !ball_released) {
         release_ball(pressed);
     }
 
-    uint32_t now = HAL_GetTick();
+    {
+        uint32_t now = HAL_GetTick();
 
-    while (ball_in && (uint32_t)(now - s_lastGameTickMs) >= GAME_TICK_MS) {
-        s_lastGameTickMs += GAME_TICK_MS;
+        while (ball_in && (uint32_t)(now - s_lastGameTickMs) >= GAME_TICK_MS) {
+            s_lastGameTickMs += GAME_TICK_MS;
 
-        platform_update(held);
-        ball_update();
-        break_Tick();
+            platform_update(held);
+            ball_update();
+            break_Tick();
+        }
     }
 
     break_draw();

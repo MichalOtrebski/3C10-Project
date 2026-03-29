@@ -128,7 +128,7 @@ static void Snake_DrawGameOverOnce(void)
 {
     if(s_gameOverDrawn) return;
 
-    LCD_DrawRect(8, 68, 90, 20, C_BG);
+    LCD_DrawRect(8, 68, 100, 20, C_BG);
     LCD_DrawText(10, 70, "GAME OVER", C_TEXT, C_BG, 2);
     s_gameOverDrawn = true;
 }

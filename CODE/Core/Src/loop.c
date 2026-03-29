@@ -70,6 +70,8 @@ static uint16_t GetHeldEventMask(void)
 void loop(void)
 {
 
+	uint32_t start = DWT->CYCCNT;
+
     Buttons_BeginFrame();
 
     uint16_t pressed = GetPressedMask();    // one-shot press
@@ -103,7 +105,7 @@ void loop(void)
         break;
     }
 
-    uint32_t start = DWT->CYCCNT;
+
 
     /* code you want to measure */
     render_dma();
