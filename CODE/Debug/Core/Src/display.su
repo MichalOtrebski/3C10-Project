@@ -12,5 +12,5 @@
 ../Core/Src/display.c:254:13:render_full_dma_internal	40	static
 ../Core/Src/display.c:284:13:flush_rect_scaled	64	static
 ../Core/Src/display.c:328:6:render_dma	16	static
-../Core/Src/display.c:365:6:border	40	static
-../Core/Src/display.c:385:10:Darken565	24	static
+../Core/Src/display.c:361:6:border	40	static
+../Core/Src/display.c:381:10:Darken565	24	static

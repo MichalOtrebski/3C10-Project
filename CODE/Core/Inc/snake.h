@@ -13,16 +13,31 @@
 
 #define UI_TOP 20
 #define BORDER 2
-#define CELL 4
+#define CELL 8
 
-#define FIELD_X BORDER
-#define FIELD_Y (UI_TOP + BORDER)
+/*
+ * Play area available below the UI.
+ */
+#define PLAY_W (FB_WIDTH - BORDER * 2)
+#define PLAY_H (FB_HEIGHT - UI_TOP - BORDER * 2)
 
-#define FIELD_W (FB_WIDTH - BORDER * 2)
-#define FIELD_H (FB_HEIGHT - UI_TOP - BORDER * 2)
+/*
+ * Grid size in cells.
+ */
+#define GRID_W (PLAY_W / CELL)
+#define GRID_H (PLAY_H / CELL)
 
-#define GRID_W FIELD_W / CELL
-#define GRID_H FIELD_H / CELL
+/*
+ * Actual pixel size of the grid.
+ */
+#define FIELD_W (GRID_W * CELL)
+#define FIELD_H (GRID_H * CELL)
+
+/*
+ * Center the grid in the available play area.
+ */
+#define FIELD_X ((FB_WIDTH - FIELD_W) / 2)
+#define FIELD_Y (UI_TOP + BORDER + ((PLAY_H - FIELD_H) / 2))
 
 // colors
 #define C_BG     0x0000
@@ -34,7 +49,7 @@
 // SNAKE
 typedef struct { uint8_t x,y; } Pt;
 
-#define SNAKE_MAX (GRID_W*GRID_H)
+#define SNAKE_MAX (GRID_W * GRID_H)
 
 static Pt snake[SNAKE_MAX];
 static int snake_len;
@@ -48,13 +63,9 @@ static int alive;
 static int score;
 
 // FUNCTIONS
-
 void Snake_Init(void);
 void Snake_Tick(void);
 void Snake_Draw(void);
 void Snake_Update(uint16_t pressed, uint16_t held);
-
-// HELPERS
-
 
 #endif /* INC_SNAKE_H_ */

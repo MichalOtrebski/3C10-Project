@@ -11,7 +11,7 @@
 #define C_BG     0x0000
 
 #define UI_TOP   20
-#define BORDER   2
+#define BORDER   4
 
 /* -------------------- BALL -------------------- */
 #define BALL_WDH 4
@@ -34,7 +34,6 @@
 #define FIELD_H_BREAKOUT  (FB_HEIGHT - UI_TOP - (BORDER * 2))
 
 /* -------------------- BLOCK POSITIONING -------------------- */
-/* Center blocks nicely instead of offsetting */
 #define BLOCKS_TOTAL_W   (BLK_XQ * BLK_WDH)
 #define FST_BLK_SPX      (FIELD_X + ((FIELD_W_BREAKOUT - BLOCKS_TOTAL_W) / 2))
 #define FST_BLK_SPY      (FIELD_Y + (FIELD_H_BREAKOUT / 8))
@@ -47,8 +46,18 @@
 #define PLT_SPY     (FIELD_Y + FIELD_H_BREAKOUT - (3 * PLT_HGT) - BALL_HGT)
 
 /* -------------------- BALL PHYSICS -------------------- */
-#define BALL_VEL 24.0f
-#define BALL_INT 0.05f
+#define BALL_VEL         120.0f
+#define BALL_MIN_VX      30.0f
+#define GAME_TICK_MS     16
+
+/* -------------------- POWER-UP DURATIONS -------------------- */
+#define POWER_SCORE_MS   8000u
+#define POWER_WIDE_MS    10000u
+#define POWER_SLOW_MS    8000u
+
+/* -------------------- POWER-UP TUNING -------------------- */
+#define POWER_WIDE_EXTRA_WDH  12
+#define POWER_SLOW_FACTOR     0.78f
 
 /* -------------------- BLOCK COLOURS -------------------- */
 #define BLK_RED 0xF800
@@ -68,8 +77,14 @@ extern float ball_vely;
 /* BALL */
 extern float pos_ball[2];
 
-/* PLATFORM */
+/* PLATFORM
+ * The improved .c tracks the platform internally as float for smoother motion,
+ * but keeps this exported integer position for compatibility with the rest
+ * of the project.
+ */
 extern uint16_t pos_plat[2];
+
+/* SCORE */
 
 /* -------------------- FUNCTIONS -------------------- */
 
@@ -94,8 +109,8 @@ void does_collide_wall(void);
 void does_collide_plat(void);
 
 /* Updates */
-void ball_update(void);
-void platform_update(uint16_t held);
+void ball_update(float dt);
+void platform_update(uint16_t held, float dt);
 
 /* Game loop */
 void break_Tick(void);

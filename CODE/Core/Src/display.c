@@ -337,10 +337,6 @@ void render_dma(void)
     if (dirty_count == 0)
         return;
 
-    /*
-     * Heuristic:
-     * if too many dirty rects, or dirty area is large, full refresh is cheaper.
-     */
     uint32_t total_area = 0;
     for (uint16_t i = 0; i < dirty_count; i++)
         total_area += (uint32_t)dirty_rects[i].w * dirty_rects[i].h;
