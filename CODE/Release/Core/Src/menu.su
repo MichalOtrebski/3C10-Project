@@ -1,6 +1,5 @@
-../Core/Src/menu.c:134:13:Menu_DrawScrollbar	16	static
 ../Core/Src/menu.c:89:13:Menu_DrawRow	40	static
 ../Core/Src/menu.c:123:13:Menu_DrawVisibleRows	16	static
-../Core/Src/menu.c:163:6:Menu_Invalidate	0	static
-../Core/Src/menu.c:170:6:LCD_MenuDraw	48	static
-../Core/Src/menu.c:215:9:Menu_Update	16	static
+../Core/Src/menu.c:134:6:Menu_Invalidate	0	static
+../Core/Src/menu.c:141:6:LCD_MenuDraw	48	static
+../Core/Src/menu.c:185:9:Menu_Update	16	static
