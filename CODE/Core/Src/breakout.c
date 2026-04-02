@@ -628,15 +628,12 @@ void release_ball(uint16_t pressed) {
 
 void bouncex(uint8_t typ) {
     ball_velx = -ball_velx;
-<<<<<<< Updated upstream
     enforce_min_horizontal_speed();
-=======
     if (typ) {
         BreakoutSFX_BlockHit();
     } else {
     	BreakoutSFX_Bounce();
     }
->>>>>>> Stashed changes
 }
 
 void bouncexplat(float position) {
@@ -769,12 +766,7 @@ void does_collide_blk(void) {
 void does_collide_wall(void) {
     if (pos_ball[0] - BALL_WDH / 2 <= FIELD_X) {
         pos_ball[0] = FIELD_X + BALL_WDH / 2;
-<<<<<<< Updated upstream
-        bouncex();
-    } else if (pos_ball[0] + BALL_WDH / 2 >= FIELD_X + FIELD_W_BREAKOUT) {
-        pos_ball[0] = FIELD_X + FIELD_W_BREAKOUT - BALL_WDH / 2;
-        bouncex();
-=======
+
         bouncex(0);
 
         if (ball_velx < BALL_MIN_VX) {
@@ -787,7 +779,6 @@ void does_collide_wall(void) {
         if (ball_velx > -BALL_MIN_VX) {
             ball_velx = -BALL_MIN_VX;
         }
->>>>>>> Stashed changes
     }
 
     if (pos_ball[1] - BALL_HGT / 2 <= FIELD_Y) {
