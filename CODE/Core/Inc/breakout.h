@@ -99,9 +99,9 @@ void initialise(void);
 void release_ball(uint16_t pressed);
 
 /* Physics / Bounce */
-void bouncex(void);
+void bouncex(uint8_t typ);
 void bouncexplat(float position);
-void bouncey(void);
+void bouncey(uint8_t typ);
 
 /* Collision */
 void does_collide_blk(void);

@@ -8,6 +8,7 @@
 #include <math.h>
 #include "menu.h"
 #include <limits.h>
+#include "breakout_sfx.h"
 
 /*
  * Power-up meanings:
@@ -625,12 +626,21 @@ void release_ball(uint16_t pressed) {
 
 /* -------------------- bounce code -------------------- */
 
-void bouncex(void) {
+void bouncex(uint8_t typ) {
     ball_velx = -ball_velx;
+<<<<<<< Updated upstream
     enforce_min_horizontal_speed();
+=======
+    if (typ) {
+        BreakoutSFX_BlockHit();
+    } else {
+    	BreakoutSFX_Bounce();
+    }
+>>>>>>> Stashed changes
 }
 
 void bouncexplat(float position) {
+	BreakoutSFX_Bounce();
     float offset = (position - 0.5f) * 2.0f;
 
     if (offset > -0.08f && offset < 0.08f) {
@@ -655,8 +665,15 @@ void bouncexplat(float position) {
     enforce_min_horizontal_speed();
 }
 
-void bouncey(void) {
+void bouncey(uint8_t typ) {
     ball_vely = -ball_vely;
+
+    if (typ) {
+        BreakoutSFX_BlockHit();
+    } else {
+    	BreakoutSFX_Bounce();
+    }
+
 }
 
 void does_collide_blk(void) {
@@ -707,16 +724,16 @@ void does_collide_blk(void) {
 
             if (came_from_left) {
                 pos_ball[0] = blk_left - BALL_WDH / 2.0f;
-                bouncex();
+                bouncex(1);
             } else if (came_from_right) {
                 pos_ball[0] = blk_right + BALL_WDH / 2.0f;
-                bouncex();
+                bouncex(1);
             } else if (came_from_top) {
                 pos_ball[1] = blk_top - BALL_HGT / 2.0f;
-                bouncey();
+                bouncey(1);
             } else if (came_from_bottom) {
                 pos_ball[1] = blk_bottom + BALL_HGT / 2.0f;
-                bouncey();
+                bouncey(1);
             } else {
                 float overlap_left   = ball_right - blk_left;
                 float overlap_right  = blk_right - ball_left;
@@ -731,14 +748,14 @@ void does_collide_blk(void) {
                     } else {
                         pos_ball[0] = blk_right + BALL_WDH / 2.0f;
                     }
-                    bouncex();
+                    bouncex(1);
                 } else {
                     if (overlap_top < overlap_bottom) {
                         pos_ball[1] = blk_top - BALL_HGT / 2.0f;
                     } else {
                         pos_ball[1] = blk_bottom + BALL_HGT / 2.0f;
                     }
-                    bouncey();
+                    bouncey(1);
                 }
             }
 
@@ -752,15 +769,30 @@ void does_collide_blk(void) {
 void does_collide_wall(void) {
     if (pos_ball[0] - BALL_WDH / 2 <= FIELD_X) {
         pos_ball[0] = FIELD_X + BALL_WDH / 2;
+<<<<<<< Updated upstream
         bouncex();
     } else if (pos_ball[0] + BALL_WDH / 2 >= FIELD_X + FIELD_W_BREAKOUT) {
         pos_ball[0] = FIELD_X + FIELD_W_BREAKOUT - BALL_WDH / 2;
         bouncex();
+=======
+        bouncex(0);
+
+        if (ball_velx < BALL_MIN_VX) {
+            ball_velx = BALL_MIN_VX;
+        }
+    } else if (pos_ball[0] + BALL_WDH / 2 >= FIELD_X + FIELD_W_BREAKOUT) {
+        pos_ball[0] = FIELD_X + FIELD_W_BREAKOUT - BALL_WDH / 2;
+        bouncex(0);
+
+        if (ball_velx > -BALL_MIN_VX) {
+            ball_velx = -BALL_MIN_VX;
+        }
+>>>>>>> Stashed changes
     }
 
     if (pos_ball[1] - BALL_HGT / 2 <= FIELD_Y) {
         pos_ball[1] = FIELD_Y + BALL_HGT / 2;
-        bouncey();
+        bouncey(0);
     }
 }
 

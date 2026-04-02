@@ -1,5 +1,6 @@
 "./Core/Src/audio.o"
 "./Core/Src/breakout.o"
+"./Core/Src/breakout_sfx.o"
 "./Core/Src/buttons.o"
 "./Core/Src/dac.o"
 "./Core/Src/display.o"
