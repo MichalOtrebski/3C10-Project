@@ -57,8 +57,7 @@ static inline uint32_t hz_to_inc(float hz)
     return (uint32_t)inc;
 }
 
-void PSG_Init(void)
-{
+void PSG_Init(void) {
     for (int i = 0; i < 4; i++) {
         v[i].phase = 0;
         v[i].inc = 0;
@@ -67,8 +66,7 @@ void PSG_Init(void)
     }
 }
 
-static void Audio_ClearVoices(void)
-{
+static void Audio_ClearVoices(void) {
     for (int i = 0; i < 4; i++) {
         v[i].phase = 0;
         v[i].inc = 0;
@@ -77,8 +75,7 @@ static void Audio_ClearVoices(void)
     }
 }
 
-void Audio_Start(void)
-{
+void Audio_Start(void) {
     PSG_Init();
     SFX_Init();
     TetrisAudio_Init(SR);
@@ -89,7 +86,7 @@ void Audio_Start(void)
         audioBuf[i] = 0x08000800u;
     }
 
-    HAL_DAC_Start_DMA(&hdac2, DAC_CHANNEL_1, audioBuf, AUDIO_BUF, DAC_ALIGN_12B_R);
+    HAL_DAC_Start_DMA(&hdac2, DAC_CHANNEL_1, (uint32_t*)audioBuf, 1024, DAC_ALIGN_12B_R);
 }
 
 void Audio_Stop(void)

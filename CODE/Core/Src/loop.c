@@ -70,7 +70,7 @@ static uint16_t GetHeldEventMask(void)
 void loop(void)
 {
 
-	uint32_t start = DWT->CYCCNT;
+//	uint32_t start = DWT->CYCCNT;
 
     Buttons_BeginFrame();
 
@@ -110,10 +110,10 @@ void loop(void)
     /* code you want to measure */
     render_dma();
 
-    uint32_t end = DWT->CYCCNT;
-
-    uint32_t cycles = end - start;
-    uint32_t us = cycles / 170;
-
-    printf("Time: %lu us\r\n", us);
+//    uint32_t end = DWT->CYCCNT;
+//
+//    uint32_t cycles = end - start;
+//    uint32_t us = cycles / 170;
+//
+//    printf("Time: %lu us\r\n", us);
 }

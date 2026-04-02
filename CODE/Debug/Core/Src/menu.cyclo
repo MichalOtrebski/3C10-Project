@@ -1,9 +1,8 @@
 ../Core/Src/menu.c:24:12:clampi	2
 ../Core/Src/menu.c:28:13:LCD_DrawMenuTitleFancy	4
-../Core/Src/menu.c:57:13:Menu_DrawStatic	1
-../Core/Src/menu.c:82:13:Menu_DrawRow	7
-../Core/Src/menu.c:116:13:Menu_DrawVisibleRows	2
-../Core/Src/menu.c:127:13:Menu_DrawScrollbar	4
-../Core/Src/menu.c:156:6:Menu_Invalidate	1
-../Core/Src/menu.c:163:6:LCD_MenuDraw	11
-../Core/Src/menu.c:208:9:Menu_Update	8
+../Core/Src/menu.c:64:13:Menu_DrawStatic	1
+../Core/Src/menu.c:89:13:Menu_DrawRow	7
+../Core/Src/menu.c:123:13:Menu_DrawVisibleRows	2
+../Core/Src/menu.c:134:6:Menu_Invalidate	1
+../Core/Src/menu.c:141:6:LCD_MenuDraw	11
+../Core/Src/menu.c:185:9:Menu_Update	8

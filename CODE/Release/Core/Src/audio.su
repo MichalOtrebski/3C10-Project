@@ -1,0 +1,12 @@
+../Core/Src/audio.c:144:23:osc_sample	0	static
+../Core/Src/audio.c:60:6:PSG_Init	0	static
+../Core/Src/audio.c:78:6:Audio_Start	16	static
+../Core/Src/audio.c:92:6:Audio_Stop	8	static
+../Core/Src/audio.c:98:6:Audio_SetMode	16	static
+../Core/Src/audio.c:120:11:Audio_GetMode	0	static
+../Core/Src/audio.c:125:6:PSG_SetVoiceFreq	16	static
+../Core/Src/audio.c:131:6:PSG_SetVoiceVol	0	static
+../Core/Src/audio.c:138:6:PSG_SetVoiceWave	0	static
+../Core/Src/audio.c:170:6:PSG_Fill	24	static
+../Core/Src/audio.c:26:6:HAL_DAC_ConvHalfCpltCallbackCh1	8	static
+../Core/Src/audio.c:39:6:HAL_DAC_ConvCpltCallbackCh1	8	static

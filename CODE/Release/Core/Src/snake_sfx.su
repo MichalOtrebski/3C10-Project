@@ -1,0 +1,4 @@
+../Core/Src/snake_sfx.c:34:6:SnakeSFX_MoveTick	0	static
+../Core/Src/snake_sfx.c:39:6:SnakeSFX_Eat	0	static
+../Core/Src/snake_sfx.c:44:6:SnakeSFX_HitWall	0	static
+../Core/Src/snake_sfx.c:49:6:SnakeSFX_GameOver	0	static

@@ -1,0 +1,7 @@
+../Core/Src/buttons.c:46:6:Buttons_Init	0	static
+../Core/Src/buttons.c:63:6:Buttons_BeginFrame	0	static,ignoring_inline_asm
+../Core/Src/buttons.c:73:6:Buttons_Tick1ms	32	static
+../Core/Src/buttons.c:126:6:Buttons_IsDown	0	static
+../Core/Src/buttons.c:131:6:Buttons_WasPressed	0	static
+../Core/Src/buttons.c:136:6:Buttons_WasHeld	0	static
+../Core/Src/buttons.c:141:10:Buttons_HeldMs	0	static

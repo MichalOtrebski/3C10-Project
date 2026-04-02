@@ -1,0 +1,6 @@
+../Core/Src/sfx.c:26:13:sfx_apply_step	7
+../Core/Src/sfx.c:53:6:SFX_Init	2
+../Core/Src/sfx.c:68:6:SFX_Play	4
+../Core/Src/sfx.c:80:6:SFX_StopVoice	2
+../Core/Src/sfx.c:94:9:SFX_IsVoiceBusy	2
+../Core/Src/sfx.c:100:6:SFX_Update	7

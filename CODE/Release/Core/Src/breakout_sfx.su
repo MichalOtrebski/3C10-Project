@@ -1,0 +1,4 @@
+../Core/Src/breakout_sfx.c:36:6:BreakoutSFX_Bounce	0	static
+../Core/Src/breakout_sfx.c:41:6:BreakoutSFX_BlockHit	0	static
+../Core/Src/breakout_sfx.c:46:6:BreakoutSFX_PowerUp	0	static
+../Core/Src/breakout_sfx.c:51:6:BreakoutSFX_GameOver	0	static

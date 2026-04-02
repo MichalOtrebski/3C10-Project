@@ -1,0 +1,2 @@
+../Core/Src/text.c:21:6:LCD_DrawChar	8
+../Core/Src/text.c:49:6:LCD_DrawText	6

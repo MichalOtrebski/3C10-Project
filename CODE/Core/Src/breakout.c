@@ -259,12 +259,12 @@ static void draw_block_cell(int j, int i) {
         LCD_DrawRect(cx + 1, cy + 1, 1, 1, accent);
 
     } else if (p2) {
-    	/* WIDE PADDLE: plus */
-    	int cx = x + (BLK_WDH / 2);
-    	int cy = y + (BLK_HGT / 2);
+        /* WIDE PADDLE: plus */
+        int cx = x + (BLK_WDH / 2);
+        int cy = y + (BLK_HGT / 2);
 
-    	LCD_DrawRect(cx - 2, cy, 5, 1, C_BG);
-    	LCD_DrawRect(cx, cy - 2, 1, 5, C_BG);
+        LCD_DrawRect(cx - 2, cy, 5, 1, C_BG);
+        LCD_DrawRect(cx, cy - 2, 1, 5, C_BG);
 
     } else if (p3) {
         /* SLOW BALL: centered minus */
@@ -307,7 +307,6 @@ static void erase_old_ball(void) {
         int field_top    = FIELD_Y + 1;
         int field_bottom = FIELD_Y + FIELD_H_BREAKOUT - 1;
 
-        /* Clip horizontally */
         if (x < field_left) {
             w -= (field_left - x);
             x = field_left;
@@ -316,7 +315,6 @@ static void erase_old_ball(void) {
             w = field_right - x;
         }
 
-        /* Clip vertically */
         if (y < field_top) {
             h -= (field_top - y);
             y = field_top;
@@ -345,7 +343,6 @@ static void erase_old_paddle(void) {
         int field_top    = FIELD_Y + 1;
         int field_bottom = FIELD_Y + FIELD_H_BREAKOUT - 1;
 
-        /* Clip horizontally */
         if (x < field_left) {
             w -= (field_left - x);
             x = field_left;
@@ -354,7 +351,6 @@ static void erase_old_paddle(void) {
             w = field_right - x;
         }
 
-        /* Clip vertically (usually not needed, but safe) */
         if (y < field_top) {
             h -= (field_top - y);
             y = field_top;
@@ -516,15 +512,23 @@ static void handle_block_clear(void) {
 
 static void activate_block_power(bool hit_p1, bool hit_p2, bool hit_p3) {
     uint32_t now = HAL_GetTick();
+    bool got_power = false;
 
     if (hit_p1) {
         power_score_until_ms = now + POWER_SCORE_MS;
+        got_power = true;
     }
     if (hit_p2) {
         power_wide_until_ms = now + POWER_WIDE_MS;
+        got_power = true;
     }
     if (hit_p3) {
         power_slow_until_ms = now + POWER_SLOW_MS;
+        got_power = true;
+    }
+
+    if (got_power) {
+        BreakoutSFX_PowerUp();
     }
 
     refresh_active_powers();
@@ -632,12 +636,12 @@ void bouncex(uint8_t typ) {
     if (typ) {
         BreakoutSFX_BlockHit();
     } else {
-    	BreakoutSFX_Bounce();
+        BreakoutSFX_Bounce();
     }
 }
 
 void bouncexplat(float position) {
-	BreakoutSFX_Bounce();
+    BreakoutSFX_Bounce();
     float offset = (position - 0.5f) * 2.0f;
 
     if (offset > -0.08f && offset < 0.08f) {
@@ -668,9 +672,8 @@ void bouncey(uint8_t typ) {
     if (typ) {
         BreakoutSFX_BlockHit();
     } else {
-    	BreakoutSFX_Bounce();
+        BreakoutSFX_Bounce();
     }
-
 }
 
 void does_collide_blk(void) {
@@ -908,6 +911,7 @@ void break_Tick(void) {
 
     if (pos_ball[1] + BALL_HGT / 2 >= FIELD_Y + FIELD_H_BREAKOUT) {
         ball_in = false;
+        BreakoutSFX_GameOver();
     }
 }
 
@@ -924,8 +928,9 @@ void break_draw(void) {
     }
 
     if (!ball_in) {
-        LCD_DrawRect(18, 66, 92, 24, C_BG);
-        LCD_DrawText(20, 68, "GAME OVER", C_TEXT, C_BG, 2);
+        LCD_DrawRect(2, 64, 116, 28, C_TEXT);
+        LCD_DrawRect(4, 66, 112, 24, 0x0000);
+        LCD_DrawText(10, 70, "GAME OVER", C_TEXT, 0x0000, 2);
     }
 }
 

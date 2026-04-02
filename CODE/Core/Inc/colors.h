@@ -30,6 +30,8 @@
 #define RGB565_MENU_DIVIDER  0x2104
 #define RGB565_MENU_SELECT   0x039F
 
+#define RGB565_ORANGE 0xFD20
+
 // Accent color (your border color)
 #define RGB565_ACCENT        0xF81D
 

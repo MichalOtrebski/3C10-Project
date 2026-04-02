@@ -31,7 +31,7 @@
 
 typedef struct {
     int8_t  note;     /* MIDI note, -1 = rest */
-    uint8_t len16;    /* duration in 1/16th notes */
+    uint16_t len16;    /* duration in 1/16th notes */
 } TA_Event;
 
 typedef struct {

@@ -1,0 +1,9 @@
+../Core/Src/display.c:215:20:build_scaled_2rows_full	0	static
+../Core/Src/display.c:232:20:build_scaled_2rows_partial	20	static
+../Core/Src/display.c:254:13:render_full_dma_internal	32	static
+../Core/Src/display.c:47:6:HAL_SPI_TxCpltCallback	8	static
+../Core/Src/display.c:166:6:LCD_ClearFrame	8	static
+../Core/Src/display.c:173:6:LCD_DrawRect	64	static
+../Core/Src/display.c:328:6:render_dma	64	static
+../Core/Src/display.c:361:6:border	32	static
+../Core/Src/display.c:381:10:Darken565	8	static

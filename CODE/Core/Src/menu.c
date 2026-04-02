@@ -47,7 +47,14 @@ static void LCD_DrawMenuTitleFancy(int x, int y, const char *title, uint16_t nor
 
     if (strcmp(title, "BREAKOUT") == 0)
     {
-        LCD_DrawText(x, y, "BREAKOUT", RGB565_WHITE, bg, 2);
+        LCD_DrawText(x +  0, y, "B", RGB565_RED,     bg, 2);
+        LCD_DrawText(x + 11, y, "R", RGB565_ORANGE,  bg, 2);
+        LCD_DrawText(x + 22, y, "E", RGB565_YELLOW,  bg, 2);
+        LCD_DrawText(x + 33, y, "A", RGB565_GREEN,   bg, 2);
+        LCD_DrawText(x + 44, y, "K", RGB565_CYAN,    bg, 2);
+        LCD_DrawText(x + 55, y, "O", RGB565_BLUE,    bg, 2);
+        LCD_DrawText(x + 66, y, "U", RGB565_MAGENTA, bg, 2);
+        LCD_DrawText(x + 77, y, "T", RGB565_RED,     bg, 2);
         return;
     }
 
@@ -124,35 +131,6 @@ static void Menu_DrawVisibleRows(void)
     }
 }
 
-static void Menu_DrawScrollbar(void)
-{
-    const int topY = 38;
-    const int rowH = 18;
-    const int visibleRows = (FB_HEIGHT - topY - 14) / rowH;
-    const int maxScroll = ((int)MENU_COUNT - visibleRows > 0) ? ((int)MENU_COUNT - visibleRows) : 0;
-
-    int barX = FB_WIDTH - 6;
-    int barY = topY;
-    int barH = visibleRows * rowH - 2;
-
-    LCD_DrawRect(barX - 1, barY, 4, barH, 0x1883);
-
-    if (MENU_COUNT > (uint32_t)visibleRows) {
-        int thumbH = (barH * visibleRows) / MENU_COUNT;
-        int thumbY = barY;
-
-        LCD_DrawRect(barX, barY, 2, barH, 0x39E7);
-
-        if (thumbH < 8) thumbH = 8;
-
-        if (maxScroll > 0) {
-            thumbY = barY + ((barH - thumbH) * menu_scroll) / maxScroll;
-        }
-
-        LCD_DrawRect(barX - 1, thumbY, 4, thumbH, 0xF81D);
-    }
-}
-
 void Menu_Invalidate(void)
 {
     menu_first_draw = 1;
@@ -177,7 +155,7 @@ void LCD_MenuDraw(void) {
     if (menu_first_draw) {
         Menu_DrawStatic();
         Menu_DrawVisibleRows();
-        Menu_DrawScrollbar();
+
 
         prev_menu_selected = menu_selected;
         prev_menu_scroll = menu_scroll;
@@ -187,7 +165,6 @@ void LCD_MenuDraw(void) {
 
     if (menu_scroll != prev_menu_scroll) {
         Menu_DrawVisibleRows();
-        Menu_DrawScrollbar();
     } else if (menu_selected != prev_menu_selected) {
         int oldRow = prev_menu_selected - menu_scroll;
         int newRow = menu_selected - menu_scroll;

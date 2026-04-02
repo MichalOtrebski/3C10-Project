@@ -17,8 +17,8 @@
 #include "buttons.h"
 #include "snake_sfx.h"
 
-static inline int GX(int gx){ return FIELD_X + gx * CELL; }
-static inline int GY(int gy){ return FIELD_Y + gy * CELL; }
+static inline int GX(int gx){ return FIELD_X_S + gx * CELL; }
+static inline int GY(int gy){ return FIELD_Y_S + gy * CELL; }
 
 static bool once = true;
 static uint32_t s_lastTickMs;
@@ -30,6 +30,16 @@ static int s_prevScoreDrawn = -1;
 static int s_prevFoodX = -1;
 static int s_prevFoodY = -1;
 static bool s_gameOverDrawn = false;
+
+static Pt snake[SNAKE_MAX];
+static int snake_len;
+static int head_i;
+
+static Dir dir;
+
+static Pt food;
+static int alive;
+static int score;
 
 /*
  * Local palette override for a softer snake board look.

@@ -1,0 +1,9 @@
+../Core/Src/display.c:215:20:build_scaled_2rows_full	2
+../Core/Src/display.c:232:20:build_scaled_2rows_partial	2
+../Core/Src/display.c:254:13:render_full_dma_internal	2
+../Core/Src/display.c:47:6:HAL_SPI_TxCpltCallback	2
+../Core/Src/display.c:166:6:LCD_ClearFrame	1
+../Core/Src/display.c:173:6:LCD_DrawRect	28
+../Core/Src/display.c:328:6:render_dma	9
+../Core/Src/display.c:361:6:border	7
+../Core/Src/display.c:381:10:Darken565	1

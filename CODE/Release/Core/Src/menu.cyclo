@@ -1,0 +1,6 @@
+../Core/Src/menu.c:134:13:Menu_DrawScrollbar	1
+../Core/Src/menu.c:89:13:Menu_DrawRow	6
+../Core/Src/menu.c:123:13:Menu_DrawVisibleRows	2
+../Core/Src/menu.c:163:6:Menu_Invalidate	1
+../Core/Src/menu.c:170:6:LCD_MenuDraw	6
+../Core/Src/menu.c:215:9:Menu_Update	6

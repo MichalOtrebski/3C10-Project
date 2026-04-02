@@ -11,7 +11,7 @@
 #define C_BG     0x0000
 
 #define UI_TOP   20
-#define BORDER   4
+#define BORDER_H   4
 
 /* -------------------- BALL -------------------- */
 #define BALL_WDH 4
@@ -28,10 +28,10 @@
 #define PLT_HGT  2
 
 /* -------------------- FIELD -------------------- */
-#define FIELD_X           BORDER
-#define FIELD_Y           (UI_TOP + BORDER)
-#define FIELD_W_BREAKOUT  (FB_WIDTH - (BORDER * 2))
-#define FIELD_H_BREAKOUT  (FB_HEIGHT - UI_TOP - (BORDER * 2))
+#define FIELD_X           BORDER_H
+#define FIELD_Y           (UI_TOP + BORDER_H)
+#define FIELD_W_BREAKOUT  (FB_WIDTH - (BORDER_H * 2))
+#define FIELD_H_BREAKOUT  (FB_HEIGHT - UI_TOP - (BORDER_H * 2))
 
 /* -------------------- BLOCK POSITIONING -------------------- */
 #define BLOCKS_TOTAL_W   (BLK_XQ * BLK_WDH)

@@ -12,14 +12,14 @@
 #include "globals.h"
 
 #define UI_TOP 20
-#define BORDER 2
+#define BORDER_S 2
 #define CELL 8
 
 /*
  * Play area available below the UI.
  */
-#define PLAY_W (FB_WIDTH - BORDER * 2)
-#define PLAY_H (FB_HEIGHT - UI_TOP - BORDER * 2)
+#define PLAY_W (FB_WIDTH - BORDER_S * 2)
+#define PLAY_H (FB_HEIGHT - UI_TOP - BORDER_S * 2)
 
 /*
  * Grid size in cells.
@@ -36,8 +36,8 @@
 /*
  * Center the grid in the available play area.
  */
-#define FIELD_X ((FB_WIDTH - FIELD_W) / 2)
-#define FIELD_Y (UI_TOP + BORDER + ((PLAY_H - FIELD_H) / 2))
+#define FIELD_X_S ((FB_WIDTH - FIELD_W) / 2)
+#define FIELD_Y_S (UI_TOP + BORDER_S + ((PLAY_H - FIELD_H) / 2))
 
 // colors
 #define C_BG     0x0000
@@ -51,16 +51,10 @@ typedef struct { uint8_t x,y; } Pt;
 
 #define SNAKE_MAX (GRID_W * GRID_H)
 
-static Pt snake[SNAKE_MAX];
-static int snake_len;
-static int head_i;
+
 
 typedef enum {DIR_UP,DIR_DOWN,DIR_LEFT,DIR_RIGHT} Dir;
-static Dir dir;
 
-static Pt food;
-static int alive;
-static int score;
 
 // FUNCTIONS
 void Snake_Init(void);

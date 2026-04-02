@@ -1,0 +1,14 @@
+../Core/Src/snake.c:55:19:idx_wrap	3
+../Core/Src/snake.c:83:12:snake_contains	4
+../Core/Src/snake.c:93:13:Snake_SpawnFood	2
+../Core/Src/snake.c:78:20:Snake_DrawGridCell	1
+../Core/Src/snake.c:109:13:Snake_DrawCell	1
+../Core/Src/snake.c:151:13:Snake_DrawFoodIfNeeded	5
+../Core/Src/snake.c:166:13:Snake_DrawInitialBody	2
+../Core/Src/snake.c:125:13:Snake_DrawStatic	3
+../Core/Src/snake.c:138:13:Snake_DrawScoreIfNeeded	2
+../Core/Src/snake.c:189:6:Snake_Init	1
+../Core/Src/snake.c:221:6:Snake_SetDir	9
+../Core/Src/snake.c:234:6:Snake_Tick	16
+../Core/Src/snake.c:301:6:Snake_Draw	4
+../Core/Src/snake.c:316:6:Snake_Update	9
