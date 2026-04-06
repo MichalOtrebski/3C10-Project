@@ -9,14 +9,13 @@
 #include "sfx.h"
 
 static const SFX_Note breakout_bounce_seq[] = {
-    { 700, 1200, 50, 0 },
-    { 900, 1000, 40, 0 }
+	{ 1000, 1800, 60, 1 },
+	{ 800, 1600, 55, 1 },
 };
 
 static const SFX_Note breakout_block_bounce_seq[] = {
-    { 800, 1800, 60, 1 },
-    { 600, 1600, 55, 1 },
-    { 400, 1400, 50, 1 }
+	{ 1200, 1200, 50, 1 },
+	{ 1500, 1000, 40, 1}
 };
 
 static const SFX_Note breakout_powerup_seq[] = {

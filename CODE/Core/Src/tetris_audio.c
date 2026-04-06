@@ -11,6 +11,7 @@
 
 #include "tetris_audio.h"
 #include "audio.h"
+#include "sfx.h"
 
 #ifndef TA_NUM_CH
 #define TA_NUM_CH 4
@@ -63,6 +64,17 @@ static void TA_AdvanceOne(TA_Track *tr, uint8_t ch, uint16_t vol, int is_noise);
 static void TA_AdvanceTracks(uint32_t ticks_to_advance);
 static void TA_ApplyEventToChannel(uint8_t ch, const TA_Event *ev, uint16_t vol, int is_noise);
 static void TA_ResetTracks(void);
+
+static const SFX_Note tetris_gameover_seq[] = {
+    { 700, 2500, 35, 0 },
+    { 520, 2300, 35, 0 },
+    { 380, 2100, 45, 0 },
+    { 240, 1900, 70, 3 }
+};
+
+void TetrisSFX_GameOver(void) {
+    SFX_Play(1, tetris_gameover_seq, sizeof(tetris_gameover_seq) / sizeof(tetris_gameover_seq[0]));
+}
 
 /* melody */
 static const TA_Event g_melody[] = {

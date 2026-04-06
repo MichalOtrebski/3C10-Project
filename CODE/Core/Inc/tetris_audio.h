@@ -18,5 +18,6 @@ void TetrisAudio_SetBPM(uint32_t bpm);
 void TetrisAudio_Update(uint32_t samples_rendered);
 
 uint8_t TetrisAudio_IsPlaying(void);
+void TetrisSFX_GameOver(void);
 
 #endif /* INC_TETRIS_AUDIO_H_ */

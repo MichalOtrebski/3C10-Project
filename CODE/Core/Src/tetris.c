@@ -52,6 +52,8 @@ static int block;
 static int hold_used;
 static int store_block;
 
+bool game_over_sound = true;
+
 static uint16_t FallingColour(void) {
     switch (cur_type) {
     case 0: return C_B1;
@@ -327,6 +329,7 @@ void Grid_init(void) {
 void Tetris_init(void) {
 	TetrisAudio_Init(SR);
 	Grid_init();
+	game_over_sound = true;
 	store_block = -1;
 	hold_used = 0;
 	int last_block = -1;
@@ -970,7 +973,6 @@ void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev) {
     bool down_held = (down & (1u << BTN_DOWN)) != 0u;
 
     if (held_ev & (1u << BTN_A)) {
-    	Audio_SetMode(AUDIO_MODE_SFX);
     	Menu_Invalidate();
         g_state = STATE_MENU;
         game_over = 0;
@@ -987,6 +989,13 @@ void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev) {
 
     if (game_over) {
     	TetrisAudio_Stop();
+    	Audio_SetMode(AUDIO_MODE_SFX);
+
+    	if (game_over_sound) {
+        	TetrisSFX_GameOver();
+        	game_over_sound = false;
+    	}
+
         DrawGameOverPanel();
         return;
     }
@@ -998,7 +1007,6 @@ void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev) {
         DrawPredictedBlocks();
         DrawStoredBlock();
         Draw_Field();
-//        DrawTetrisIcon();
         return;
     }
 

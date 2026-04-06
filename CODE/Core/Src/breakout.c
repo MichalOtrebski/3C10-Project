@@ -41,6 +41,8 @@ static uint16_t prev_score_drawn = 0xFFFF;
 static uint8_t prev_active_power_mask = 0xFFu;
 static uint16_t prev_score_colour = 0xFFFFu;
 
+static bool wave_clear_pending = false;
+
 static uint8_t block_wave = 0;
 
 #define LOCAL_BALL_MIN_VX      6.0f
@@ -488,25 +490,25 @@ static void respawn_blocks(void) {
     block_draw();
 }
 
+static void try_advance_wave(void) {
+    int respawn_line = FST_BLK_SPY + (BLK_YQ * BLK_HGT) + 2;
+
+    if (!wave_clear_pending || !ball_released || !ball_in) {
+        return;
+    }
+
+    /* Wait until the ball has fallen just below the old block area */
+    if (pos_ball[1] - (BALL_HGT / 2.0f) < respawn_line) {
+        return;
+    }
+
+    respawn_blocks();
+    wave_clear_pending = false;
+}
+
 static void handle_block_clear(void) {
     if (!blocks_remaining()) {
-        erase_old_ball();
-        erase_old_paddle();
-
-        ball_released = false;
-        ball_velx = 0.0f;
-        ball_vely = 0.0f;
-
-        plat_fx = (float)PLT_SPX;
-        pos_plat[0] = PLT_SPX;
-        pos_plat[1] = PLT_SPY;
-
-        position_ball_on_paddle();
-
-        respawn_blocks();
-
-        draw_paddle_current();
-        draw_ball_current();
+        wave_clear_pending = true;
     }
 }
 
@@ -570,6 +572,8 @@ void ball_intl(void) {
 void initialise(void) {
     ball_released = false;
     ball_in = true;
+
+    wave_clear_pending = false;
 
     score = 0;
     ball_velx = 0.0f;
@@ -791,6 +795,10 @@ void does_collide_wall(void) {
 }
 
 void does_collide_plat(void) {
+    if (wave_clear_pending) {
+        return;
+    }
+
     float plat_left   = pos_plat[0] - current_plat_wdh / 2.0f;
     float plat_right  = pos_plat[0] + current_plat_wdh / 2.0f;
     float plat_top    = pos_plat[1] - PLT_HGT / 2.0f;
@@ -909,6 +917,10 @@ void break_Tick(void) {
         return;
     }
 
+    if (wave_clear_pending) {
+        return;
+    }
+
     if (pos_ball[1] + BALL_HGT / 2 >= FIELD_Y + FIELD_H_BREAKOUT) {
         ball_in = false;
         BreakoutSFX_GameOver();
@@ -959,6 +971,7 @@ void Breakout_Update(uint16_t pressed, uint16_t held, uint16_t held_ev) {
 
             platform_update(held, LOCAL_GAME_TICK_MS / 1000.0f);
             ball_update(LOCAL_GAME_TICK_MS / 1000.0f);
+            try_advance_wave();
             break_Tick();
             refresh_active_powers();
         }
