@@ -984,6 +984,9 @@ void Tetris_Update(uint16_t pressed, uint16_t down, uint16_t held_ev) {
         right_repeat_ms = 0;
         down_was_held = false;
 
+    	TetrisAudio_Stop();
+    	Audio_SetMode(AUDIO_MODE_SFX);
+
         return;
     }
 
